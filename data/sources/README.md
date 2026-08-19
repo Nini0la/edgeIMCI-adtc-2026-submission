@@ -8,4 +8,4 @@ The WHO PDF is not redistributed with EdgeIMCI. Obtain it separately from WHO an
 data/sources/IMCI chartbooklet 2014.pdf
 ```
 
-Local PDF files in this directory are gitignored. The encoded rules record the source section, PDF page, and printed chart page used for provenance.
+Local PDF files in this directory are gitignored. Every encoded rule records the source section, `source_pdf_page` from the PDF viewer, and `source_printed_page` shown by the publisher.

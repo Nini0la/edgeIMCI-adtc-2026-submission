@@ -62,7 +62,7 @@ def load_rule_set(path: str | Path = DEFAULT_RULE_PATH) -> RuleSet:
             raise ValueError(f"duplicate rule_id: {rule_id}")
         seen_ids.add(rule_id)
         source = item["source"]
-        if not {"section", "pdf_page", "chart_page"} <= source.keys():
+        if not {"section", "source_pdf_page", "source_printed_page"} <= source.keys():
             raise ValueError(f"rule {rule_id} has incomplete provenance")
         rules.append(
             Rule(

@@ -12,7 +12,7 @@ The deterministic rule engine—not a language model—constructs and verifies t
 
 ## Clinical source
 
-Rules are traced to **WHO — Integrated Management of Childhood Illness, Chart Booklet, March 2014**, PDF pages 5–7 (printed chart pages 1–3 of 76). The WHO PDF is not redistributed. Obtain it separately and place it at:
+Rules are traced to **WHO — Integrated Management of Childhood Illness, Chart Booklet, March 2014**. Provenance records both `source_pdf_page` (PDF viewer pages 5–7) and `source_printed_page` (publisher pages 1–3 of 76). The WHO PDF is not redistributed. Obtain it separately and place it at:
 
 ```text
 data/sources/IMCI chartbooklet 2014.pdf
@@ -44,6 +44,16 @@ python scripts/generate_benchmark.py \
   --seed 20240301
 ```
 
+## Review the rule set in YAML
+
+`data/rules/imci_selected_v0.json` remains the canonical machine artifact consumed by the rule loader and reference evaluator. The synchronized `data/rules/imci_selected_v0.yaml` mirror is representation-only and formatted for human review. After changing the JSON, regenerate the YAML with:
+
+```bash
+python scripts/sync_rule_yaml.py
+```
+
+The test suite fails if the committed YAML does not deserialize to the same rule set or does not match deterministic regeneration.
+
 ## Run the mock baseline
 
 The mock adapter exercises serialization, prompting, structured scoring, and run-artifact generation without downloading or invoking a model.
@@ -58,7 +68,8 @@ The runner writes `run.json` with per-case outputs, competency scores, aggregate
 
 ## Repository components
 
-- `data/rules/imci_selected_v0.json`: inspectable rules and source provenance.
+- `data/rules/imci_selected_v0.json`: canonical machine-readable rules and provenance.
+- `data/rules/imci_selected_v0.yaml`: generated human-readable mirror of the canonical JSON.
 - `src/edge_imci/schemas/`: typed case and result representations.
 - `src/edge_imci/evaluation/reference.py`: deterministic benchmark oracle.
 - `src/edge_imci/generation/cases.py`: controlled case generation.
