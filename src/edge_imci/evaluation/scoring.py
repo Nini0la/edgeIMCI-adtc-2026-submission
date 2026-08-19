@@ -6,10 +6,12 @@ from dataclasses import asdict, dataclass
 from typing import Any
 
 from edge_imci.schemas.case import EvaluationResult
+from edge_imci.schemas.prediction import ModelPrediction
 
 
 @dataclass(frozen=True)
 class CaseScore:
+    sufficient_information_correct: bool
     classification_correct: bool
     danger_sign_handling: bool
     referral_correct: bool
@@ -22,26 +24,30 @@ class CaseScore:
         return asdict(self)
 
 
-def score_prediction(prediction: dict[str, Any], expected: EvaluationResult) -> CaseScore:
+def score_prediction(prediction: ModelPrediction, expected: EvaluationResult) -> CaseScore:
     expected_data = expected.to_dict()
-    predicted_classifications = prediction.get("classifications", {})
-    predicted_danger = prediction.get("detected_danger_signs", [])
-    predicted_actions = prediction.get("actions", [])
-    predicted_missing = prediction.get("missing_required_observations", [])
-
-    classification_correct = predicted_classifications == expected_data["classifications"]
-    danger_sign_handling = _as_set(predicted_danger) == set(expected_data["detected_danger_signs"])
-    referral_correct = prediction.get("referral") == expected_data["referral"]
-    actions_correct = _as_set(predicted_actions) == set(expected_data["actions"])
-    required_information_complete = _as_set(predicted_missing) == set(expected_data["missing_required_observations"])
+    prediction_data = prediction.to_dict()
+    sufficient_information_correct = prediction.sufficient_information == (
+        not expected.missing_required_observations
+    )
+    classification_correct = prediction_data["classifications"] == expected_data["classifications"]
+    danger_sign_handling = set(prediction_data["detected_danger_signs"]) == set(
+        expected_data["detected_danger_signs"]
+    )
+    referral_correct = prediction_data["referral"] == expected_data["referral"]
+    actions_correct = set(prediction_data["actions"]) == set(expected_data["actions"])
+    required_information_complete = set(prediction_data["missing_required_observations"]) == set(
+        expected_data["missing_required_observations"]
+    )
 
     expected_classifications = set(expected_data["classifications"].items())
-    predicted_classification_items = set(predicted_classifications.items()) if isinstance(predicted_classifications, dict) else {("<invalid>", "<invalid>")}
+    predicted_classification_items = set(prediction_data["classifications"].items())
     no_unsupported_output = (
         predicted_classification_items <= expected_classifications
-        and _as_set(predicted_actions) <= set(expected_data["actions"])
+        and set(prediction_data["actions"]) <= set(expected_data["actions"])
     )
     checks = (
+        sufficient_information_correct,
         classification_correct,
         danger_sign_handling,
         referral_correct,
@@ -50,6 +56,7 @@ def score_prediction(prediction: dict[str, Any], expected: EvaluationResult) -> 
         no_unsupported_output,
     )
     return CaseScore(
+        sufficient_information_correct=sufficient_information_correct,
         classification_correct=classification_correct,
         danger_sign_handling=danger_sign_handling,
         referral_correct=referral_correct,
@@ -61,7 +68,7 @@ def score_prediction(prediction: dict[str, Any], expected: EvaluationResult) -> 
 
 
 def failed_score() -> CaseScore:
-    return CaseScore(False, False, False, False, False, False, False)
+    return CaseScore(False, False, False, False, False, False, False, False)
 
 
 def aggregate_scores(scores: list[CaseScore]) -> dict[str, float | int]:
@@ -72,12 +79,3 @@ def aggregate_scores(scores: list[CaseScore]) -> dict[str, float | int]:
     aggregate["case_count"] = len(scores)
     aggregate["passed_cases"] = sum(score.overall_pass for score in scores)
     return aggregate
-
-
-def _as_set(value: Any) -> set[Any]:
-    if not isinstance(value, list):
-        return {"<invalid>"}
-    try:
-        return set(value)
-    except TypeError:
-        return {"<invalid>"}

@@ -184,8 +184,10 @@ class GenerationMetadata:
     generator_version: str
     seed: int
     categories: tuple[GenerationCategory, ...]
-    template_id: str
-    counterfactual_group: str | None = None
+    rule_family: str
+    logic_signature: str
+    template_family: str
+    counterfactual_group_id: str | None = None
 
 
 @dataclass(frozen=True)
@@ -255,8 +257,10 @@ class ClinicalCase:
                 generator_version=generation["generator_version"],
                 seed=generation["seed"],
                 categories=tuple(GenerationCategory(item) for item in generation["categories"]),
-                template_id=generation["template_id"],
-                counterfactual_group=generation.get("counterfactual_group"),
+                rule_family=generation["rule_family"],
+                logic_signature=generation["logic_signature"],
+                template_family=generation["template_family"],
+                counterfactual_group_id=generation.get("counterfactual_group_id"),
             ),
         )
 

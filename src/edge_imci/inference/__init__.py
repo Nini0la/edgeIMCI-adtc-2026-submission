@@ -1,5 +1,6 @@
 """Offline model inference workflows."""
 
-from edge_imci.inference.adapters import MockOracleAdapter, ModelAdapter
+from edge_imci.inference.adapters import GenerationOutput, MockOracleAdapter, ModelAdapter
+from edge_imci.inference.mlx_adapter import MlxModelAdapter
 
-__all__ = ["MockOracleAdapter", "ModelAdapter"]
+__all__ = ["GenerationOutput", "MlxModelAdapter", "MockOracleAdapter", "ModelAdapter"]

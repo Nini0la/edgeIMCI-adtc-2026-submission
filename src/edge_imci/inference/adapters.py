@@ -3,9 +3,24 @@
 from __future__ import annotations
 
 import json
-from typing import Protocol
+from dataclasses import dataclass
+from typing import Any, Protocol
 
 from edge_imci.schemas.case import EvaluationResult
+
+
+@dataclass(frozen=True)
+class GenerationOutput:
+    text: str
+    input_token_count: int | None = None
+    output_token_count: int | None = None
+    generation_seconds: float | None = None
+
+    @property
+    def tokens_per_second(self) -> float | None:
+        if self.output_token_count is None or self.generation_seconds in (None, 0):
+            return None
+        return self.output_token_count / self.generation_seconds
 
 
 class ModelAdapter(Protocol):
@@ -13,7 +28,15 @@ class ModelAdapter(Protocol):
     def model_id(self) -> str:
         ...
 
-    def generate(self, prompt: str) -> str:
+    @property
+    def model_metadata(self) -> dict[str, Any]:
+        ...
+
+    @property
+    def runtime_metadata(self) -> dict[str, Any]:
+        ...
+
+    def generate(self, prompt: str) -> GenerationOutput:
         ...
 
 
@@ -27,7 +50,15 @@ class MockOracleAdapter:
     def model_id(self) -> str:
         return "mock-oracle"
 
-    def generate(self, prompt: str) -> str:
+    @property
+    def model_metadata(self) -> dict[str, Any]:
+        return {"model_id": self.model_id, "base_or_instruct": "mock"}
+
+    @property
+    def runtime_metadata(self) -> dict[str, Any]:
+        return {"backend": "mock", "quantization": None, "dtype": None}
+
+    def generate(self, prompt: str) -> GenerationOutput:
         first_line = prompt.splitlines()[0]
         prefix = "CASE_ID: "
         if not first_line.startswith(prefix):
@@ -38,5 +69,6 @@ class MockOracleAdapter:
         except KeyError as error:
             raise ValueError(f"unknown case ID: {case_id}") from error
         prediction = result.to_dict()
+        prediction["sufficient_information"] = not result.missing_required_observations
         prediction.pop("fired_rule_ids", None)
-        return json.dumps(prediction, sort_keys=True)
+        return GenerationOutput(json.dumps(prediction, sort_keys=True))

@@ -37,5 +37,12 @@ def make_case(
         known_missing_information=(),
         expected_result=None,
         provenance=SourceProvenance("WHO IMCI Chart Booklet", "March 2014", (), (), ()),
-        generation=GenerationMetadata("test", 0, (GenerationCategory.NORMAL,), "test"),
+        generation=GenerationMetadata(
+            generator_version="test",
+            seed=0,
+            categories=(GenerationCategory.NORMAL,),
+            rule_family="test",
+            logic_signature="test",
+            template_family="test",
+        ),
     )
