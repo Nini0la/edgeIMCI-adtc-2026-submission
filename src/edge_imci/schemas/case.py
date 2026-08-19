@@ -174,7 +174,8 @@ class EvaluationResult:
 class SourceProvenance:
     document: str
     edition: str
-    pdf_pages: tuple[int, ...]
+    source_pdf_pages: tuple[int, ...]
+    source_printed_pages: tuple[str, ...]
     source_rule_ids: tuple[str, ...]
 
 
@@ -208,7 +209,8 @@ class ClinicalCase:
         data = asdict(self)
         data["observations"]["dehydration"] = _enum_values(data["observations"]["dehydration"])
         data["generation"]["categories"] = [item.value for item in self.generation.categories]
-        data["provenance"]["pdf_pages"] = list(self.provenance.pdf_pages)
+        data["provenance"]["source_pdf_pages"] = list(self.provenance.source_pdf_pages)
+        data["provenance"]["source_printed_pages"] = list(self.provenance.source_printed_pages)
         data["provenance"]["source_rule_ids"] = list(self.provenance.source_rule_ids)
         data["known_missing_information"] = list(self.known_missing_information)
         if include_expected:
@@ -245,7 +247,8 @@ class ClinicalCase:
             provenance=SourceProvenance(
                 document=provenance["document"],
                 edition=provenance["edition"],
-                pdf_pages=tuple(provenance["pdf_pages"]),
+                source_pdf_pages=tuple(provenance["source_pdf_pages"]),
+                source_printed_pages=tuple(provenance["source_printed_pages"]),
                 source_rule_ids=tuple(provenance["source_rule_ids"]),
             ),
             generation=GenerationMetadata(

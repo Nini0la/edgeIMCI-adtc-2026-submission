@@ -9,6 +9,7 @@ description = "Experimental benchmark for bounded IMCI decision pathways on cons
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
+dependencies = ["PyYAML>=6.0"]
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]

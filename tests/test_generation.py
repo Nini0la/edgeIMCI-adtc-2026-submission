@@ -11,7 +11,8 @@ def test_rule_set_is_explicit_unique_and_provenanced():
 
     assert len(rule_set.rules) == 15
     assert len(rule_set.ids()) == 15
-    assert all(rule.source["pdf_page"] in {5, 6, 7} for rule in rule_set.rules)
+    assert all(rule.source["source_pdf_page"] in {5, 6, 7} for rule in rule_set.rules)
+    assert all(rule.source["source_printed_page"] in {"1 of 76", "2 of 76", "3 of 76"} for rule in rule_set.rules)
     assert all(rule.source["section"] for rule in rule_set.rules)
 
 
@@ -36,7 +37,8 @@ def test_cases_preserve_valid_rule_provenance():
     for case in generate_cases():
         assert case.provenance.document
         assert case.provenance.edition == "March 2014"
-        assert case.provenance.pdf_pages
+        assert case.provenance.source_pdf_pages
+        assert case.provenance.source_printed_pages
         assert case.provenance.source_rule_ids
         assert set(case.provenance.source_rule_ids) <= rule_ids
         assert set(case.expected_result.fired_rule_ids) <= set(case.provenance.source_rule_ids)

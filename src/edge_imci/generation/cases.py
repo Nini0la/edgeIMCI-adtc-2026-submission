@@ -79,7 +79,8 @@ def generate_cases(seed: int = DEFAULT_SEED, rule_set: RuleSet | None = None) ->
             provenance=SourceProvenance(
                 document=selected_rules.document,
                 edition=selected_rules.edition,
-                pdf_pages=(),
+                source_pdf_pages=(),
+                source_printed_pages=(),
                 source_rule_ids=(),
             ),
             generation=GenerationMetadata(
@@ -93,7 +94,13 @@ def generate_cases(seed: int = DEFAULT_SEED, rule_set: RuleSet | None = None) ->
         result = evaluate_case(provisional, selected_rules)
         relevant_rules = _relevant_rule_ids(provisional, result.fired_rule_ids, selected_rules)
         source_by_id = {rule.rule_id: rule.source for rule in selected_rules.rules}
-        pages = tuple(sorted({source_by_id[rule_id]["pdf_page"] for rule_id in relevant_rules}))
+        source_pdf_pages = tuple(sorted({source_by_id[rule_id]["source_pdf_page"] for rule_id in relevant_rules}))
+        source_printed_pages = tuple(
+            sorted(
+                {source_by_id[rule_id]["source_printed_page"] for rule_id in relevant_rules},
+                key=lambda page: int(page.split()[0]),
+            )
+        )
         cases.append(
             replace(
                 provisional,
@@ -102,7 +109,8 @@ def generate_cases(seed: int = DEFAULT_SEED, rule_set: RuleSet | None = None) ->
                 provenance=SourceProvenance(
                     document=selected_rules.document,
                     edition=selected_rules.edition,
-                    pdf_pages=pages,
+                    source_pdf_pages=source_pdf_pages,
+                    source_printed_pages=source_printed_pages,
                     source_rule_ids=relevant_rules,
                 ),
             )

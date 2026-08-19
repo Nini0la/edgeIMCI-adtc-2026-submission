@@ -9,7 +9,7 @@ Each question must identify the proposed rule ID, source location, a faithful su
 ### CQ-001 — Wheeze reassessment before respiratory classification
 
 - **Proposed rule ID:** `IMCI-RESP-WHEEZE-REASSESS`
-- **Source:** WHO *Integrated Management of Childhood Illness, Chart Booklet*, March 2014; “Cough or difficult breathing”; PDF page 6 (chart page 2 of 76).
+- **Source:** WHO *Integrated Management of Childhood Illness, Chart Booklet*, March 2014; “Cough or difficult breathing”; `source_pdf_page: 6`; `source_printed_page: 2 of 76`.
 - **Source wording, summarized:** When wheeze occurs with either fast breathing or chest indrawing, the chart directs a trial of rapid-acting inhaled bronchodilator up to three times, followed by another breath count and chest-indrawing assessment before classification.
 - **Exact ambiguity:** The source is clear about the clinical sequence but does not define how a static benchmark case should represent the repeated observations, an incomplete bronchodilator trial, or a setting where reassessment is unavailable.
 - **Decision needed:** A domain expert must define the admissible pre-treatment/post-treatment observation states and when the benchmark should require reassessment rather than emit a respiratory classification.

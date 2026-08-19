@@ -1,0 +1,277 @@
+# Generated from data/rules/imci_selected_v0.json.
+# Review this file freely, but edit the canonical JSON and rerun scripts/sync_rule_yaml.py.
+rule_set_id: imci-selected-v0
+document: WHO Integrated Management of Childhood Illness, Chart Booklet
+edition: March 2014
+population:
+  age_months:
+    gte: 2
+    lt: 60
+rules:
+  - rule_id: IMCI-GDS-UNABLE-TO-DRINK
+    kind: danger_sign
+    source:
+      section: General danger signs
+      source_pdf_page: 5
+      source_printed_page: 1 of 76
+    conditions:
+      field: danger_signs.unable_to_drink_or_breastfeed
+      equals: true
+    result:
+      danger_sign: UNABLE_TO_DRINK_OR_BREASTFEED
+      classification: VERY_SEVERE_DISEASE
+      actions:
+        - COMPLETE_ASSESSMENT_QUICKLY
+        - GIVE_PRE_REFERRAL_TREATMENT_IMMEDIATELY
+        - PREVENT_LOW_BLOOD_SUGAR
+        - KEEP_WARM
+        - URGENT_REFERRAL
+  - rule_id: IMCI-GDS-VOMITS-EVERYTHING
+    kind: danger_sign
+    source:
+      section: General danger signs
+      source_pdf_page: 5
+      source_printed_page: 1 of 76
+    conditions:
+      field: danger_signs.vomits_everything
+      equals: true
+    result:
+      danger_sign: VOMITS_EVERYTHING
+      classification: VERY_SEVERE_DISEASE
+      actions:
+        - COMPLETE_ASSESSMENT_QUICKLY
+        - GIVE_PRE_REFERRAL_TREATMENT_IMMEDIATELY
+        - PREVENT_LOW_BLOOD_SUGAR
+        - KEEP_WARM
+        - URGENT_REFERRAL
+  - rule_id: IMCI-GDS-CONVULSIONS-HISTORY
+    kind: danger_sign
+    source:
+      section: General danger signs
+      source_pdf_page: 5
+      source_printed_page: 1 of 76
+    conditions:
+      field: danger_signs.had_convulsions
+      equals: true
+    result:
+      danger_sign: HAD_CONVULSIONS
+      classification: VERY_SEVERE_DISEASE
+      actions:
+        - COMPLETE_ASSESSMENT_QUICKLY
+        - GIVE_PRE_REFERRAL_TREATMENT_IMMEDIATELY
+        - PREVENT_LOW_BLOOD_SUGAR
+        - KEEP_WARM
+        - URGENT_REFERRAL
+  - rule_id: IMCI-GDS-LETHARGIC-OR-UNCONSCIOUS
+    kind: danger_sign
+    source:
+      section: General danger signs
+      source_pdf_page: 5
+      source_printed_page: 1 of 76
+    conditions:
+      field: danger_signs.lethargic_or_unconscious
+      equals: true
+    result:
+      danger_sign: LETHARGIC_OR_UNCONSCIOUS
+      classification: VERY_SEVERE_DISEASE
+      actions:
+        - COMPLETE_ASSESSMENT_QUICKLY
+        - GIVE_PRE_REFERRAL_TREATMENT_IMMEDIATELY
+        - PREVENT_LOW_BLOOD_SUGAR
+        - KEEP_WARM
+        - URGENT_REFERRAL
+  - rule_id: IMCI-GDS-CONVULSING-NOW
+    kind: danger_sign
+    source:
+      section: General danger signs
+      source_pdf_page: 5
+      source_printed_page: 1 of 76
+    conditions:
+      field: danger_signs.convulsing_now
+      equals: true
+    result:
+      danger_sign: CONVULSING_NOW
+      classification: VERY_SEVERE_DISEASE
+      actions:
+        - GIVE_DIAZEPAM_IF_CONVULSING_NOW
+        - COMPLETE_ASSESSMENT_QUICKLY
+        - GIVE_PRE_REFERRAL_TREATMENT_IMMEDIATELY
+        - PREVENT_LOW_BLOOD_SUGAR
+        - KEEP_WARM
+        - URGENT_REFERRAL
+  - rule_id: IMCI-RESP-FAST-BREATHING-2-12M
+    kind: fast_breathing_threshold
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      age_months:
+        gte: 2
+        lt: 12
+      respiratory_rate:
+        gte: 50
+    result:
+      fast_breathing: true
+  - rule_id: IMCI-RESP-FAST-BREATHING-12-60M
+    kind: fast_breathing_threshold
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      age_months:
+        gte: 12
+        lt: 60
+      respiratory_rate:
+        gte: 40
+    result:
+      fast_breathing: true
+  - rule_id: IMCI-RESP-SEVERE-DANGER-SIGN
+    kind: respiratory_classification
+    priority: 1
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      any_general_danger_sign: true
+    result:
+      classification: SEVERE_PNEUMONIA_OR_VERY_SEVERE_DISEASE
+      actions:
+        - GIVE_FIRST_DOSE_APPROPRIATE_ANTIBIOTIC
+        - URGENT_REFERRAL
+  - rule_id: IMCI-RESP-SEVERE-STRIDOR
+    kind: respiratory_classification
+    priority: 2
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      field: respiratory.stridor_when_calm
+      equals: true
+    result:
+      classification: SEVERE_PNEUMONIA_OR_VERY_SEVERE_DISEASE
+      actions:
+        - GIVE_FIRST_DOSE_APPROPRIATE_ANTIBIOTIC
+        - URGENT_REFERRAL
+  - rule_id: IMCI-RESP-PNEUMONIA-CHEST-INDRAWING
+    kind: respiratory_classification
+    priority: 3
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      field: respiratory.chest_indrawing
+      equals: true
+    result:
+      classification: PNEUMONIA
+      actions:
+        - GIVE_ORAL_AMOXICILLIN_5_DAYS
+        - SOOTHE_THROAT_AND_RELIEVE_COUGH
+        - ADVISE_WHEN_TO_RETURN_IMMEDIATELY
+        - FOLLOW_UP_3_DAYS
+  - rule_id: IMCI-RESP-PNEUMONIA-FAST-BREATHING
+    kind: respiratory_classification
+    priority: 4
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      fast_breathing: true
+    result:
+      classification: PNEUMONIA
+      actions:
+        - GIVE_ORAL_AMOXICILLIN_5_DAYS
+        - SOOTHE_THROAT_AND_RELIEVE_COUGH
+        - ADVISE_WHEN_TO_RETURN_IMMEDIATELY
+        - FOLLOW_UP_3_DAYS
+  - rule_id: IMCI-RESP-COUGH-OR-COLD
+    kind: respiratory_classification
+    priority: 5
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      fallback: true
+    result:
+      classification: COUGH_OR_COLD
+      actions:
+        - SOOTHE_THROAT_AND_RELIEVE_COUGH
+        - ADVISE_WHEN_TO_RETURN_IMMEDIATELY
+        - FOLLOW_UP_5_DAYS_IF_NOT_IMPROVING
+  - rule_id: IMCI-DIARRHOEA-SEVERE-DEHYDRATION
+    kind: dehydration_classification
+    priority: 1
+    source:
+      section: Diarrhoea — dehydration
+      source_pdf_page: 7
+      source_printed_page: 3 of 76
+    conditions:
+      minimum_count: 2
+      signs:
+        - field: danger_signs.lethargic_or_unconscious
+          equals: true
+        - field: dehydration.sunken_eyes
+          equals: true
+        - field: dehydration.drinking_status
+          in:
+            - UNABLE
+            - POORLY
+        - field: dehydration.skin_pinch
+          equals: VERY_SLOWLY
+    result:
+      classification: SEVERE_DEHYDRATION
+      actions_without_other_severe_classification:
+        - GIVE_FLUID_FOR_SEVERE_DEHYDRATION_PLAN_C
+      actions_with_other_severe_classification:
+        - URGENT_REFERRAL
+        - FREQUENT_ORS_SIPS_DURING_REFERRAL
+        - CONTINUE_BREASTFEEDING
+  - rule_id: IMCI-DIARRHOEA-SOME-DEHYDRATION
+    kind: dehydration_classification
+    priority: 2
+    source:
+      section: Diarrhoea — dehydration
+      source_pdf_page: 7
+      source_printed_page: 3 of 76
+    conditions:
+      minimum_count: 2
+      signs:
+        - field: dehydration.restless_or_irritable
+          equals: true
+        - field: dehydration.sunken_eyes
+          equals: true
+        - field: dehydration.drinking_status
+          equals: EAGER_OR_THIRSTY
+        - field: dehydration.skin_pinch
+          equals: SLOWLY
+    result:
+      classification: SOME_DEHYDRATION
+      actions_without_other_severe_classification:
+        - GIVE_FLUID_ZINC_AND_FOOD_PLAN_B
+        - ADVISE_WHEN_TO_RETURN_IMMEDIATELY
+        - FOLLOW_UP_5_DAYS_IF_NOT_IMPROVING
+      actions_with_other_severe_classification:
+        - URGENT_REFERRAL
+        - FREQUENT_ORS_SIPS_DURING_REFERRAL
+        - CONTINUE_BREASTFEEDING
+  - rule_id: IMCI-DIARRHOEA-NO-DEHYDRATION
+    kind: dehydration_classification
+    priority: 3
+    source:
+      section: Diarrhoea — dehydration
+      source_pdf_page: 7
+      source_printed_page: 3 of 76
+    conditions:
+      fallback: true
+    result:
+      classification: NO_DEHYDRATION
+      actions:
+        - GIVE_FLUID_ZINC_AND_FOOD_PLAN_A
+        - ADVISE_WHEN_TO_RETURN_IMMEDIATELY
+        - FOLLOW_UP_5_DAYS_IF_NOT_IMPROVING
