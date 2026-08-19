@@ -16,6 +16,7 @@ from edge_imci.schemas.case import (
     DehydrationObservations,
     DrinkingStatus,
     GeneralDangerSignObservations,
+    EvaluationResult,
     GenerationCategory,
     GenerationMetadata,
     PatientFacts,
@@ -24,7 +25,7 @@ from edge_imci.schemas.case import (
     SourceProvenance,
 )
 
-GENERATOR_VERSION = "imci-generator-v0"
+GENERATOR_VERSION = "imci-generator-v1"
 DEFAULT_SEED = 20240301
 DEFAULT_BENCHMARK_PATH = Path(__file__).resolve().parents[3] / "data" / "benchmark" / "imci_v0.jsonl"
 
@@ -87,8 +88,10 @@ def generate_cases(seed: int = DEFAULT_SEED, rule_set: RuleSet | None = None) ->
                 generator_version=GENERATOR_VERSION,
                 seed=seed,
                 categories=categories,
-                template_id=template_id,
-                counterfactual_group=counterfactual_group,
+                rule_family=_rule_family(template_id),
+                logic_signature="pending-evaluation",
+                template_family=template_id,
+                counterfactual_group_id=counterfactual_group,
             ),
         )
         result = evaluate_case(provisional, selected_rules)
@@ -112,6 +115,10 @@ def generate_cases(seed: int = DEFAULT_SEED, rule_set: RuleSet | None = None) ->
                     source_pdf_pages=source_pdf_pages,
                     source_printed_pages=source_printed_pages,
                     source_rule_ids=relevant_rules,
+                ),
+                generation=replace(
+                    provisional.generation,
+                    logic_signature=_logic_signature(result),
                 ),
             )
         )
@@ -370,6 +377,27 @@ def generate_cases(seed: int = DEFAULT_SEED, rule_set: RuleSet | None = None) ->
     if len({case.case_id for case in cases}) != len(cases):
         raise AssertionError("generated case IDs must be unique")
     return cases
+
+
+def _rule_family(template_family: str) -> str:
+    if template_family.startswith("general-danger"):
+        return "general-danger-signs"
+    if template_family.startswith("respiratory"):
+        return "respiratory"
+    if template_family.startswith("dehydration"):
+        return "dehydration"
+    raise ValueError(f"unknown template family: {template_family}")
+
+
+def _logic_signature(result: EvaluationResult) -> str:
+    semantic_result = {
+        "fired_rule_ids": sorted(result.fired_rule_ids),
+        "detected_danger_signs": sorted(item.value for item in result.detected_danger_signs),
+        "classifications": sorted((pathway.value, value.value) for pathway, value in result.classifications.items()),
+        "referral": result.referral.value,
+        "missing_required_observations": sorted(result.missing_required_observations),
+    }
+    return json.dumps(semantic_result, sort_keys=True, separators=(",", ":"))
 
 
 def write_benchmark(path: str | Path = DEFAULT_BENCHMARK_PATH, seed: int = DEFAULT_SEED) -> list[ClinicalCase]:

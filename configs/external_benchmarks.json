@@ -1,0 +1,36 @@
+{
+  "lundin_current_07c6f0f": {
+    "repository_url": "https://github.com/jessicalundin/graph_testing_harness",
+    "revision": "07c6f0fe54a21c9861cee89499ebbf286520ee67",
+    "questions_path": "results/IMCI_qamc.json",
+    "questions_git_blob_oid": "ab4ff45f0c5a78de5efe2bf2ed16d2f9916c098e",
+    "questions_sha256": "adf61def016e03010b43e5deab56e6f12b1a451cb7884e2cf28c0e5eb8238d7d",
+    "questions_size_bytes": 481915,
+    "question_count": 432,
+    "license_path": "LICENSE",
+    "license_sha256": "56f16d0b3f2e3012a2dfdb64e8f4f45e4c3528fcc6b5cb48232b90725bc492e3",
+    "license_size_bytes": 1062,
+    "license_spdx": "MIT",
+    "paper_url": "https://arxiv.org/abs/2508.20810v3",
+    "paper_license": "CC-BY-4.0",
+    "paper_version": "v3",
+    "status_note": "Current committed 432-question benchmark. Fetch only; do not redistribute from EdgeIMCI."
+  },
+  "lundin_arxiv_v1_d153120": {
+    "repository_url": "https://github.com/jessicalundin/graph_testing_harness",
+    "revision": "d1531204bb29f4e9305910b395c3c28906dfb698",
+    "questions_path": "results/IMCI_qamc.json",
+    "questions_git_blob_oid": "03ac2943a2e8fcaf19297afd2900ff74576486b7",
+    "questions_sha256": "425941e555e4739aaf059c4b4d5215770a83264c8a4488285fcf501c37dd98e9",
+    "questions_size_bytes": 237363,
+    "question_count": 438,
+    "license_path": "LICENSE",
+    "license_sha256": "56f16d0b3f2e3012a2dfdb64e8f4f45e4c3528fcc6b5cb48232b90725bc492e3",
+    "license_size_bytes": 1062,
+    "license_spdx": "MIT",
+    "paper_url": "https://arxiv.org/abs/2508.20810v1",
+    "paper_license": "CC-BY-4.0",
+    "paper_version": "v1",
+    "status_note": "Closest identifiable pre-submission Git revision, not a tagged paper artifact. The committed 438-question JSON is stable; exact published scoring reproduction remains unavailable."
+  }
+}
