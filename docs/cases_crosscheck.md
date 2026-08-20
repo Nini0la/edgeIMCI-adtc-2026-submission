@@ -1,7 +1,7 @@
-# IMCI Benchmark Cases — Domain Expert Crosscheck
+# `imci-selected-v0` benchmark cases — Domain Expert Crosscheck
 
-Review each case: given the patient presentation and observations, is the expected classification and action correct per WHO IMCI 2014?
-Tick the box in the last column if correct, or write a note if something is wrong.
+Review each selected-scope case: given the patient presentation and observations, is the expected classification and action correct under the EdgeIMCI machine-readable rule set derived from WHO IMCI 2014?
+These cases do not represent a complete IMCI encounter. Tick the box in the last column if correct, or write a note if something is wrong.
 
 | Case ID | Age | Presentation | Key observations | Expected classification | Expected actions | Referral | Correct? |
 |---|---|---|---|---|---|---|---|

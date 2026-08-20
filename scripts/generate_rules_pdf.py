@@ -197,7 +197,7 @@ def build_pdf():
 
     story = []
 
-    story.append(Paragraph("IMCI Rules - Domain Expert Crosscheck", title_style))
+    story.append(Paragraph("imci-selected-v0 machine-readable rule set - Domain Expert Crosscheck", title_style))
     story.append(Paragraph(
         f"Source: {rules_data['document']}, {rules_data['edition']}",
         subtitle_style,
@@ -209,8 +209,10 @@ def build_pdf():
     ))
     story.append(Spacer(1, 4))
     story.append(Paragraph(
-        "Review each rule: does the condition, classification, and actions match the WHO IMCI chart? "
-        "Tick the box in the last column if correct, or write a note if something is wrong.",
+        "Review each EdgeIMCI-encoded rule derived from the WHO IMCI chart: does its condition, "
+        "classification, and action set preserve the selected source logic? These are not WHO-authored "
+        "machine-readable rules and do not represent complete IMCI. Tick the box in the last column if "
+        "correct, or write a note if something is wrong.",
         intro_style,
     ))
 
@@ -226,7 +228,7 @@ def build_pdf():
         condition = conditions_to_plain(rule)
         result = rule["result"]
         source = rule.get("source", {})
-        who_page = f"p.{source.get('pdf_page', '?')} (chart {source.get('chart_page', '?')})"
+        who_page = f"p.{source.get('source_pdf_page', '?')} (chart {source.get('source_printed_page', '?')})"
 
         if kind == "fast_breathing_threshold":
             then_text = "Sets: fast breathing = yes (used by rule IMCI-RESP-PNEUMONIA-FAST-BREATHING)"

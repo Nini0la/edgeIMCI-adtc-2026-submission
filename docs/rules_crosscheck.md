@@ -1,11 +1,11 @@
-# IMCI Rules — Domain Expert Crosscheck
+# `imci-selected-v0` machine-readable rule set — Domain Expert Crosscheck
 
-**Source:** WHO Integrated Management of Childhood Illness, Chart Booklet, March 2014
+**Source:** Derived from WHO Integrated Management of Childhood Illness, Chart Booklet, March 2014
 
 **Population:** Children aged 2 to 59 months
 
-Review each rule: does the condition, classification, and actions match the WHO IMCI chart?
-Tick the box in the last column if correct, or write a note if something is wrong.
+Review each EdgeIMCI-encoded rule derived from the WHO IMCI chart: does its condition, classification, and action set preserve the selected source logic?
+These are not WHO-authored machine-readable rules and do not represent complete IMCI. Tick the box in the last column if correct, or write a note if something is wrong.
 
 | Rule ID | Clinical Area | If (condition) | Then | Actions / Note | WHO page | Correct? |
 |---|---|---|---|---|---|---|

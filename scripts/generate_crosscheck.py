@@ -223,7 +223,7 @@ def generate_rules_crosscheck(rules_data: dict) -> tuple[str, list[list[str]]]:
         condition = conditions_to_plain(rule)
         result = rule["result"]
         source = rule.get("source", {})
-        who_page = f"p.{source.get('pdf_page', '?')} (chart {source.get('chart_page', '?')})"
+        who_page = f"p.{source.get('source_pdf_page', '?')} (chart {source.get('source_printed_page', '?')})"
 
         if kind == "fast_breathing_threshold":
             # Threshold rules don't classify directly — they set a flag used by later rules
@@ -256,11 +256,11 @@ def generate_rules_crosscheck(rules_data: dict) -> tuple[str, list[list[str]]]:
         ])
 
     # Build markdown
-    md = "# IMCI Rules — Domain Expert Crosscheck\n\n"
-    md += f"**Source:** {rules_data['document']}, {rules_data['edition']}\n\n"
+    md = "# `imci-selected-v0` machine-readable rule set — Domain Expert Crosscheck\n\n"
+    md += f"**Source:** Derived from {rules_data['document']}, {rules_data['edition']}\n\n"
     md += f"**Population:** Children aged {rules_data['population']['age_months']['gte']} to {rules_data['population']['age_months']['lt'] - 1} months\n\n"
-    md += "Review each rule: does the condition, classification, and actions match the WHO IMCI chart?\n"
-    md += "Tick the box in the last column if correct, or write a note if something is wrong.\n\n"
+    md += "Review each EdgeIMCI-encoded rule derived from the WHO IMCI chart: does its condition, classification, and action set preserve the selected source logic?\n"
+    md += "These are not WHO-authored machine-readable rules and do not represent complete IMCI. Tick the box in the last column if correct, or write a note if something is wrong.\n\n"
     md += "| " + " | ".join(headers) + " |\n"
     md += "|" + "|".join(["---"] * len(headers)) + "|\n"
     for row in rows:
@@ -309,9 +309,9 @@ def generate_cases_crosscheck(benchmark_path: Path) -> tuple[str, list[list[str]
                 "☐",
             ])
 
-    md = "# IMCI Benchmark Cases — Domain Expert Crosscheck\n\n"
-    md += "Review each case: given the patient presentation and observations, is the expected classification and action correct per WHO IMCI 2014?\n"
-    md += "Tick the box in the last column if correct, or write a note if something is wrong.\n\n"
+    md = "# `imci-selected-v0` benchmark cases — Domain Expert Crosscheck\n\n"
+    md += "Review each selected-scope case: given the patient presentation and observations, is the expected classification and action correct under the EdgeIMCI machine-readable rule set derived from WHO IMCI 2014?\n"
+    md += "These cases do not represent a complete IMCI encounter. Tick the box in the last column if correct, or write a note if something is wrong.\n\n"
     md += "| " + " | ".join(headers) + " |\n"
     md += "|" + "|".join(["---"] * len(headers)) + "|\n"
     for row in rows:

@@ -10,7 +10,7 @@
 | Term | Definition |
 |------|-----------|
 | Clinical rule | A source-backed deterministic rule encoded from the currently supported IMCI material. Clinical rules determine classifications/actions; interaction policy must not alter them. |
-| Clinical rules v0 / imci-selected-v0 | The frozen current EdgeIMCI clinical subset: children 2–59 months, general danger signs, respiratory pathway, and diarrhoea/dehydration pathway. |
+| Clinical rules v0 / `imci-selected-v0` | The frozen current 15-rule EdgeIMCI clinical subset for children aged 2–59 months: five general danger-sign rules, two fast-breathing derived-finding rules, five selected respiratory classification rules, and three selected dehydration classification rules. It is not complete IMCI or a complete respiratory/diarrhoea algorithm. |
 | Observation | A clinical fact that may be reported, observed, or measured, e.g. respiratory rate or vomiting everything. |
 | Predicate | A logical condition derived from observations, e.g. age < 12 months AND RR >= 50. |
 | Derived finding | An intermediate result computed from observations and used by later rules, e.g. fast_breathing=true. |
