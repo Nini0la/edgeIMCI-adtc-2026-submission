@@ -1,5 +1,12 @@
 # EdgeIMCI Glossary
 
+## Terminology rules
+
+1. Use "classification" rather than "diagnosis" unless explicitly discussing diagnosis as a broader medical concept. EdgeIMCI currently executes encoded IMCI classifications; it is not being trained as an unrestricted diagnostic model.
+2. "Required" must always be qualified when ambiguity exists: required for classification, required for action selection, required for urgent action, or required for assessment completion.
+
+## Clinical truth / rule layer
+
 | Term | Definition |
 |------|-----------|
 | Clinical rule | A source-backed deterministic rule encoded from the currently supported IMCI material. Clinical rules determine classifications/actions; interaction policy must not alter them. |
@@ -51,3 +58,30 @@ These definitions are especially important because "sufficient information" is n
 | History or record | Information such as age obtained from history or an existing record. |
 | Acquisition mode | The method by which an observation must be obtained. The current proposal distinguishes the four types above. See `information_policy_proposal.md`. |
 | Validity requirement | Conditions that must hold for an acquired observation to count as valid evidence, e.g. respiratory assessment while the child is calm. |
+
+## Dataset layer
+
+| Term | Definition |
+|------|-----------|
+| Latent case / structured truth | The machine-readable underlying clinical state from which presentations and targets are generated. |
+| Presentation | Natural-language information given to EdgeIMCI at a particular turn. It may expose only part of the latent case. |
+| Training target | The desired natural-language model response associated with a training example. |
+| Trajectory | A multi-turn sequence of presentation → information acquisition → new observations → eventual classification/action. |
+| Renderer | The component that converts structured case information into natural language without changing its clinical meaning. |
+| Golden slice | The small, manually audited pilot dataset used to validate the generation pipeline before bulk generation. |
+| Round-trip consistency | A corpus-validation check in which generated natural language is converted back into structured meaning and compared with the original structured truth. |
+| Counterfactual pair/group | Closely related cases differing in a controlled observation whose change should produce a known change—or deliberate lack of change—in outcome. |
+| Logic signature | A stable identifier for the meaningful combination of clinical conditions represented by a generated case. |
+| Template family | A family of related natural-language rendering patterns. |
+
+## Evaluation layer
+
+| Term | Definition |
+|------|-----------|
+| Premature classification | Producing a classification before enough information exists to support it. |
+| Required-question recall | Fraction of currently required observations that the model appropriately requests. |
+| Unnecessary-question rate | Degree to which the model asks for observations that are already known or not currently decision-relevant. |
+| Trajectory completion | Successfully gathering the necessary information and reaching the correct terminal classification/actions without inappropriate early stopping. |
+| Structured diagnostic | An evaluation mode using structured representations to make particular competencies easier to score objectively; it is not necessarily the intended user interface. |
+| Natural-language evaluation | The primary user-facing evaluation in which EdgeIMCI receives and produces natural language. |
+| External benchmark | An independently constructed evaluation such as Lundin et al., kept separate from EdgeIMCI's internally generated benchmarks. |
