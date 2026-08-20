@@ -7,6 +7,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import yaml
+
 from edge_imci.evaluation.reference import evaluate_case
 from edge_imci.information_policy import (
     CONSTRAINT_SET_ID,
@@ -64,6 +66,7 @@ from edge_imci.validation.golden import RoundTripValidation, validate_target_rou
 GOLDEN_GENERATOR_VERSION = "golden-conversion-slice-v1"
 GOLDEN_SEED = 20260820
 DEFAULT_GOLDEN_PATH = Path(__file__).resolve().parents[3] / "data" / "golden" / "golden_conversion_slice_v1.jsonl"
+DEFAULT_GOLDEN_YAML_PATH = Path(__file__).resolve().parents[3] / "data" / "golden" / "golden_conversion_slice_v1.yaml"
 DEFAULT_REVIEW_PATH = Path(__file__).resolve().parents[3] / "docs" / "golden_slice_review_v1.md"
 
 _DANGER_IDS = (
@@ -230,17 +233,24 @@ def generate_golden_slice(seed: int = GOLDEN_SEED) -> list[GoldenRecord]:
     renderer = ConservativeGoldenRenderer()
     return [_build_record(spec, renderer, seed) for spec in _golden_specs()]
 
-
 def write_golden_slice(
     output_path: str | Path = DEFAULT_GOLDEN_PATH,
     review_path: str | Path = DEFAULT_REVIEW_PATH,
     seed: int = GOLDEN_SEED,
+    yaml_path: str | Path = DEFAULT_GOLDEN_YAML_PATH,
 ) -> list[GoldenRecord]:
     records = generate_golden_slice(seed)
+    serialized_records = [record.to_dict() for record in records]
     destination = Path(output_path)
     destination.parent.mkdir(parents=True, exist_ok=True)
     destination.write_text(
-        "".join(json.dumps(record.to_dict(), sort_keys=True) + "\n" for record in records),
+        "".join(json.dumps(record, sort_keys=True) + "\n" for record in serialized_records),
+        encoding="utf-8",
+    )
+    yaml_destination = Path(yaml_path)
+    yaml_destination.parent.mkdir(parents=True, exist_ok=True)
+    yaml_destination.write_text(
+        yaml.safe_dump(serialized_records, allow_unicode=True, sort_keys=False, width=100),
         encoding="utf-8",
     )
     review_destination = Path(review_path)

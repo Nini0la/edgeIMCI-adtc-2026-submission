@@ -101,7 +101,7 @@ Both use `corpus_role=ILLUSTRATIVE_FIXTURE`. They are schema examples only: **no
 
 ## Golden conversion slice
 
-`data/golden/golden_conversion_slice_v1.jsonl` contains 14 deterministic validation records using `corpus_role=GOLDEN_CONVERSION_SLICE`. They are separately generated from structured latent truth through the frozen clinical evaluator, the canonical information-policy evaluator, structured assistant semantics, and the conservative v1 renderer. They are **not training data, not a benchmark, and not a bulk corpus**.
+`data/golden/golden_conversion_slice_v1.jsonl` and its equivalent generated YAML mirror contain 14 deterministic validation records using `corpus_role=GOLDEN_CONVERSION_SLICE`. They are separately generated from structured latent truth through the frozen clinical evaluator, the canonical information-policy evaluator, structured assistant semantics, and the conservative v1 renderer. They are **not training data, not a benchmark, and not a bulk corpus**.
 
 Each assistant target retains its structured semantics and deterministic controlled-language round-trip result. `docs/golden_slice_review_v1.md` remains the required human/domain-expert review surface; a passing controlled round trip is not independent clinical proof.
 

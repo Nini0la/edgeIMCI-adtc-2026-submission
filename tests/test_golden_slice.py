@@ -4,9 +4,11 @@ import json
 from pathlib import Path
 
 import pytest
+import yaml
 
 from edge_imci.generation.golden import (
     DEFAULT_GOLDEN_PATH,
+    DEFAULT_GOLDEN_YAML_PATH,
     DEFAULT_REVIEW_PATH,
     ConservativeGoldenRenderer,
     generate_golden_slice,
@@ -68,6 +70,12 @@ def test_generation_is_reproducible_and_committed_jsonl_matches(golden_records) 
     second = [record.to_dict() for record in generate_golden_slice()]
     assert first == second
     assert load_golden_slice(DEFAULT_GOLDEN_PATH) == first
+
+
+def test_generated_yaml_mirror_matches_canonical_jsonl(golden_records) -> None:
+    yaml_records = yaml.safe_load(DEFAULT_GOLDEN_YAML_PATH.read_text(encoding="utf-8"))
+    assert yaml_records == load_golden_slice(DEFAULT_GOLDEN_PATH)
+    assert yaml_records == [record.to_dict() for record in golden_records]
 
 
 def test_every_record_round_trips_through_trajectory_schema(golden_records) -> None:

@@ -142,7 +142,7 @@ Runs are local MLX inference only. No checkpoint is selected from evaluation res
 - `docs/information_policy_v1.md`: executable policy contract, unresolved-question handling, and golden-slice handoff.
 - `src/edge_imci/generation/golden.py`: deterministic structured-first factory and conservative renderer for the 14-record `GOLDEN_CONVERSION_SLICE`; no paraphrase sampling.
 - `src/edge_imci/validation/golden.py`: isolated controlled-language semantic round-trip validator; not a clinical oracle.
-- `data/golden/golden_conversion_slice_v1.jsonl`: tiny machine-readable validation slice; explicitly not training data, not a benchmark, and not a bulk corpus.
+- `data/golden/golden_conversion_slice_v1.jsonl` and `.yaml`: tiny equivalent machine-readable validation slices; explicitly not training data, not a benchmark, and not a bulk corpus.
 - `docs/golden_slice_review_v1.md`: per-record human/domain-expert review package, deterministic validation results, and flags.
 - `src/edge_imci/evaluation/reference.py`: deterministic benchmark oracle.
 - `src/edge_imci/evaluation/parsing.py` and `scoring.py`: strict typed internal model-output handling.
