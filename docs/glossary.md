@@ -24,3 +24,18 @@
 | Decision-relevant observation | An unknown observation for which at least two valid values lead to different outcomes for the target currently being considered. |
 | Required next observation | A currently unknown observation that the information policy says must now be acquired because it can change classification, actions, urgency, or another active decision target. |
 | Remaining assessment observation | An observation still needed to complete the supported assessment but no longer necessary to determine the current classification/action. |
+
+## Sufficiency / policy layer
+
+These definitions are especially important because "sufficient information" is no longer one boolean.
+
+| Term | Definition |
+|------|-----------|
+| Information policy | The deterministic policy that decides whether current information is sufficient and, if not, which information should be acquired next. It sits above the frozen clinical oracle. |
+| Decision sufficient | All valid completions of the remaining unknowns yield the same classification for the specified target. |
+| Action-set sufficient | All valid completions yield the same relevant source-backed action set. |
+| Assessment complete | Every observation designated as part of the currently supported active assessment has been validly acquired, even if some were no longer decision-relevant. |
+| Urgent action required | Existing evidence already supports a source-backed urgent action that must not be delayed while further information is acquired. |
+| Outcome invariance | The principle that a target is sufficient when its outcome remains identical across every valid completion of the unknown information. |
+| Short circuit | A state in which further observations cannot change a specified decision target, although they may still matter for assessment completion or another target. |
+| Blocked | A necessary observation cannot be acquired, so the policy cannot safely resolve the relevant decision and must not guess. |
