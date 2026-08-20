@@ -134,14 +134,14 @@ An acquired respiratory observation with `UNRESOLVED` validity and `IP-CQ-003` r
 
 ## Scope and non-goals
 
-The supported encounter means only general danger signs, the selected respiratory classifications, and dehydration classification for ages 2–59 months. This implementation does not:
+The supported encounter means only general danger signs, the selected respiratory classifications, and dehydration classification for ages 2–59 months. The information-policy layer itself does not:
 
 - modify the 15 frozen clinical rules or their evaluator;
 - modify the 82 committed oracle outputs;
 - add an IMCI pathway;
 - resolve `IP-CQ-001` through `IP-CQ-004`;
 - implement wheeze/bronchodilator reassessment or other known out-of-scope dependencies;
-- generate a golden slice, paraphrases, trajectories, or SFT data;
+- generate or render trajectories, paraphrases, or SFT data;
 - train or modify a model.
 
 ## Golden-slice handoff
@@ -162,4 +162,4 @@ InformationPolicyResult
 ExpectedAssistantSemantics / trajectory schema
 ```
 
-The next stage may generate a **very small** golden conversion slice only after using this evaluator for every state transition and retaining both artifact IDs in trajectory metadata. The slice still requires round-trip checks and human audit before any bulk generation.
+The 14-record validation slice now implements this handoff in `data/golden/golden_conversion_slice_v1.jsonl`. Every state is recomputed with this evaluator, both artifact IDs are pinned in trajectory metadata, controlled-language round-trip results are recorded, and `docs/golden_slice_review_v1.md` provides the human/domain-expert review surface. This permits inspection and refinement of the tiny slice only; controlled bulk generation remains gated on human review.

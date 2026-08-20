@@ -140,11 +140,15 @@ Runs are local MLX inference only. No checkpoint is selected from evaluation res
 - `configs/information_policy/`: canonical approved v1 information-policy and valid-completion JSON artifacts with generated YAML review mirrors.
 - `src/edge_imci/information_policy/`: artifact validation plus deterministic valid-completion information-policy evaluation above the frozen clinical oracle.
 - `docs/information_policy_v1.md`: executable policy contract, unresolved-question handling, and golden-slice handoff.
+- `src/edge_imci/generation/golden.py`: deterministic structured-first factory and conservative renderer for the 14-record `GOLDEN_CONVERSION_SLICE`; no paraphrase sampling.
+- `src/edge_imci/validation/golden.py`: isolated controlled-language semantic round-trip validator; not a clinical oracle.
+- `data/golden/golden_conversion_slice_v1.jsonl`: tiny machine-readable validation slice; explicitly not training data, not a benchmark, and not a bulk corpus.
+- `docs/golden_slice_review_v1.md`: per-record human/domain-expert review package, deterministic validation results, and flags.
 - `src/edge_imci/evaluation/reference.py`: deterministic benchmark oracle.
 - `src/edge_imci/evaluation/parsing.py` and `scoring.py`: strict typed internal model-output handling.
 - `src/edge_imci/evaluation/external.py`: pinned fetch and separated strict/upstream-compatible external scoring.
 - `src/edge_imci/evaluation/reporting.py`: result indexing without cross-benchmark score merging.
 - `src/edge_imci/generation/cases.py` and `splits.py`: controlled cases, group-aware splits, and leakage detectors.
 - `src/edge_imci/inference/adapters.py` and `mlx_adapter.py`: thin adapter protocol, mock, and real local MLX inference.
-- `scripts/`: benchmark generation and baseline entry points.
+- `scripts/`: benchmark, policy-mirror, golden-slice, and baseline entry points.
 - `tests/`: clinical boundaries, missing information, provenance, and pipeline behavior.

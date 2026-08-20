@@ -99,6 +99,12 @@ Two committed JSON fixtures validate the representation:
 
 Both use `corpus_role=ILLUSTRATIVE_FIXTURE`. They are schema examples only: **not training data, not a golden slice, and not final benchmark data**.
 
+## Golden conversion slice
+
+`data/golden/golden_conversion_slice_v1.jsonl` contains 14 deterministic validation records using `corpus_role=GOLDEN_CONVERSION_SLICE`. They are separately generated from structured latent truth through the frozen clinical evaluator, the canonical information-policy evaluator, structured assistant semantics, and the conservative v1 renderer. They are **not training data, not a benchmark, and not a bulk corpus**.
+
+Each assistant target retains its structured semantics and deterministic controlled-language round-trip result. `docs/golden_slice_review_v1.md` remains the required human/domain-expert review surface; a passing controlled round trip is not independent clinical proof.
+
 ## Policy dependencies and unresolved questions
 
 No new contradiction requiring a change to the approved information-policy design was found. The schema deliberately does not resolve the existing open questions:
@@ -108,4 +114,4 @@ No new contradiction requiring a change to the approved information-policy desig
 - `IP-CQ-003`: calm state, one-minute count, and an `UNRESOLVED` validity status are representable. The schema does not define the minimum evidence contract that makes a respiratory observation valid.
 - `IP-CQ-004`: all source-backed action blocks can be preserved simultaneously, but the schema does not choose their conversational ordering or suppression.
 
-The implementation dependency is now satisfied by the canonical artifacts in `configs/information_policy/` and the deterministic evaluator in `src/edge_imci/information_policy/`. Future golden-slice generation must compute every state result with that evaluator rather than hand-authoring policy outcomes as the illustrative fixtures do.
+The implementation dependency is satisfied by the canonical artifacts in `configs/information_policy/` and the deterministic evaluator in `src/edge_imci/information_policy/`. The committed golden slice computes every state result with that evaluator; it does not reuse the hand-authored policy outcomes in the illustrative fixtures.

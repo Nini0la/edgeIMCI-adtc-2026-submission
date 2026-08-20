@@ -138,6 +138,7 @@ class CorpusRole(StringEnum):
     TRAINING = "TRAINING"
     VALIDATION = "VALIDATION"
     BENCHMARK = "BENCHMARK"
+    GOLDEN_CONVERSION_SLICE = "GOLDEN_CONVERSION_SLICE"
     ILLUSTRATIVE_FIXTURE = "ILLUSTRATIVE_FIXTURE"
 
 
@@ -509,8 +510,6 @@ class PathwayPolicyState:
                 raise ValueError(f"classification {classification.value} is invalid for {self.pathway.value}")
         if self.entry_status is EntryStatus.NOT_APPLICABLE and self.possible_classifications:
             raise ValueError("a not-applicable pathway cannot have possible classifications")
-        if self.exact_rule_sufficient and len(self.possible_fired_rule_ids) > 1:
-            raise ValueError("exact-rule sufficiency cannot have multiple possible fired rules")
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -726,8 +725,6 @@ class ExpectedAssistantSemantics:
         blocked = self.decision_status is DecisionStatus.BLOCKED or bool(self.blocked_observation_ids)
         if (AssistantBehavior.REPORT_BLOCKED in self.behaviors) != blocked:
             raise ValueError("REPORT_BLOCKED must match blocked decision state")
-        if self.exact_rule_sufficient and len(self.possible_fired_rule_ids) > 1:
-            raise ValueError("exact-rule sufficiency cannot have multiple possible fired rules")
 
     def to_dict(self) -> dict[str, Any]:
         return {

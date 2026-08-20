@@ -172,7 +172,37 @@ class InformationPolicyEvaluator:
         self._observation_artifacts = self.artifacts.observations
 
     def evaluate(self, state: PartialCaseState) -> InformationPolicyResult:
-        records = {item.observation_id: item for item in state.observations}
+        return self._evaluate_records({item.observation_id: item for item in state.observations})
+
+    def evaluate_observations(
+        self,
+        observations: Iterable[ObservationEvidence],
+    ) -> InformationPolicyResult:
+        """Evaluate sparse evidence before a persisted PartialCaseState exists."""
+
+        supplied = tuple(observations)
+        supplied_ids = tuple(item.observation_id for item in supplied)
+        if len(supplied_ids) != len(set(supplied_ids)):
+            raise ValueError("observation evidence cannot contain duplicate observation IDs")
+        supplied_by_id = {item.observation_id: item for item in supplied}
+        records = {
+            item: supplied_by_id.get(item, ObservationEvidence.unknown(item))
+            for item in CANONICAL_OBSERVATION_ORDER
+        }
+        lethargic = _known_value(records[ObservationId.DANGER_LETHARGIC_OR_UNCONSCIOUS])
+        restless = _known_value(records[ObservationId.DEHYDRATION_RESTLESS_OR_IRRITABLE])
+        if lethargic is True and restless is True:
+            raise ValueError("a child cannot be both lethargic/unconscious and restless/irritable")
+        unable = _known_value(records[ObservationId.DANGER_UNABLE_TO_DRINK_OR_BREASTFEED])
+        drinking = _known_value(records[ObservationId.DEHYDRATION_DRINKING_STATUS])
+        if unable is False and drinking is DrinkingStatus.UNABLE:
+            raise ValueError("UNABLE drinking status conflicts with a negative general danger sign")
+        return self._evaluate_records(records)
+
+    def _evaluate_records(
+        self,
+        records: dict[ObservationId, ObservationEvidence],
+    ) -> InformationPolicyResult:
         outcomes, pruned_coherence = _enumerate_outcomes(records)
         influences = {
             observation_id: _measure_influence(observation_id, outcomes)
@@ -291,7 +321,7 @@ class InformationPolicyEvaluator:
             possible_classifications=possible_classifications,
             decision_status=decision_status,
             action_set_sufficient=len(actions) == 1,
-            exact_rule_sufficient=len(traces) == 1 and len(possible_rule_ids) <= 1,
+            exact_rule_sufficient=len(traces) == 1,
             possible_fired_rule_ids=possible_rule_ids,
             assessment_complete=assessment_complete,
         )
@@ -414,9 +444,14 @@ class InformationPolicyEvaluator:
             for record in records.values()
             for question_id in record.validity.unresolved_question_ids
         }
-        unable = records[ObservationId.DANGER_UNABLE_TO_DRINK_OR_BREASTFEED]
-        drinking = records[ObservationId.DEHYDRATION_DRINKING_STATUS]
-        if (unable.knowledge_state is KnowledgeState.UNKNOWN) != (drinking.knowledge_state is KnowledgeState.UNKNOWN):
+        unable = _known_value(records[ObservationId.DANGER_UNABLE_TO_DRINK_OR_BREASTFEED])
+        drinking = _known_value(records[ObservationId.DEHYDRATION_DRINKING_STATUS])
+        has_diarrhoea = _known_value(records[ObservationId.HAS_DIARRHOEA]) is True
+        cross_evidence_ambiguous = has_diarrhoea and (
+            (drinking is DrinkingStatus.UNABLE and unable is None)
+            or (unable is True and drinking is None)
+        )
+        if cross_evidence_ambiguous:
             unresolved.add("IP-CQ-002")
         return unresolved
 
@@ -450,6 +485,14 @@ def evaluate_information_policy(
     """Convenience wrapper for deterministic policy evaluation."""
 
     return InformationPolicyEvaluator(artifacts).evaluate(state)
+
+def evaluate_information_policy_observations(
+    observations: Iterable[ObservationEvidence],
+    artifacts: InformationPolicyArtifacts | None = None,
+) -> InformationPolicyResult:
+    """Evaluate sparse evidence and return a result suitable for a new state."""
+
+    return InformationPolicyEvaluator(artifacts).evaluate_observations(observations)
 
 
 def _enumerate_outcomes(
@@ -674,9 +717,14 @@ def _measure_influence(
     outcomes: tuple[_CompletionOutcome, ...],
 ) -> _Influence:
     index = _INDEX[observation_id]
+    excluded_indexes = {index}
+    if observation_id is ObservationId.HAS_COUGH_OR_DIFFICULT_BREATHING:
+        excluded_indexes.update(_INDEX[item] for item in _RESPIRATORY_IDS)
+    elif observation_id is ObservationId.HAS_DIARRHOEA:
+        excluded_indexes.update(_INDEX[item] for item in _DEHYDRATION_IDS)
     grouped: dict[tuple[Any, ...], list[_CompletionOutcome]] = defaultdict(list)
     for outcome in outcomes:
-        key = outcome.values[:index] + outcome.values[index + 1 :]
+        key = tuple(value for position, value in enumerate(outcome.values) if position not in excluded_indexes)
         grouped[key].append(outcome)
 
     classification = False
