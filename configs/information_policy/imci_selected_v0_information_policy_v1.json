@@ -1,0 +1,363 @@
+{
+  "policy_id": "imci-selected-v0-information-policy-v1",
+  "rule_set_id": "imci-selected-v0",
+  "constraint_set_id": "imci-selected-v0-valid-completions-v1",
+  "status": "APPROVED_V1",
+  "description": "Deterministic information policy above the frozen imci-selected-v0 clinical evaluator.",
+  "provenance": {
+    "design_document": "docs/information_policy_proposal.md",
+    "approved_decision_ids": ["IP-RQ-001", "IP-RQ-002"],
+    "clinical_source": "WHO Integrated Management of Childhood Illness, Chart Booklet",
+    "clinical_source_edition": "March 2014",
+    "encoding_statement": "EdgeIMCI machine-readable policy derived from the selected source-backed rule set; not WHO-authored machine-readable rules."
+  },
+  "knowledge_states": ["KNOWN_PRESENT", "KNOWN_ABSENT", "KNOWN_VALUE", "UNKNOWN"],
+  "acquisition_modes": [
+    "CAREGIVER_QUESTION",
+    "CLINICIAN_OBSERVATION",
+    "MEASUREMENT",
+    "HISTORY_OR_RECORD"
+  ],
+  "basis_types": [
+    "DIRECT_SOURCE_DERIVED",
+    "INTERACTION_POLICY",
+    "UNRESOLVED_CLINICAL_AMBIGUITY"
+  ],
+  "sufficiency": {
+    "method": "VALID_COMPLETION_OUTCOME_INVARIANCE",
+    "decision_projection": "classification_by_pathway_with_scope_and_entry_state",
+    "action_projection": "selected_scope_action_set",
+    "exact_rule_projection": "fired_rule_ids_by_pathway",
+    "assessment_complete_definition": "all designated observations for the active supported assessment were acquired with VALID evidence",
+    "unknown_is_negative": false,
+    "decision_sufficiency_requires_assessment_complete": false,
+    "action_set_sufficiency_requires_decision_sufficiency": false
+  },
+  "urgent_action_semantics": {
+    "independent_of_assessment_complete": true,
+    "known_urgent_action_ids": [
+      "URGENT_REFERRAL",
+      "GIVE_DIAZEPAM_IF_CONVULSING_NOW",
+      "GIVE_FIRST_DOSE_APPROPRIATE_ANTIBIOTIC",
+      "GIVE_PRE_REFERRAL_TREATMENT_IMMEDIATELY"
+    ],
+    "surface_before_next_acquisition": true,
+    "assessment_sequence_unresolved_question_id": "IP-CQ-001"
+  },
+  "pathways": {
+    "general_danger_signs": {
+      "entry_observation": null,
+      "classification_projection": "classifications.general_danger_signs",
+      "assessment_observations": [
+        "danger_signs.convulsing_now",
+        "danger_signs.lethargic_or_unconscious",
+        "danger_signs.unable_to_drink_or_breastfeed",
+        "danger_signs.vomits_everything",
+        "danger_signs.had_convulsions"
+      ],
+      "rule_priority": [
+        "IMCI-GDS-UNABLE-TO-DRINK",
+        "IMCI-GDS-VOMITS-EVERYTHING",
+        "IMCI-GDS-CONVULSIONS-HISTORY",
+        "IMCI-GDS-LETHARGIC-OR-UNCONSCIOUS",
+        "IMCI-GDS-CONVULSING-NOW"
+      ]
+    },
+    "respiratory": {
+      "entry_observation": "patient_facts.has_cough_or_difficult_breathing",
+      "classification_projection": "classifications.respiratory",
+      "assessment_observations": [
+        "respiratory.stridor_when_calm",
+        "respiratory.chest_indrawing",
+        "respiratory.respiratory_rate"
+      ],
+      "rule_priority": [
+        "IMCI-RESP-SEVERE-DANGER-SIGN",
+        "IMCI-RESP-SEVERE-STRIDOR",
+        "IMCI-RESP-PNEUMONIA-CHEST-INDRAWING",
+        "IMCI-RESP-PNEUMONIA-FAST-BREATHING",
+        "IMCI-RESP-COUGH-OR-COLD"
+      ]
+    },
+    "dehydration": {
+      "entry_observation": "patient_facts.has_diarrhoea",
+      "classification_projection": "classifications.dehydration",
+      "assessment_observations": [
+        "dehydration.restless_or_irritable",
+        "dehydration.sunken_eyes",
+        "dehydration.drinking_status",
+        "dehydration.skin_pinch"
+      ],
+      "rule_priority": [
+        "IMCI-DIARRHOEA-SEVERE-DEHYDRATION",
+        "IMCI-DIARRHOEA-SOME-DEHYDRATION",
+        "IMCI-DIARRHOEA-NO-DEHYDRATION"
+      ],
+      "action_dependency": {
+        "name": "other_severe_classification",
+        "mechanism": "frozen_evaluator",
+        "source_states": [
+          "any detected general danger sign",
+          "respiratory.SEVERE_PNEUMONIA_OR_VERY_SEVERE_DISEASE"
+        ]
+      }
+    },
+    "supported_encounter": {
+      "meaning": "Only the three currently encoded areas; not a complete IMCI encounter.",
+      "pathways": ["general_danger_signs", "respiratory", "dehydration"],
+      "always_assessed_observations": [
+        "patient_facts.age_months",
+        "danger_signs.convulsing_now",
+        "danger_signs.lethargic_or_unconscious",
+        "danger_signs.unable_to_drink_or_breastfeed",
+        "danger_signs.vomits_everything",
+        "danger_signs.had_convulsions",
+        "patient_facts.has_cough_or_difficult_breathing",
+        "patient_facts.has_diarrhoea"
+      ]
+    }
+  },
+  "observations": [
+    {
+      "observation_id": "patient_facts.age_months",
+      "value_domain": {"type": "non_negative_integer", "supported": {"gte": 2, "lt": 60}},
+      "acquisition_mode": "HISTORY_OR_RECORD",
+      "default_priority_band": 1,
+      "basis": "DIRECT_SOURCE_DERIVED",
+      "policy_rule_ids": ["IP-SCOPE-001"],
+      "source_rule_ids": ["IMCI-RESP-FAST-BREATHING-2-12M", "IMCI-RESP-FAST-BREATHING-12-60M"],
+      "source_pdf_pages": [5, 6],
+      "source_printed_pages": ["1 of 76", "2 of 76"],
+      "validity_requirements": []
+    },
+    {
+      "observation_id": "danger_signs.convulsing_now",
+      "value_domain": {"type": "boolean"},
+      "acquisition_mode": "CLINICIAN_OBSERVATION",
+      "default_priority_band": 2,
+      "basis": "DIRECT_SOURCE_DERIVED",
+      "policy_rule_ids": ["IP-GDS-001", "IP-GDS-002", "IP-ACTION-001"],
+      "source_rule_ids": ["IMCI-GDS-CONVULSING-NOW", "IMCI-RESP-SEVERE-DANGER-SIGN"],
+      "source_pdf_pages": [5, 6],
+      "source_printed_pages": ["1 of 76", "2 of 76"],
+      "validity_requirements": []
+    },
+    {
+      "observation_id": "danger_signs.lethargic_or_unconscious",
+      "value_domain": {"type": "boolean"},
+      "acquisition_mode": "CLINICIAN_OBSERVATION",
+      "default_priority_band": 2,
+      "basis": "DIRECT_SOURCE_DERIVED",
+      "policy_rule_ids": ["IP-GDS-001", "IP-GDS-002", "IP-ACTION-001"],
+      "source_rule_ids": ["IMCI-GDS-LETHARGIC-OR-UNCONSCIOUS", "IMCI-RESP-SEVERE-DANGER-SIGN", "IMCI-DIARRHOEA-SEVERE-DEHYDRATION"],
+      "source_pdf_pages": [5, 6, 7],
+      "source_printed_pages": ["1 of 76", "2 of 76", "3 of 76"],
+      "validity_requirements": []
+    },
+    {
+      "observation_id": "danger_signs.unable_to_drink_or_breastfeed",
+      "value_domain": {"type": "boolean"},
+      "acquisition_mode": "CAREGIVER_QUESTION",
+      "default_priority_band": 2,
+      "basis": "DIRECT_SOURCE_DERIVED",
+      "policy_rule_ids": ["IP-GDS-001", "IP-GDS-002", "IP-ACTION-001"],
+      "source_rule_ids": ["IMCI-GDS-UNABLE-TO-DRINK", "IMCI-RESP-SEVERE-DANGER-SIGN"],
+      "source_pdf_pages": [5, 6],
+      "source_printed_pages": ["1 of 76", "2 of 76"],
+      "validity_requirements": [],
+      "cross_evidence_unresolved_question_id": "IP-CQ-002"
+    },
+    {
+      "observation_id": "danger_signs.vomits_everything",
+      "value_domain": {"type": "boolean"},
+      "acquisition_mode": "CAREGIVER_QUESTION",
+      "default_priority_band": 2,
+      "basis": "DIRECT_SOURCE_DERIVED",
+      "policy_rule_ids": ["IP-GDS-001", "IP-GDS-002", "IP-ACTION-001"],
+      "source_rule_ids": ["IMCI-GDS-VOMITS-EVERYTHING", "IMCI-RESP-SEVERE-DANGER-SIGN"],
+      "source_pdf_pages": [5, 6],
+      "source_printed_pages": ["1 of 76", "2 of 76"],
+      "validity_requirements": []
+    },
+    {
+      "observation_id": "danger_signs.had_convulsions",
+      "value_domain": {"type": "boolean"},
+      "acquisition_mode": "CAREGIVER_QUESTION",
+      "default_priority_band": 2,
+      "basis": "DIRECT_SOURCE_DERIVED",
+      "policy_rule_ids": ["IP-GDS-001", "IP-GDS-002", "IP-ACTION-001"],
+      "source_rule_ids": ["IMCI-GDS-CONVULSIONS-HISTORY", "IMCI-RESP-SEVERE-DANGER-SIGN"],
+      "source_pdf_pages": [5, 6],
+      "source_printed_pages": ["1 of 76", "2 of 76"],
+      "validity_requirements": []
+    },
+    {
+      "observation_id": "patient_facts.has_cough_or_difficult_breathing",
+      "value_domain": {"type": "boolean"},
+      "acquisition_mode": "CAREGIVER_QUESTION",
+      "default_priority_band": 3,
+      "basis": "DIRECT_SOURCE_DERIVED",
+      "policy_rule_ids": ["IP-ENTRY-001"],
+      "source_rule_ids": [],
+      "source_pdf_pages": [6],
+      "source_printed_pages": ["2 of 76"],
+      "validity_requirements": []
+    },
+    {
+      "observation_id": "patient_facts.has_diarrhoea",
+      "value_domain": {"type": "boolean"},
+      "acquisition_mode": "CAREGIVER_QUESTION",
+      "default_priority_band": 3,
+      "basis": "DIRECT_SOURCE_DERIVED",
+      "policy_rule_ids": ["IP-ENTRY-001"],
+      "source_rule_ids": [],
+      "source_pdf_pages": [7],
+      "source_printed_pages": ["3 of 76"],
+      "validity_requirements": []
+    },
+    {
+      "observation_id": "respiratory.stridor_when_calm",
+      "value_domain": {"type": "boolean"},
+      "acquisition_mode": "CLINICIAN_OBSERVATION",
+      "default_priority_band": 4,
+      "basis": "DIRECT_SOURCE_DERIVED",
+      "policy_rule_ids": ["IP-RESP-001", "IP-ACTION-001"],
+      "source_rule_ids": ["IMCI-RESP-SEVERE-STRIDOR"],
+      "source_pdf_pages": [6],
+      "source_printed_pages": ["2 of 76"],
+      "validity_requirements": ["CHILD_CALM"],
+      "validity_unresolved_question_id": "IP-CQ-003"
+    },
+    {
+      "observation_id": "respiratory.chest_indrawing",
+      "value_domain": {"type": "boolean"},
+      "acquisition_mode": "CLINICIAN_OBSERVATION",
+      "default_priority_band": 5,
+      "basis": "DIRECT_SOURCE_DERIVED",
+      "policy_rule_ids": ["IP-RESP-001"],
+      "source_rule_ids": ["IMCI-RESP-PNEUMONIA-CHEST-INDRAWING"],
+      "source_pdf_pages": [6],
+      "source_printed_pages": ["2 of 76"],
+      "validity_requirements": ["CHILD_CALM"],
+      "validity_unresolved_question_id": "IP-CQ-003"
+    },
+    {
+      "observation_id": "respiratory.respiratory_rate",
+      "value_domain": {"type": "non_negative_integer", "symbolic_partitions": "age_specific_below_vs_at_or_above_threshold"},
+      "acquisition_mode": "MEASUREMENT",
+      "default_priority_band": 5,
+      "basis": "DIRECT_SOURCE_DERIVED",
+      "policy_rule_ids": ["IP-RESP-001"],
+      "source_rule_ids": ["IMCI-RESP-FAST-BREATHING-2-12M", "IMCI-RESP-FAST-BREATHING-12-60M", "IMCI-RESP-PNEUMONIA-FAST-BREATHING"],
+      "source_pdf_pages": [6],
+      "source_printed_pages": ["2 of 76"],
+      "validity_requirements": ["CHILD_CALM", "COUNTED_FOR_ONE_MINUTE"],
+      "validity_unresolved_question_id": "IP-CQ-003"
+    },
+    {
+      "observation_id": "dehydration.restless_or_irritable",
+      "value_domain": {"type": "boolean"},
+      "acquisition_mode": "CLINICIAN_OBSERVATION",
+      "default_priority_band": 5,
+      "basis": "DIRECT_SOURCE_DERIVED",
+      "policy_rule_ids": ["IP-DEHYD-001"],
+      "source_rule_ids": ["IMCI-DIARRHOEA-SOME-DEHYDRATION"],
+      "source_pdf_pages": [7],
+      "source_printed_pages": ["3 of 76"],
+      "validity_requirements": []
+    },
+    {
+      "observation_id": "dehydration.sunken_eyes",
+      "value_domain": {"type": "boolean"},
+      "acquisition_mode": "CLINICIAN_OBSERVATION",
+      "default_priority_band": 4,
+      "basis": "DIRECT_SOURCE_DERIVED",
+      "policy_rule_ids": ["IP-DEHYD-001", "IP-ACTION-001"],
+      "source_rule_ids": ["IMCI-DIARRHOEA-SEVERE-DEHYDRATION", "IMCI-DIARRHOEA-SOME-DEHYDRATION"],
+      "source_pdf_pages": [7],
+      "source_printed_pages": ["3 of 76"],
+      "validity_requirements": []
+    },
+    {
+      "observation_id": "dehydration.drinking_status",
+      "value_domain": {"type": "enum", "values": ["NORMAL", "EAGER_OR_THIRSTY", "POORLY", "UNABLE"]},
+      "acquisition_mode": "CLINICIAN_OBSERVATION",
+      "default_priority_band": 4,
+      "basis": "DIRECT_SOURCE_DERIVED",
+      "policy_rule_ids": ["IP-DEHYD-001", "IP-ACTION-001"],
+      "source_rule_ids": ["IMCI-DIARRHOEA-SEVERE-DEHYDRATION", "IMCI-DIARRHOEA-SOME-DEHYDRATION"],
+      "source_pdf_pages": [7],
+      "source_printed_pages": ["3 of 76"],
+      "validity_requirements": ["OFFER_FLUID_AND_OBSERVE_RESPONSE"],
+      "cross_evidence_unresolved_question_id": "IP-CQ-002"
+    },
+    {
+      "observation_id": "dehydration.skin_pinch",
+      "value_domain": {"type": "enum", "values": ["NORMAL", "SLOWLY", "VERY_SLOWLY"]},
+      "acquisition_mode": "CLINICIAN_OBSERVATION",
+      "default_priority_band": 4,
+      "basis": "DIRECT_SOURCE_DERIVED",
+      "policy_rule_ids": ["IP-DEHYD-001", "IP-ACTION-001"],
+      "source_rule_ids": ["IMCI-DIARRHOEA-SEVERE-DEHYDRATION", "IMCI-DIARRHOEA-SOME-DEHYDRATION"],
+      "source_pdf_pages": [7],
+      "source_printed_pages": ["3 of 76"],
+      "validity_requirements": ["ABDOMINAL_SKIN_PINCH"]
+    }
+  ],
+  "priority_bands": [
+    {"band": 1, "name": "SCOPE_ACQUISITION"},
+    {"band": 2, "name": "DANGER_SIGN_ASSESSMENT"},
+    {"band": 3, "name": "PATHWAY_ENTRY"},
+    {"band": 4, "name": "URGENT_PATHWAY_DISCRIMINATOR"},
+    {"band": 5, "name": "NON_URGENT_DECISION_DISCRIMINATOR"},
+    {"band": 6, "name": "ASSESSMENT_COMPLETION"}
+  ],
+  "scheduler": {
+    "algorithm": "DETERMINISTIC_PRIORITY_THEN_CANONICAL_ORDER",
+    "policy_version": 1,
+    "uses_information_gain": false,
+    "uses_learned_ordering": false,
+    "stochastic": false,
+    "return_first_decision_batch": true,
+    "batch_requires_same_priority_band": true,
+    "batch_requires_same_acquisition_mode": true,
+    "recompute_after_every_batch": true,
+    "canonical_observation_order": [
+      "patient_facts.age_months",
+      "danger_signs.convulsing_now",
+      "danger_signs.lethargic_or_unconscious",
+      "danger_signs.unable_to_drink_or_breastfeed",
+      "danger_signs.vomits_everything",
+      "danger_signs.had_convulsions",
+      "patient_facts.has_cough_or_difficult_breathing",
+      "patient_facts.has_diarrhoea",
+      "respiratory.stridor_when_calm",
+      "respiratory.chest_indrawing",
+      "respiratory.respiratory_rate",
+      "dehydration.restless_or_irritable",
+      "dehydration.sunken_eyes",
+      "dehydration.drinking_status",
+      "dehydration.skin_pinch"
+    ]
+  },
+  "policy_rules": [
+    {"policy_rule_id": "IP-SCOPE-001", "basis": "DIRECT_SOURCE_DERIVED"},
+    {"policy_rule_id": "IP-UNKNOWN-001", "basis": "INTERACTION_POLICY"},
+    {"policy_rule_id": "IP-GDS-001", "basis": "DIRECT_SOURCE_DERIVED"},
+    {"policy_rule_id": "IP-GDS-002", "basis": "DIRECT_SOURCE_DERIVED"},
+    {"policy_rule_id": "IP-ENTRY-001", "basis": "DIRECT_SOURCE_DERIVED"},
+    {"policy_rule_id": "IP-RESP-001", "basis": "DIRECT_SOURCE_DERIVED"},
+    {"policy_rule_id": "IP-DEHYD-001", "basis": "DIRECT_SOURCE_DERIVED"},
+    {"policy_rule_id": "IP-CROSS-001", "basis": "DIRECT_SOURCE_DERIVED"},
+    {"policy_rule_id": "IP-NEXT-001", "basis": "INTERACTION_POLICY"},
+    {"policy_rule_id": "IP-NEXT-002", "basis": "INTERACTION_POLICY"},
+    {"policy_rule_id": "IP-ACTION-001", "basis": "DIRECT_SOURCE_DERIVED"}
+  ],
+  "approved_decisions": ["IP-RQ-001", "IP-RQ-002"],
+  "unresolved_questions": [
+    {"question_id": "IP-CQ-001", "status": "UNRESOLVED", "topic": "urgent action and rapid assessment sequencing"},
+    {"question_id": "IP-CQ-002", "status": "UNRESOLVED", "topic": "reuse of drinking evidence across two assessments"},
+    {"question_id": "IP-CQ-003", "status": "UNRESOLVED", "topic": "validity contract for calm respiratory assessment"},
+    {"question_id": "IP-CQ-004", "status": "UNRESOLVED", "topic": "home-care actions alongside unrelated urgent referral"}
+  ]
+}

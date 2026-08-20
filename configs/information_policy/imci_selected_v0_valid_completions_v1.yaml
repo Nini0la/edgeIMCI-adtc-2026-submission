@@ -1,0 +1,110 @@
+# Generated from configs/information_policy/imci_selected_v0_valid_completions_v1.json.
+# Edit the canonical JSON and rerun scripts/sync_information_policy.py; do not edit this mirror.
+constraint_set_id: imci-selected-v0-valid-completions-v1
+rule_set_id: imci-selected-v0
+status: APPROVED_V1
+description: Versioned completion domain for information-policy outcome-invariance checks.
+provenance:
+  design_document: docs/information_policy_proposal.md
+  design_section: 1.4 Versioned valid-completion constraints
+  approved_decision_ids:
+    - IP-RQ-001
+    - IP-RQ-002
+constraints:
+  - constraint_id: VC-SCOPE-001
+    kind: SCOPE_GATE
+    rule: Only integer ages 2-59 months are passed to the frozen evaluator; unknown age branches to in-scope and
+      out-of-scope states.
+    enforcement: SCOPE_BRANCH
+    completion_pruning: false
+    basis: DIRECT_SOURCE_DERIVED
+    source_rule_ids:
+      - IMCI-RESP-FAST-BREATHING-2-12M
+      - IMCI-RESP-FAST-BREATHING-12-60M
+  - constraint_id: VC-DOMAIN-001
+    kind: ENUMERATED_DOMAIN
+    rule: Boolean observations complete only to explicit true or false values.
+    enforcement: COMPLETION_DOMAIN
+    completion_pruning: false
+    basis: INTERACTION_POLICY
+  - constraint_id: VC-DOMAIN-002
+    kind: ENUMERATED_DOMAIN
+    rule: Drinking status and skin pinch complete only to their declared source-backed enum values.
+    enforcement: COMPLETION_DOMAIN
+    completion_pruning: false
+    basis: DIRECT_SOURCE_DERIVED
+    source_rule_ids:
+      - IMCI-DIARRHOEA-SEVERE-DEHYDRATION
+      - IMCI-DIARRHOEA-SOME-DEHYDRATION
+  - constraint_id: VC-DOMAIN-003
+    kind: SYMBOLIC_NUMERIC_PARTITION
+    rule: Respiratory rate is non-negative and is partitioned into representative below-threshold and at-or-above-threshold
+      values for each possible age band.
+    enforcement: COMPLETION_DOMAIN
+    completion_pruning: false
+    basis: DIRECT_SOURCE_DERIVED
+    source_rule_ids:
+      - IMCI-RESP-FAST-BREATHING-2-12M
+      - IMCI-RESP-FAST-BREATHING-12-60M
+  - constraint_id: VC-ENTRY-001
+    kind: PATHWAY_ENTRY_BRANCH
+    rule: Entry true activates its pathway, false makes it not applicable, and unknown creates both branches; downstream
+      observations do not infer entry.
+    enforcement: COMPLETION_BRANCH
+    completion_pruning: false
+    basis: DIRECT_SOURCE_DERIVED
+  - constraint_id: VC-CONTAINER-001
+    kind: PARTIAL_STATE_NORMALIZATION
+    rule: For an active pathway, an absent group means every field is unknown; for an inactive pathway, group fields
+      are irrelevant.
+    enforcement: NORMALIZATION
+    completion_pruning: false
+    basis: INTERACTION_POLICY
+  - constraint_id: VC-COHERENCE-001
+    kind: FORBIDDEN_COMPLETION
+    when:
+      danger_signs.lethargic_or_unconscious: true
+      dehydration.restless_or_irritable: true
+    enforcement: COMPLETION_PRUNING_AND_INPUT_VALIDATION
+    completion_pruning: true
+    basis: INTERACTION_POLICY
+  - constraint_id: VC-COHERENCE-002
+    kind: FORBIDDEN_EXPLICIT_COMBINATION
+    when:
+      dehydration.drinking_status: UNABLE
+      danger_signs.unable_to_drink_or_breastfeed: false
+    enforcement: INPUT_VALIDATION_ONLY
+    completion_pruning: false
+    basis: INTERACTION_POLICY
+    unresolved_question_id: IP-CQ-002
+  - constraint_id: VC-EVIDENCE-001
+    kind: EVIDENCE_VALIDITY
+    rule: V1 accepts only evidence marked VALID and does not infer calm-state or measurement validity.
+    enforcement: PRESERVE_UNRESOLVED
+    completion_pruning: false
+    basis: UNRESOLVED_CLINICAL_AMBIGUITY
+    unresolved_question_id: IP-CQ-003
+  - constraint_id: VC-UNKNOWN-001
+    kind: UNKNOWN_PRESERVATION
+    rule: No unknown is completed from omission, prose silence, a default constructor value, or an unrelated observation.
+    enforcement: GLOBAL_COMPLETION_RULE
+    completion_pruning: false
+    basis: INTERACTION_POLICY
+symbolic_representatives:
+  unknown_age_months:
+    in_scope:
+      - 2
+      - 12
+    out_of_scope:
+      - 60
+  unknown_respiratory_rate_with_known_younger_age:
+    - 49
+    - 50
+  unknown_respiratory_rate_with_known_older_age:
+    - 39
+    - 40
+  unknown_respiratory_rate_with_unknown_age:
+    - 39
+    - 40
+    - 49
+    - 50

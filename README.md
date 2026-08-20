@@ -137,6 +137,9 @@ Runs are local MLX inference only. No checkpoint is selected from evaluation res
 - `src/edge_imci/schemas/trajectory.py`: separate latent-truth, partial-state, model-visible interaction, and structured assistant-target contracts.
 - `data/fixtures/trajectories/`: two illustrative schema fixtures; not training, golden-slice, or final benchmark data.
 - `docs/trajectory_schema.md`: trajectory-layer boundaries, invariants, and unresolved policy dependencies.
+- `configs/information_policy/`: canonical approved v1 information-policy and valid-completion JSON artifacts with generated YAML review mirrors.
+- `src/edge_imci/information_policy/`: artifact validation plus deterministic valid-completion information-policy evaluation above the frozen clinical oracle.
+- `docs/information_policy_v1.md`: executable policy contract, unresolved-question handling, and golden-slice handoff.
 - `src/edge_imci/evaluation/reference.py`: deterministic benchmark oracle.
 - `src/edge_imci/evaluation/parsing.py` and `scoring.py`: strict typed internal model-output handling.
 - `src/edge_imci/evaluation/external.py`: pinned fetch and separated strict/upstream-compatible external scoring.

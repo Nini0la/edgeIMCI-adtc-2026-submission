@@ -1,8 +1,10 @@
 # EdgeIMCI information policy proposal
 
-**Status:** Proposed for review; not approved clinical logic and not an implementation specification.
+**Status:** Approved v1 design record. This is interaction-policy logic, not new clinical logic.
 
 **Recorded review decisions:** `IP-RQ-001` and `IP-RQ-002` are approved for v1. `IP-CQ-001` through `IP-CQ-004` remain unresolved and must not be implemented by assumption.
+
+**Implementation:** Canonical artifacts live in `configs/information_policy/`; the deterministic evaluator and execution contract are documented in [`docs/information_policy_v1.md`](information_policy_v1.md).
 
 This document proposes how EdgeIMCI should decide whether the information currently known about a child is sufficient to emit a classification or urgent action, and which observation should be acquired next when it is not. It is deliberately limited to `imci-selected-v0`: children aged 2 months to under 5 years, general danger signs, cough or difficult breathing, and diarrhoea dehydration classification.
 
