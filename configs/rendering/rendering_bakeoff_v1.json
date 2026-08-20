@@ -1,0 +1,83 @@
+{
+  "experiment_id": "edge-imci-rendering-bakeoff-v1",
+  "status": "ACCEPTANCE_EXPERIMENT",
+  "description": "Three pinned local Qwen3 teacher checkpoints crossed with two controlled PHC rendering prompts over the fixed 14-case golden semantic conversion slice.",
+  "semantic_source": {
+    "path": "data/golden/golden_conversion_slice_v1.jsonl",
+    "sha256": "97a09ebda86018885c68cf8b95cccbdc2d962a52e0de80bfce90f67a06d8405a",
+    "case_count": 14,
+    "assistant_target_count": 16,
+    "rule_set_id": "imci-selected-v0",
+    "information_policy_id": "imci-selected-v0-information-policy-v1",
+    "constraint_set_id": "imci-selected-v0-valid-completions-v1"
+  },
+  "provider": {
+    "provider_id": "local-hugging-face-cache",
+    "runtime": "mlx-lm",
+    "device": "Apple Silicon GPU",
+    "api_cost": null,
+    "api_cost_note": "Local inference; no hosted API charge. Electricity and hardware amortization were not measured."
+  },
+  "generation": {
+    "temperature": 0.0,
+    "max_output_tokens": 512,
+    "enable_thinking": false,
+    "seed": 20260819,
+    "variants_per_target": 1,
+    "retry_policy": "one retry only for an empty output or runtime exception"
+  },
+  "teacher_models": [
+    {
+      "teacher_id": "qwen3-0.6b-local",
+      "model_id": "Qwen/Qwen3-0.6B",
+      "revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+      "tokenizer_revision": "c1899de289a04d12100db370d81485cdf75e47ca",
+      "parameter_count_billions": 0.6,
+      "quantization": null,
+      "dtype": "bfloat16"
+    },
+    {
+      "teacher_id": "qwen3-1.7b-local",
+      "model_id": "Qwen/Qwen3-1.7B",
+      "revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "tokenizer_revision": "70d244cc86ccca08cf5af4e1e306ecf908b1ad5e",
+      "parameter_count_billions": 1.7,
+      "quantization": null,
+      "dtype": "bfloat16"
+    },
+    {
+      "teacher_id": "qwen3-4b-4bit-local",
+      "model_id": "mlx-community/Qwen3-4B-4bit",
+      "revision": "4dcb3d101c2a062e5c1d4bb173588c54ea6c4d25",
+      "tokenizer_revision": "4dcb3d101c2a062e5c1d4bb173588c54ea6c4d25",
+      "parameter_count_billions": 4.0,
+      "quantization": "4-bit group-size-64 MLX; bfloat16 compute",
+      "dtype": "bfloat16"
+    }
+  ],
+  "prompt_strategies": [
+    {
+      "strategy_id": "strict-semantic-v1",
+      "prompt_version": "edge-imci-strict-semantic-renderer-v1",
+      "instructions": "Render the fixed semantics directly. Use short clinical sentences. Put each classification on a line beginning 'Classification:'. State every action explicitly. For missing information, preserve each supplied acquisition instruction closely, including who should provide or assess it. Avoid explanations, rationale, and stylistic variation."
+    },
+    {
+      "strategy_id": "guided-conversational-v1",
+      "prompt_version": "edge-imci-guided-conversational-renderer-v1",
+      "instructions": "Speak directly and naturally to a frontline PHC worker. Keep the response concise, but combine related actions and requests when that improves flow. Put urgent instructions first and make classification labels easy to scan. Preserve the exact clinical meaning and acquisition source even when rephrasing. Do not add rationale or facts."
+    }
+  ],
+  "validation": {
+    "validator_id": "edge-imci-natural-rendering-lexical-guards-v1",
+    "human_review_required": true,
+    "limitations": "Lexical semantic guards are deterministic but do not replace human review of free-form entailment, negation, naturalness, or PHC suitability."
+  },
+  "non_goals": [
+    "model-performance benchmark",
+    "SFT corpus generation",
+    "train/validation/test splitting",
+    "fine-tuning",
+    "clinical semantic modification",
+    "bulk generation"
+  ]
+}

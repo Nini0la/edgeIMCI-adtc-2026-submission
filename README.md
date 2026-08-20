@@ -144,6 +144,11 @@ Runs are local MLX inference only. No checkpoint is selected from evaluation res
 - `src/edge_imci/validation/golden.py`: isolated controlled-language semantic round-trip validator; not a clinical oracle.
 - `data/golden/golden_conversion_slice_v1.jsonl` and `.yaml`: tiny equivalent machine-readable validation slices; explicitly not training data, not a benchmark, and not a bulk corpus.
 - `docs/golden_slice_review_v1.md`: per-record human/domain-expert review package, deterministic validation results, and flags.
+- `docs/rendering_contract_v1.md`: proposed frontline-PHC language contract, acquisition-mode rules, and deterministic rejection gates.
+- `data/golden/golden_reference_renderings_v1.jsonl`: 14 proposed natural reference renderings over the unchanged golden semantics; human review required.
+- `configs/rendering/rendering_bakeoff_v1.json`: pinned three-teacher/two-prompt local rendering experiment.
+- `experiments/rendering_bakeoff_v1/`: 96 fixed-case teacher candidates plus configuration-level semantic and runtime metrics; not a benchmark or corpus.
+- `docs/rendering_bakeoff_review_v1.md`: compact side-by-side reference/teacher review surface.
 - `src/edge_imci/evaluation/reference.py`: deterministic benchmark oracle.
 - `src/edge_imci/evaluation/parsing.py` and `scoring.py`: strict typed internal model-output handling.
 - `src/edge_imci/evaluation/external.py`: pinned fetch and separated strict/upstream-compatible external scoring.
