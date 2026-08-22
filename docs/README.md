@@ -59,6 +59,7 @@ The proposed holistic golden suite does not become frozen product authority unti
 | `system_level_clinical_audit_v2.md` | `REVIEW_RECORD` | `CURRENT` | Current deterministic substrate audit. |
 | `product_holistic_golden_suite_requirements_v1.md` | `APPROVED_PRODUCT_POLICY` | `CURRENT` | Approved construction/review contract for product semantics. |
 | `product_holistic_golden_review_v1.md` | `REVIEW_RECORD` | `PROPOSED_FOR_REVIEW` | Generated domain-review surface; not frozen semantics. |
+| `holistic_golden_domain_review_agent_instructions.md` | `WORKING_PLAN` | `CURRENT` | Review-only protocol for the 78-case technical/source audit. |
 | `interaction_design_retrieval_assessment_bundles.md` | `APPROVED_PRODUCT_POLICY` | `CURRENT` | Current interaction framing; cannot override clinical artifacts. |
 | `experiment_operations_and_tracking_plan.md` | `WORKING_PLAN` | `CURRENT` | Maintained Markdown working version; corresponding DOCX is its source snapshot. |
 | `experimental_campaign_map.md` | `WORKING_PLAN` | `CURRENT` | Maintained Markdown working version; corresponding DOCX is its source snapshot. |

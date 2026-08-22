@@ -234,6 +234,7 @@ Documentation authority and lifecycle are defined in [`docs/README.md`](docs/REA
 - [`docs/product_holistic_golden_suite_requirements_v1.md`](docs/product_holistic_golden_suite_requirements_v1.md): product-level semantic-suite contract.
 - [`configs/golden/holistic_product_golden_scope_dispositions_v1.json`](configs/golden/holistic_product_golden_scope_dispositions_v1.json): versioned product-scope resolution for later Plan B/C treatment-stage execution.
 - [`docs/product_holistic_golden_review_v1.md`](docs/product_holistic_golden_review_v1.md): case index, pinned substrate, review instructions, and resolved scope disposition.
+- [`docs/holistic_golden_domain_review_agent_instructions.md`](docs/holistic_golden_domain_review_agent_instructions.md): strict handoff protocol for the 78-case technical/source review.
 - [`docs/interaction_design_retrieval_assessment_bundles.md`](docs/interaction_design_retrieval_assessment_bundles.md): current holistic interaction framing.
 - [`docs/synthetic_data_generation_experiment_notes.md`](docs/synthetic_data_generation_experiment_notes.md): structured-first language-generation hypotheses and experiments.
 - [`data/archive/selected_v0/`](data/archive/selected_v0): quarantined historical 14-case selected-v0 component semantics and proposed renderings; lifecycle restrictions are machine-readable in its archive manifest.
