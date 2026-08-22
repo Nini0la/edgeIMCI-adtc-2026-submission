@@ -5,6 +5,7 @@ from edge_imci.generation.holistic_golden import (
     DEFAULT_JSONL_PATH,
     DEFAULT_MANIFEST_PATH,
     DEFAULT_REVIEW_PATH,
+    DEFAULT_SCOPE_DISPOSITIONS_YAML_PATH,
     DEFAULT_YAML_PATH,
     write_holistic_golden_suite,
 )
@@ -15,4 +16,5 @@ if __name__ == "__main__":
     print(f"wrote {len(records)} holistic semantic cases to {DEFAULT_JSONL_PATH}")
     print(f"wrote YAML mirror to {DEFAULT_YAML_PATH}")
     print(f"wrote suite manifest to {DEFAULT_MANIFEST_PATH}")
+    print(f"wrote scope-disposition YAML mirror to {DEFAULT_SCOPE_DISPOSITIONS_YAML_PATH}")
     print(f"wrote review package to {DEFAULT_REVIEW_PATH}")

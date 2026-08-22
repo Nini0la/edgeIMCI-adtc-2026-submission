@@ -1,5 +1,7 @@
 # EdgeIMCI rendering bake-off v1 — human review
 
+> **Authority:** `HISTORICAL_ARCHIVE` · **Lifecycle:** `ARCHIVED` · Selected-v0 experiment evidence only.
+
 **Status:** `ARCHIVED_HISTORICAL_EXPERIMENT`
 
 > This review preserves the original selected-v0 experiment. It is not a current teacher-selection exercise and must not be used as product-level holistic semantics, product evaluation, or training data.

@@ -1,5 +1,7 @@
 # EdgeIMCI Synthetic Data Generation Experiment Plan
 
+> **Authority:** `WORKING_PLAN` · **Lifecycle:** `CURRENT` · Maintained Markdown working version; the corresponding DOCX is its source snapshot.
+
 *Whole-encounter rendering, controlled bake-offs and a two-speed route to scale*
 
 **Status:** Working plan; time and cost figures are planning estimates until measured.

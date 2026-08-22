@@ -1,5 +1,7 @@
 # Clinical questions
 
+> **Authority:** `REVIEW_RECORD` · **Lifecycle:** `CURRENT` · Canonical approved answers live in the versioned decision artifacts.
+
 This file records source-dependent questions that must not be resolved from general medical knowledge. The 13 questions that blocked the expanded major sick-child hackathon substrate were resolved on 2026-08-22 and are canonically recorded in `configs/information_policy/imci_major_sick_child_review_decisions_v1.json` (with a generated YAML mirror).
 
 Each question must identify the proposed rule ID, source location, a faithful summary of the source wording, the exact ambiguity, the expert decision required, and the blocked implementation.

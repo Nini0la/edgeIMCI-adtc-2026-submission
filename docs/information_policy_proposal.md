@@ -1,5 +1,7 @@
 # EdgeIMCI information policy proposal
 
+> **Authority:** `REVIEW_RECORD` · **Lifecycle:** `ARCHIVED` · Selected-v0 design history, not current holistic product policy.
+
 **Status:** Approved v1 design record. This is interaction-policy logic, not new clinical logic.
 
 **Recorded review decisions:** `IP-RQ-001` and `IP-RQ-002` are approved for v1. `IP-CQ-001` through `IP-CQ-004` remain unresolved and must not be implemented by assumption.

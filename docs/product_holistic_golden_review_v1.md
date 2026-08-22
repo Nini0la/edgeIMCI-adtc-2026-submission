@@ -1,16 +1,18 @@
 # Product-level holistic golden semantic suite v1 — review package
 
+> **Authority:** `REVIEW_RECORD` · **Lifecycle:** `PROPOSED_FOR_REVIEW` · Generated semantic-review surface; not frozen product authority.
+
 **Status:** `PROPOSED_FOR_DOMAIN_REVIEW` — not frozen, not training data, and not yet eligible for product evaluation or teacher selection.
 
 **Cases:** 78. **Corpus role:** `HOLISTIC_PRODUCT_GOLDEN`.
 
-**Pinned substrate:** `imci-major-sick-child-v1` / `imci-major-sick-child-holistic-completeness-v2` / `imci-major-sick-child-review-decisions-v1` / `edge-imci-holistic-deterministic-oracle-v1`.
+**Pinned substrate:** `imci-major-sick-child-v1` / `imci-major-sick-child-holistic-completeness-v2` / `imci-major-sick-child-review-decisions-v1` / `edge-imci-holistic-golden-scope-dispositions-v1` / `edge-imci-holistic-deterministic-oracle-v1`.
 
 Every evaluable record is deterministically recomputed. The expected output is a review proposal, not independent clinical approval.
 
-## Known construction gap
+## Resolved product-scope disposition
 
-- `HPG-GAP-REASSESS-001`: The approved initial oracle emits Plan B/C and a reassessment action, but no approved separate treatment-stage evaluator currently consumes post-rehydration submissions. No semantics were invented.
+- `HPG-GAP-REASSESS-001` — `RESOLVED_BY_PRODUCT_SCOPE`: Separate longitudinal Plan B/Plan C treatment-stage execution is outside holistic golden v1. The initial holistic semantic answer must include the source-backed dehydration classification, Plan B or Plan C, and the timed-reassessment instruction. A later full updated assessment may be submitted and evaluated afresh; EdgeIMCI v1 does not maintain treatment state, infer reassessment findings, or automatically repeat a rehydration plan.
 
 ## Case index
 

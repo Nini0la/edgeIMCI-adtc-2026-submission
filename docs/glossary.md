@@ -1,5 +1,7 @@
 # EdgeIMCI Glossary
 
+> **Authority:** `REFERENCE` · **Lifecycle:** `CURRENT` · Terminology aid; it does not override canonical artifacts.
+
 ## Terminology rules
 
 1. Use "classification" rather than "diagnosis" unless explicitly discussing diagnosis as a broader medical concept. EdgeIMCI currently executes encoded IMCI classifications; it is not being trained as an unrestricted diagnostic model.

@@ -12,13 +12,17 @@ from edge_imci.generation.holistic_golden import (
     DEFAULT_JSONL_PATH,
     DEFAULT_MANIFEST_PATH,
     DEFAULT_REVIEW_PATH,
+    DEFAULT_SCOPE_DISPOSITIONS_PATH,
+    DEFAULT_SCOPE_DISPOSITIONS_YAML_PATH,
     DEFAULT_YAML_PATH,
     DECISION_SET_ID,
     RECORD_SCHEMA_ID,
     SUITE_ID,
+    SCOPE_DISPOSITION_SET_ID,
     VALIDATOR_ID,
     build_holistic_golden_suite,
     load_holistic_golden_suite,
+    load_scope_dispositions,
     validate_holistic_golden_record,
 )
 from edge_imci.information_policy.holistic_artifacts import load_holistic_artifacts
@@ -75,6 +79,7 @@ def test_manifest_pins_lifecycle_hash_and_noneligibility(records: list[dict]) ->
     assert manifest["lifecycle_status"] == "PROPOSED_FOR_DOMAIN_REVIEW"
     assert manifest["case_count"] == len(records)
     assert manifest["artifact_pins"]["review_decision_set_id"] == DECISION_SET_ID
+    assert manifest["artifact_pins"]["scope_disposition_set_id"] == SCOPE_DISPOSITION_SET_ID
     assert manifest["artifact_pins"]["validator_id"] == VALIDATOR_ID
     assert manifest["semantic_cases_sha256"] == hashlib.sha256(DEFAULT_JSONL_PATH.read_bytes()).hexdigest()
     assert manifest["unknown_semantics"] == {
@@ -167,17 +172,19 @@ def test_out_of_scope_cases_are_schema_rejections(records: list[dict]) -> None:
     assert all(record["expected"]["kind"] == "SCHEMA_REJECTION" for record in rejected)
 
 
-def test_later_plan_reassessment_gap_is_explicit_and_not_invented() -> None:
+def test_later_plan_reassessment_gap_is_resolved_by_versioned_product_scope() -> None:
     manifest = json.loads(DEFAULT_MANIFEST_PATH.read_text(encoding="utf-8"))
-    assert manifest["known_coverage_gaps"] == [
-        {
-            "gap_id": "HPG-GAP-REASSESS-001",
-            "note": "The approved initial oracle emits Plan B/C and a reassessment action, but no approved separate treatment-stage evaluator currently consumes post-rehydration submissions. No semantics were invented.",
-            "requirement": "Separate later Plan B/Plan C timed-reassessment semantic states",
-            "review_decision_ids": ["MSC-CQ-REASSESS-001"],
-            "status": "BLOCKED_BY_MISSING_TREATMENT_STAGE_EVALUATOR",
-        }
-    ]
+    artifact = load_scope_dispositions()
+    assert manifest["known_coverage_gaps"] == []
+    assert manifest["freeze_blockers"] == ["DOMAIN_REVIEW_PENDING"]
+    assert manifest["scope_dispositions"] == artifact["dispositions"]
+    disposition = artifact["dispositions"][0]
+    assert disposition["gap_id"] == "HPG-GAP-REASSESS-001"
+    assert disposition["status"] == "RESOLVED_BY_PRODUCT_SCOPE"
+    assert disposition["rationale_type"] == "PRODUCT_SCOPE_DECISION"
+    assert artifact["clinical_rule_change"] is False
+    yaml_mirror = yaml.safe_load(DEFAULT_SCOPE_DISPOSITIONS_YAML_PATH.read_text(encoding="utf-8"))
+    assert yaml_mirror == json.loads(DEFAULT_SCOPE_DISPOSITIONS_PATH.read_text(encoding="utf-8"))
 
 
 def test_suite_contains_semantics_only_and_review_package_is_complete(records: list[dict]) -> None:

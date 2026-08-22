@@ -1,5 +1,7 @@
 # EdgeIMCI Experimental Campaign Map
 
+> **Authority:** `WORKING_PLAN` · **Lifecycle:** `CURRENT` · Maintained Markdown working version; the corresponding DOCX is its source snapshot.
+
 *Critical path, parallel lanes and evidence-based branches*
 
 **Status:** High-level roadmap for the hackathon campaign; Lundin is off the main track and the domain-expert questionnaire remains separate.

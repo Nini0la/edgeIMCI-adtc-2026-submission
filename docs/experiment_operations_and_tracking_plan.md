@@ -1,5 +1,7 @@
 # EdgeIMCI Experiment Operations & Tracking Plan
 
+> **Authority:** `WORKING_PLAN` · **Lifecycle:** `CURRENT` · Maintained Markdown working version; the corresponding DOCX is its source snapshot.
+
 *A lightweight operating system for reproducible, environment-aware experimental evidence*
 
 **Status:** Working plan based on current campaign decisions; scope excludes the domain-expert clinical questionnaire.

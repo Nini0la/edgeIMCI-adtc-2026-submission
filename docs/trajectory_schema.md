@@ -1,5 +1,7 @@
 # EdgeIMCI trajectory schema v1
 
+> **Authority:** `IMPLEMENTATION_REFERENCE` · **Lifecycle:** `ARCHIVED` · Selected-v0 trajectory and rendering representation.
+
 **Status:** Typed representation for future golden-slice and corpus work. This layer does not generate training data, implement the information-policy evaluator, or change `imci-selected-v0`.
 
 The implementation is `src/edge_imci/schemas/trajectory.py`. It is separate from the frozen `ClinicalCase` benchmark schema.

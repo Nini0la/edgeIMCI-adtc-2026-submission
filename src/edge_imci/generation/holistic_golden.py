@@ -45,7 +45,10 @@ RECORD_SCHEMA_ID = "edge-imci-holistic-golden-semantic-record-v1"
 GENERATOR_VERSION = "edge-imci-holistic-golden-generator-v1"
 VALIDATOR_ID = "edge-imci-holistic-golden-validator-v1"
 DECISION_SET_ID = "imci-major-sick-child-review-decisions-v1"
+SCOPE_DISPOSITION_SET_ID = "edge-imci-holistic-golden-scope-dispositions-v1"
 GENERATION_SEED = 20260822
+DEFAULT_SCOPE_DISPOSITIONS_PATH = ROOT / "configs" / "golden" / "holistic_product_golden_scope_dispositions_v1.json"
+DEFAULT_SCOPE_DISPOSITIONS_YAML_PATH = DEFAULT_SCOPE_DISPOSITIONS_PATH.with_suffix(".yaml")
 DEFAULT_SUITE_DIR = ROOT / "data" / "golden" / "holistic_product_v1"
 DEFAULT_JSONL_PATH = DEFAULT_SUITE_DIR / "semantic_cases.jsonl"
 DEFAULT_YAML_PATH = DEFAULT_SUITE_DIR / "semantic_cases.yaml"
@@ -80,6 +83,28 @@ def _values(value: Any) -> Any:
 
 def encounter_to_dict(encounter: HolisticEncounter) -> dict[str, Any]:
     return _values(asdict(encounter))
+
+
+def load_scope_dispositions() -> dict[str, Any]:
+    artifact = json.loads(DEFAULT_SCOPE_DISPOSITIONS_PATH.read_text(encoding="utf-8"))
+    expected_pins = {
+        "disposition_set_id": SCOPE_DISPOSITION_SET_ID,
+        "status": "APPROVED_FOR_HACKATHON_SCOPE",
+        "rule_set_id": HOLISTIC_RULE_SET_ID,
+        "completeness_policy_id": HOLISTIC_COMPLETENESS_POLICY_ID,
+        "review_decision_set_id": DECISION_SET_ID,
+        "clinical_rule_change": False,
+        "production_clinical_use_authorized": False,
+    }
+    for key, expected in expected_pins.items():
+        if artifact.get(key) != expected:
+            raise ValueError(f"incorrect holistic golden scope disposition {key}")
+    dispositions = artifact.get("dispositions", [])
+    if len(dispositions) != 1 or dispositions[0].get("gap_id") != "HPG-GAP-REASSESS-001":
+        raise ValueError("scope disposition set must resolve exactly HPG-GAP-REASSESS-001")
+    if dispositions[0].get("status") != "RESOLVED_BY_PRODUCT_SCOPE":
+        raise ValueError("HPG-GAP-REASSESS-001 must remain resolved by product scope")
+    return artifact
 
 
 def encounter_from_dict(value: dict[str, Any]) -> HolisticEncounter:
@@ -424,6 +449,7 @@ def build_holistic_golden_suite() -> list[dict[str, Any]]:
                     "rule_set_id": HOLISTIC_RULE_SET_ID,
                     "completeness_policy_id": HOLISTIC_COMPLETENESS_POLICY_ID,
                     "review_decision_set_id": DECISION_SET_ID,
+                    "scope_disposition_set_id": SCOPE_DISPOSITION_SET_ID,
                     "oracle_id": HOLISTIC_ORACLE_ID,
                     "validator_id": VALIDATOR_ID,
                     "generator_version": GENERATOR_VERSION,
@@ -447,6 +473,7 @@ def validate_holistic_golden_record(record: dict[str, Any]) -> None:
         "rule_set_id": HOLISTIC_RULE_SET_ID,
         "completeness_policy_id": HOLISTIC_COMPLETENESS_POLICY_ID,
         "review_decision_set_id": DECISION_SET_ID,
+        "scope_disposition_set_id": SCOPE_DISPOSITION_SET_ID,
         "oracle_id": HOLISTIC_ORACLE_ID,
         "validator_id": VALIDATOR_ID,
     }
@@ -492,6 +519,7 @@ def validate_holistic_golden_record(record: dict[str, Any]) -> None:
 
 
 def write_holistic_golden_suite() -> list[dict[str, Any]]:
+    scope_dispositions = load_scope_dispositions()
     records = build_holistic_golden_suite()
     for record in records:
         validate_holistic_golden_record(record)
@@ -500,6 +528,11 @@ def write_holistic_golden_suite() -> list[dict[str, Any]]:
     DEFAULT_JSONL_PATH.write_text(jsonl_content, encoding="utf-8")
     DEFAULT_YAML_PATH.write_text(
         yaml.safe_dump(records, allow_unicode=True, sort_keys=False, width=100),
+        encoding="utf-8",
+    )
+    DEFAULT_SCOPE_DISPOSITIONS_YAML_PATH.write_text(
+        "# Generated from the canonical JSON; do not edit this mirror.\n"
+        + yaml.safe_dump(scope_dispositions, allow_unicode=True, sort_keys=False, width=100),
         encoding="utf-8",
     )
     DEFAULT_MANIFEST_PATH.write_text(
@@ -548,6 +581,7 @@ def _manifest(
                 "rule_set_id",
                 "completeness_policy_id",
                 "review_decision_set_id",
+                "scope_disposition_set_id",
                 "oracle_id",
                 "validator_id",
                 "generator_version",
@@ -568,15 +602,9 @@ def _manifest(
             "TEACHER_BAKEOFF": False,
             "TRAINING": False,
         },
-        "known_coverage_gaps": [
-            {
-                "gap_id": "HPG-GAP-REASSESS-001",
-                "requirement": "Separate later Plan B/Plan C timed-reassessment semantic states",
-                "status": "BLOCKED_BY_MISSING_TREATMENT_STAGE_EVALUATOR",
-                "note": "The approved initial oracle emits Plan B/C and a reassessment action, but no approved separate treatment-stage evaluator currently consumes post-rehydration submissions. No semantics were invented.",
-                "review_decision_ids": ["MSC-CQ-REASSESS-001"],
-            }
-        ],
+        "known_coverage_gaps": [],
+        "scope_dispositions": load_scope_dispositions()["dispositions"],
+        "freeze_blockers": ["DOMAIN_REVIEW_PENDING"],
         "review_required_before_freeze": True,
         "production_clinical_use_authorized": False,
         "unknown_semantics": {
@@ -591,17 +619,19 @@ def render_holistic_golden_review(records: list[dict[str, Any]]) -> str:
     lines = [
         "# Product-level holistic golden semantic suite v1 — review package",
         "",
+        "> **Authority:** `REVIEW_RECORD` · **Lifecycle:** `PROPOSED_FOR_REVIEW` · Generated semantic-review surface; not frozen product authority.",
+        "",
         "**Status:** `PROPOSED_FOR_DOMAIN_REVIEW` — not frozen, not training data, and not yet eligible for product evaluation or teacher selection.",
         "",
         f"**Cases:** {len(records)}. **Corpus role:** `{CorpusRole.HOLISTIC_PRODUCT_GOLDEN.value}`.",
         "",
-        f"**Pinned substrate:** `{HOLISTIC_RULE_SET_ID}` / `{HOLISTIC_COMPLETENESS_POLICY_ID}` / `{DECISION_SET_ID}` / `{HOLISTIC_ORACLE_ID}`.",
+        f"**Pinned substrate:** `{HOLISTIC_RULE_SET_ID}` / `{HOLISTIC_COMPLETENESS_POLICY_ID}` / `{DECISION_SET_ID}` / `{SCOPE_DISPOSITION_SET_ID}` / `{HOLISTIC_ORACLE_ID}`.",
         "",
         "Every evaluable record is deterministically recomputed. The expected output is a review proposal, not independent clinical approval.",
         "",
-        "## Known construction gap",
+        "## Resolved product-scope disposition",
         "",
-        f"- `{manifest['known_coverage_gaps'][0]['gap_id']}`: {manifest['known_coverage_gaps'][0]['note']}",
+        f"- `{manifest['scope_dispositions'][0]['gap_id']}` — `{manifest['scope_dispositions'][0]['status']}`: {manifest['scope_dispositions'][0]['decision']}",
         "",
         "## Case index",
         "",

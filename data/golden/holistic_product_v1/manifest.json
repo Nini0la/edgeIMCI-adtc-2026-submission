@@ -7,6 +7,7 @@
     "oracle_id": "edge-imci-holistic-deterministic-oracle-v1",
     "review_decision_set_id": "imci-major-sick-child-review-decisions-v1",
     "rule_set_id": "imci-major-sick-child-v1",
+    "scope_disposition_set_id": "edge-imci-holistic-golden-scope-dispositions-v1",
     "validator_id": "edge-imci-holistic-golden-validator-v1"
   },
   "assets": [
@@ -128,22 +129,38 @@
     "TEACHER_BAKEOFF": false,
     "TRAINING": false
   },
-  "incomplete_or_rejected_case_count": 18,
-  "known_coverage_gaps": [
-    {
-      "gap_id": "HPG-GAP-REASSESS-001",
-      "note": "The approved initial oracle emits Plan B/C and a reassessment action, but no approved separate treatment-stage evaluator currently consumes post-rehydration submissions. No semantics were invented.",
-      "requirement": "Separate later Plan B/Plan C timed-reassessment semantic states",
-      "review_decision_ids": [
-        "MSC-CQ-REASSESS-001"
-      ],
-      "status": "BLOCKED_BY_MISSING_TREATMENT_STAGE_EVALUATOR"
-    }
+  "freeze_blockers": [
+    "DOMAIN_REVIEW_PENDING"
   ],
+  "incomplete_or_rejected_case_count": 18,
+  "known_coverage_gaps": [],
   "lifecycle_status": "PROPOSED_FOR_DOMAIN_REVIEW",
   "production_clinical_use_authorized": false,
   "review_required_before_freeze": true,
-  "semantic_cases_sha256": "db2e42c7a74bf86449bb4fac8dec600f93bd2e16461cc1de48b049a51fc677b6",
+  "scope_dispositions": [
+    {
+      "decision": "Separate longitudinal Plan B/Plan C treatment-stage execution is outside holistic golden v1. The initial holistic semantic answer must include the source-backed dehydration classification, Plan B or Plan C, and the timed-reassessment instruction. A later full updated assessment may be submitted and evaluated afresh; EdgeIMCI v1 does not maintain treatment state, infer reassessment findings, or automatically repeat a rehydration plan.",
+      "excluded_v1_behavior": [
+        "LONGITUDINAL_TREATMENT_STATE",
+        "AUTOMATIC_PLAN_REPETITION",
+        "INFERRED_POST_REHYDRATION_FINDINGS",
+        "DEDICATED_PLAN_B_OR_PLAN_C_TREATMENT_STAGE_ORACLE"
+      ],
+      "gap_id": "HPG-GAP-REASSESS-001",
+      "rationale_type": "PRODUCT_SCOPE_DECISION",
+      "required_initial_semantics": [
+        "DEHYDRATION_CLASSIFICATION",
+        "PLAN_B_OR_PLAN_C_ACTION",
+        "TIMED_REASSESSMENT_INSTRUCTION"
+      ],
+      "status": "RESOLVED_BY_PRODUCT_SCOPE",
+      "supporting_review_decision_ids": [
+        "MSC-CQ-SCOPE-001",
+        "MSC-CQ-REASSESS-001"
+      ]
+    }
+  ],
+  "semantic_cases_sha256": "6cc773cf467e69135ad29e6018b894b749c8689122e6c92d585ce5bffd3df8b9",
   "suite_id": "edge-imci-holistic-product-golden-v1",
   "unknown_semantics": {
     "omitted_is_unknown": true,

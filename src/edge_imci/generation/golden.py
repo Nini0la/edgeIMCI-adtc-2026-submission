@@ -46,10 +46,8 @@ from edge_imci.schemas.trajectory import (
     ConversationTurn,
     CorpusRole,
     DecisionStatus,
-    EntryStatus,
     EvidenceValidityStatus,
     ExpectedAssistantSemantics,
-    InformationPolicyResult,
     LatentClinicalCase,
     LatentObservation,
     ModelVisibleMessage,
@@ -273,6 +271,8 @@ def load_golden_slice(
 def render_golden_review(records: list[GoldenRecord]) -> str:
     lines = [
         "# Archived selected-v0 component regression slice v1 — human/domain-expert review",
+        "",
+        "> **Authority:** `HISTORICAL_ARCHIVE` · **Lifecycle:** `ARCHIVED` · Selected-v0 review evidence only.",
         "",
         "**Status:** `ARCHIVED`. Historical/component-regression use only; not training data and ineligible for product evaluation, holistic generation, and teacher selection.",
         "",

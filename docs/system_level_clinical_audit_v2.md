@@ -1,5 +1,7 @@
 # `imci-major-sick-child-v1` system-level clinical audit
 
+> **Authority:** `REVIEW_RECORD` · **Lifecycle:** `CURRENT` · Verification evidence for the bounded hackathon substrate.
+
 **Audit date:** 2026-08-22
 
 **Population:** `2 <= age_months < 60`

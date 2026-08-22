@@ -1,5 +1,7 @@
 # Product-level holistic golden suite — requirements v1
 
+> **Authority:** `APPROVED_PRODUCT_POLICY` · **Lifecycle:** `CURRENT` · Construction and review contract; not a clinical-rule source.
+
 **Status:** Construction implemented as a 78-case proposal against `imci-major-sick-child-review-decisions-v1`. Domain review and freeze are pending; this is hackathon-scope work, not production clinical authorization.
 
 **Artifacts:** `data/golden/holistic_product_v1/semantic_cases.jsonl`, its YAML mirror and manifest, plus `docs/product_holistic_golden_review_v1.md`.
@@ -42,7 +44,7 @@ The reviewed suite should include at least:
 - grouped missing-elements output;
 - contradiction and ambiguity cases;
 - bronchodilator intervention/reassessment;
-- Plan B and Plan C intervention/reassessment;
+- initial Plan B and Plan C actions with their timed-reassessment instructions;
 - a complete post-reassessment encounter;
 - malaria-risk and test-availability branches;
 - measles with simultaneous respiratory/diarrhoea/ear classifications;
@@ -52,7 +54,7 @@ The reviewed suite should include at least:
 
 The proposed suite contains 78 cases, including 60 complete encounters and 18 incomplete or schema-rejected cases. Every encoded classification family appears in at least one review case. JSONL is canonical, YAML is the human-readable mirror, and each evaluable expected result is exactly recomputed from the pinned deterministic oracle.
 
-One required family is not yet representable: separate later Plan B/Plan C timed-reassessment submissions. `MSC-CQ-REASSESS-001` establishes that these are separate treatment-stage submissions, but the repository currently has no approved treatment-stage schema/evaluator that consumes them. The suite records this as `HPG-GAP-REASSESS-001`; it covers the initial Plan B/C classifications and reassessment instructions and does not invent later-state semantics.
+`HPG-GAP-REASSESS-001` is resolved by `edge-imci-holistic-golden-scope-dispositions-v1`. Separate longitudinal Plan B/C treatment-stage execution is outside holistic golden v1. The suite covers the initial dehydration classification, Plan B/C action, and timed-reassessment instruction. A later full updated assessment may be submitted and evaluated afresh; v1 does not maintain treatment state, infer reassessment findings, or automatically repeat a plan. This product-scope disposition does not change the clinical rules or `MSC-CQ-REASSESS-001`.
 
 ## Target behavior
 

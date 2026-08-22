@@ -1,5 +1,7 @@
 # `imci-selected-v0` machine-readable rule set — Domain Expert Crosscheck
 
+> **Authority:** `HISTORICAL_ARCHIVE` · **Lifecycle:** `ARCHIVED` · Selected-v0 review evidence only.
+
 **Source:** Derived from WHO Integrated Management of Childhood Illness, Chart Booklet, March 2014
 
 **Population:** Children aged 2 to 59 months

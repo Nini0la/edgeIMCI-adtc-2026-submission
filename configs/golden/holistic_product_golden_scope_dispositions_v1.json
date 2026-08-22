@@ -1,0 +1,33 @@
+{
+  "disposition_set_id": "edge-imci-holistic-golden-scope-dispositions-v1",
+  "status": "APPROVED_FOR_HACKATHON_SCOPE",
+  "approved_date": "2026-08-22",
+  "rule_set_id": "imci-major-sick-child-v1",
+  "completeness_policy_id": "imci-major-sick-child-holistic-completeness-v2",
+  "review_decision_set_id": "imci-major-sick-child-review-decisions-v1",
+  "clinical_rule_change": false,
+  "production_clinical_use_authorized": false,
+  "dispositions": [
+    {
+      "gap_id": "HPG-GAP-REASSESS-001",
+      "status": "RESOLVED_BY_PRODUCT_SCOPE",
+      "decision": "Separate longitudinal Plan B/Plan C treatment-stage execution is outside holistic golden v1. The initial holistic semantic answer must include the source-backed dehydration classification, Plan B or Plan C, and the timed-reassessment instruction. A later full updated assessment may be submitted and evaluated afresh; EdgeIMCI v1 does not maintain treatment state, infer reassessment findings, or automatically repeat a rehydration plan.",
+      "required_initial_semantics": [
+        "DEHYDRATION_CLASSIFICATION",
+        "PLAN_B_OR_PLAN_C_ACTION",
+        "TIMED_REASSESSMENT_INSTRUCTION"
+      ],
+      "excluded_v1_behavior": [
+        "LONGITUDINAL_TREATMENT_STATE",
+        "AUTOMATIC_PLAN_REPETITION",
+        "INFERRED_POST_REHYDRATION_FINDINGS",
+        "DEDICATED_PLAN_B_OR_PLAN_C_TREATMENT_STAGE_ORACLE"
+      ],
+      "supporting_review_decision_ids": [
+        "MSC-CQ-SCOPE-001",
+        "MSC-CQ-REASSESS-001"
+      ],
+      "rationale_type": "PRODUCT_SCOPE_DECISION"
+    }
+  ]
+}

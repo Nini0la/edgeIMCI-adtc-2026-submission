@@ -1,5 +1,7 @@
 # `imci-selected-v0` benchmark cases — Domain Expert Crosscheck
 
+> **Authority:** `HISTORICAL_ARCHIVE` · **Lifecycle:** `ARCHIVED` · Selected-v0 review evidence only.
+
 Review each selected-scope case: given the patient presentation and observations, is the expected classification and action correct under the EdgeIMCI machine-readable rule set derived from WHO IMCI 2014?
 These cases do not represent a complete IMCI encounter. Tick the box in the last column if correct, or write a note if something is wrong.
 

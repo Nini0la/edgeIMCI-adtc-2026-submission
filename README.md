@@ -30,7 +30,7 @@ The clinical-semantic foundation for the bounded hackathon scope is implemented.
 | Clinical/policy review | All 13 recorded questions resolved and versioned |
 | Automated verification | Full deterministic suite maintained in `tests/` |
 | Archived selected-v0 14-case component slice | Frozen historical/component-regression artifact; product-ineligible |
-| Product-level holistic golden semantic set | 78 proposed cases constructed; domain review and one recorded reassessment coverage gap remain |
+| Product-level holistic golden semantic set | 78 proposed cases constructed; domain review is the remaining freeze gate |
 | Golden language renderings | Not yet frozen |
 | Experiment/run registry infrastructure | Planned, not yet implemented |
 | Bulk corpus generation | Not started |
@@ -141,7 +141,7 @@ Each structured golden case should pin:
 
 The proposed set includes complete encounters, every encoded classification family, multiple simultaneous conditions, explicit-negative/omission twins, urgent-incomplete cases, respiratory reassessment, initial Plan B/C behavior, malaria contexts, HIV/chest-indrawing, cholera, measles, ear boundaries, contradictions, and schema-rejected out-of-scope cases.
 
-One requirement remains explicitly blocked as `HPG-GAP-REASSESS-001`: the repository has no approved separate treatment-stage evaluator for later Plan B/C reassessment submissions. The suite does not invent those semantics. This gap must be resolved or the review requirement amended before the suite is frozen.
+`HPG-GAP-REASSESS-001` is resolved by the versioned product-scope disposition `edge-imci-holistic-golden-scope-dispositions-v1`. Holistic golden v1 covers the initial dehydration classification, Plan B/C action, and timed-reassessment instruction. It does not execute longitudinal treatment state or automatic plan loops; a later full updated assessment may be submitted and evaluated afresh. This is an interaction/product-scope decision, not a new clinical rule.
 
 The current suite is eligible only for domain review and component validation. Its manifest rejects holistic generation, product evaluation, teacher bake-offs, and training. Only after the semantic review is complete and the suite is frozen should the project establish golden language renderings and run the decisive teacher/prompt bake-off. See the [requirements](docs/product_holistic_golden_suite_requirements_v1.md) and [review package](docs/product_holistic_golden_review_v1.md).
 
@@ -217,6 +217,8 @@ External results must identify the pinned revision and one of the repository’s
 
 ## Repository map
 
+Documentation authority and lifecycle are defined in [`docs/README.md`](docs/README.md). Working plans, exploratory notes, review evidence, approved policy, and historical records must not be treated as interchangeable.
+
 ### Clinical semantics and completeness
 
 - [`data/rules/imci_major_sick_child_v1.json`](data/rules/imci_major_sick_child_v1.json): canonical expanded clinical rule set and provenance.
@@ -230,7 +232,8 @@ External results must identify the pinned revision and one of the repository’s
 
 - [`data/golden/holistic_product_v1/`](data/golden/holistic_product_v1): proposed 78-case product-level holistic semantic suite, canonical manifest, and YAML mirror.
 - [`docs/product_holistic_golden_suite_requirements_v1.md`](docs/product_holistic_golden_suite_requirements_v1.md): product-level semantic-suite contract.
-- [`docs/product_holistic_golden_review_v1.md`](docs/product_holistic_golden_review_v1.md): case index, pinned substrate, review instructions, and recorded construction gap.
+- [`configs/golden/holistic_product_golden_scope_dispositions_v1.json`](configs/golden/holistic_product_golden_scope_dispositions_v1.json): versioned product-scope resolution for later Plan B/C treatment-stage execution.
+- [`docs/product_holistic_golden_review_v1.md`](docs/product_holistic_golden_review_v1.md): case index, pinned substrate, review instructions, and resolved scope disposition.
 - [`docs/interaction_design_retrieval_assessment_bundles.md`](docs/interaction_design_retrieval_assessment_bundles.md): current holistic interaction framing.
 - [`docs/synthetic_data_generation_experiment_notes.md`](docs/synthetic_data_generation_experiment_notes.md): structured-first language-generation hypotheses and experiments.
 - [`data/archive/selected_v0/`](data/archive/selected_v0): quarantined historical 14-case selected-v0 component semantics and proposed renderings; lifecycle restrictions are machine-readable in its archive manifest.

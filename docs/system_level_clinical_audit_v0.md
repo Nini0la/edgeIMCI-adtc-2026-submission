@@ -1,5 +1,7 @@
 # `imci-selected-v0` system-level clinical substrate audit
 
+> **Authority:** `HISTORICAL_ARCHIVE` · **Lifecycle:** `ARCHIVED` · Selected-v0 audit only.
+
 **Audit date:** 2026-08-20  
 **Scope:** The frozen 15-rule EdgeIMCI machine-readable rule set derived from the WHO *Integrated Management of Childhood Illness, Chart Booklet*, March 2014. This is not a WHO-authored machine-readable rule set and is not complete IMCI.  
 **Population:** `2 <= age_months < 60`.  

@@ -1,5 +1,7 @@
 # Archived selected-v0 component regression slice v1 — human/domain-expert review
 
+> **Authority:** `HISTORICAL_ARCHIVE` · **Lifecycle:** `ARCHIVED` · Selected-v0 review evidence only.
+
 **Status:** `ARCHIVED`. Historical/component-regression use only; not training data and ineligible for product evaluation, holistic generation, and teacher selection.
 
 **Pinned IDs:** `imci-selected-v0` / `imci-selected-v0-information-policy-v1` / `imci-selected-v0-valid-completions-v1`

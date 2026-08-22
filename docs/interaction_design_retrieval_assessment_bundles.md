@@ -1,5 +1,7 @@
 # EdgeIMCI Interaction Design — Holistic Assessment, Completeness, and Clinical Synthesis
 
+> **Authority:** `APPROVED_PRODUCT_POLICY` · **Lifecycle:** `CURRENT` · Defines interaction framing but cannot create or override clinical logic.
+
 ## Status and purpose
 
 This note supersedes the earlier framing of EdgeIMCI as primarily a system for progressive conversational acquisition, assessment bundles, or retrieval of local decision cards.

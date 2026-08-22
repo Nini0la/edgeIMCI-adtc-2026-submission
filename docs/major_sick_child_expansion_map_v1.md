@@ -1,5 +1,7 @@
 # Major sick-child IMCI expansion map v1
 
+> **Authority:** `REVIEW_RECORD` · **Lifecycle:** `CURRENT` · Source/provenance map read together with the approved decision set.
+
 **Status:** Source-derived engineering map with provisional computational interpretations. Domain-expert approval is required before product-level golden data.
 
 **Clinical source:** [WHO *Integrated Management of Childhood Illness, Chart Booklet*, March 2014](../data/sources/IMCI%20chartbooklet%202014.pdf).

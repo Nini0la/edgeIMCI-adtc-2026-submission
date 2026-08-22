@@ -1,5 +1,7 @@
 # EdgeIMCI rendering contract v1
 
+> **Authority:** `HISTORICAL_ARCHIVE` · **Lifecycle:** `ARCHIVED` · Selected-v0 rendering contract; not current holistic language policy.
+
 **Status:** `PROPOSED_FOR_HUMAN_REVIEW`  
 **Scope:** Historical language realization of the archived 14-case selected-v0 component semantic slice.
 **Not:** clinical logic, a model-performance benchmark, an SFT corpus, or approval for bulk generation.

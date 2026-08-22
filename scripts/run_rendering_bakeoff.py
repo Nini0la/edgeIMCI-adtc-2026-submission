@@ -363,7 +363,11 @@ def _render_review(
     lines = [
         "# EdgeIMCI rendering bake-off v1 — human review",
         "",
-        "**Status:** `PROPOSED_FOR_HUMAN_REVIEW`",
+        "> **Authority:** `HISTORICAL_ARCHIVE` · **Lifecycle:** `ARCHIVED` · Selected-v0 experiment evidence only.",
+        "",
+        "**Status:** `ARCHIVED_HISTORICAL_EXPERIMENT`",
+        "",
+        "> This review preserves the original selected-v0 experiment. It is not a current teacher-selection exercise and must not be used as product-level holistic semantics, product evaluation, or training data.",
         "",
         "These are conversion-acceptance cases, not a model-performance benchmark or SFT corpus. Structured golden trajectories remain the semantic source of truth.",
         "",

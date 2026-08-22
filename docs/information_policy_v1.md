@@ -1,5 +1,7 @@
 # EdgeIMCI information policy v1
 
+> **Authority:** `IMPLEMENTATION_REFERENCE` · **Lifecycle:** `ARCHIVED` · Selected-v0 behavior only.
+
 **Status:** Implemented and tested deterministic execution layer for `imci-selected-v0`. It does not add clinical rules, generate a golden slice, or represent complete IMCI.
 
 ## Two separate evaluators

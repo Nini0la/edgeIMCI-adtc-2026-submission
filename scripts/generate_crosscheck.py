@@ -12,7 +12,6 @@ from __future__ import annotations
 
 import csv
 import json
-import re
 from pathlib import Path
 
 # ── paths ──────────────────────────────────────────────────────────────
@@ -137,8 +136,6 @@ def conditions_to_plain(rule: dict) -> str:
     if kind == "fast_breathing_threshold":
         age = conds.get("age_months", {})
         rr = conds.get("respiratory_rate", {})
-        age_str = f"age {age.get('gte', '?')}–{age.get('lt', '?')} months"
-        rr_str = f"respiratory rate ≥ {rr.get('gte', '?')}"
         return f"Child aged {age.get('gte', '?')} to {age.get('lt', '?')} months with respiratory rate ≥ {rr.get('gte', '?')} breaths/min"
 
     if kind == "respiratory_classification":
@@ -227,7 +224,7 @@ def generate_rules_crosscheck(rules_data: dict) -> tuple[str, list[list[str]]]:
 
         if kind == "fast_breathing_threshold":
             # Threshold rules don't classify directly — they set a flag used by later rules
-            classification = f"Sets: fast breathing = yes (used by rule IMCI-RESP-PNEUMONIA-FAST-BREATHING)"
+            classification = "Sets: fast breathing = yes (used by rule IMCI-RESP-PNEUMONIA-FAST-BREATHING)"
             actions = "Not a classification rule — this is a threshold check that feeds the respiratory classification rules below"
         elif "classification" in result:
             classification = humanize_enum(result.get("classification"), CLASSIFICATION_LABELS)
@@ -257,6 +254,7 @@ def generate_rules_crosscheck(rules_data: dict) -> tuple[str, list[list[str]]]:
 
     # Build markdown
     md = "# `imci-selected-v0` machine-readable rule set — Domain Expert Crosscheck\n\n"
+    md += "> **Authority:** `HISTORICAL_ARCHIVE` · **Lifecycle:** `ARCHIVED` · Selected-v0 review evidence only.\n\n"
     md += f"**Source:** Derived from {rules_data['document']}, {rules_data['edition']}\n\n"
     md += f"**Population:** Children aged {rules_data['population']['age_months']['gte']} to {rules_data['population']['age_months']['lt'] - 1} months\n\n"
     md += "Review each EdgeIMCI-encoded rule derived from the WHO IMCI chart: does its condition, classification, and action set preserve the selected source logic?\n"
@@ -310,6 +308,7 @@ def generate_cases_crosscheck(benchmark_path: Path) -> tuple[str, list[list[str]
             ])
 
     md = "# `imci-selected-v0` benchmark cases — Domain Expert Crosscheck\n\n"
+    md += "> **Authority:** `HISTORICAL_ARCHIVE` · **Lifecycle:** `ARCHIVED` · Selected-v0 review evidence only.\n\n"
     md += "Review each selected-scope case: given the patient presentation and observations, is the expected classification and action correct under the EdgeIMCI machine-readable rule set derived from WHO IMCI 2014?\n"
     md += "These cases do not represent a complete IMCI encounter. Tick the box in the last column if correct, or write a note if something is wrong.\n\n"
     md += "| " + " | ".join(headers) + " |\n"
@@ -349,7 +348,7 @@ def main() -> None:
         writer = csv.writer(f)
         writer.writerows(cases_csv)
 
-    print(f"Generated:")
+    print("Generated:")
     print(f"  {rules_md_path}")
     print(f"  {rules_csv_path}")
     print(f"  {cases_md_path}")

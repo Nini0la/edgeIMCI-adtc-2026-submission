@@ -1,5 +1,7 @@
 # Major sick-child clinical model v1 — domain-expert review package
 
+> **Authority:** `REVIEW_RECORD` · **Lifecycle:** `CURRENT` · Hackathon-scope review evidence; canonical decisions live in the approved decision artifact.
+
 **Review status:** The 13 recorded decisions were approved for the bounded hackathon representation on 2026-08-22. Do not use this package as production clinical guidance.
 
 **Artifact under review:** `imci-major-sick-child-v1` with completeness policy `imci-major-sick-child-holistic-completeness-v2`.

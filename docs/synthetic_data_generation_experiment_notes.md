@@ -1,5 +1,7 @@
 # EdgeIMCI Synthetic Data Generation — Experiment Notes
 
+> **Authority:** `EXPLORATORY_NOTES` · **Lifecycle:** `CURRENT` · Hypotheses and options only; not an approved clinical or product decision.
+
 ## Purpose
 
 This document records practical guidance, teacher-model options, and experimental hypotheses for generating the natural-language portion of the EdgeIMCI training corpus. The primary corpus target is now the complete supported major sick-child encounter, not an isolated pathway or a next-question trajectory.
