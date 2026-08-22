@@ -197,6 +197,11 @@ def test_wheeze_with_fast_breathing_requires_intervention_and_reassessment() -> 
     assert not incomplete.supported_encounter_complete
     assert HolisticAction.GIVE_RAPID_ACTING_INHALED_BRONCHODILATOR_TRIAL in incomplete.intermediate_actions
     assert "respiratory.post_bronchodilator_respiratory_rate" in incomplete.missing_elements[MajorAssessment.RESPIRATORY]
+    assert not any(
+        item.pathway is MajorAssessment.RESPIRATORY
+        for item in incomplete.internal_classifications
+    )
+    assert "IMCI-MSC-RESP-PNEUMONIA-FAST-BREATHING" not in incomplete.fired_rule_ids
 
     completed = evaluate_holistic_encounter(
         replace(
@@ -221,6 +226,49 @@ def test_wheeze_with_fast_breathing_requires_intervention_and_reassessment() -> 
         item.action is HolisticAction.GIVE_INHALED_BRONCHODILATOR_5_DAYS
         for item in completed.action_trace
     )
+
+
+@pytest.mark.parametrize(
+    "changes",
+    [
+        {"child_calm": False},
+        {"breaths_counted_one_minute": False},
+    ],
+)
+def test_invalid_respiratory_rate_does_not_produce_a_classification(changes) -> None:
+    result = evaluate_holistic_encounter(
+        _encounter(
+            patient_facts=_facts(has_cough_or_difficult_breathing=True),
+            respiratory=_resp(**changes),
+        )
+    )
+    assert not result.supported_encounter_complete
+    assert not any(
+        item.pathway is MajorAssessment.RESPIRATORY
+        for item in result.internal_classifications
+    )
+    assert "IMCI-MSC-RESP-COUGH-OR-COLD" not in result.fired_rule_ids
+
+
+@pytest.mark.parametrize(
+    ("age_months", "rate", "rule_id"),
+    [
+        (2, 49, "IMCI-MSC-RESP-FAST-BREATHING-2-12M"),
+        (12, 39, "IMCI-MSC-RESP-FAST-BREATHING-12-60M"),
+        (18, 35, "IMCI-MSC-RESP-FAST-BREATHING-12-60M"),
+    ],
+)
+def test_below_threshold_fast_breathing_rules_do_not_fire(age_months, rate, rule_id) -> None:
+    result = evaluate_holistic_encounter(
+        _encounter(
+            patient_facts=_facts(
+                age_months=age_months,
+                has_cough_or_difficult_breathing=True,
+            ),
+            respiratory=_resp(respiratory_rate=rate),
+        )
+    )
+    assert rule_id not in result.fired_rule_ids
 
 
 def test_some_dehydration_emits_plan_b_and_separate_reassessment_action() -> None:
@@ -278,6 +326,33 @@ def test_fever_malaria_and_measles_can_be_classified_together() -> None:
     assert HolisticAction.GIVE_FIRST_LINE_ORAL_ANTIMALARIAL in result.final_actions
     assert HolisticAction.GIVE_VITAMIN_A_TREATMENT in result.final_actions
     assert HolisticAction.GIVE_PARACETAMOL_FOR_HIGH_FEVER in result.final_actions
+
+
+def test_severe_complicated_measles_keeps_source_mandated_treatment_immediate() -> None:
+    result = evaluate_holistic_encounter(
+        _encounter(
+            patient_facts=_facts(has_fever=True),
+            fever=_fever(
+                generalized_rash=True,
+                red_eyes=True,
+                mouth_ulcers=False,
+                pus_draining_from_eye=False,
+                clouding_of_cornea=True,
+            ),
+        )
+    )
+
+    assert result.supported_encounter_complete
+    assert HolisticClassification.SEVERE_COMPLICATED_MEASLES in _classes(result)
+    required_immediate = {
+        HolisticAction.GIVE_VITAMIN_A_TREATMENT,
+        HolisticAction.GIVE_FIRST_DOSE_APPROPRIATE_ANTIBIOTIC,
+        HolisticAction.APPLY_TETRACYCLINE_EYE_OINTMENT,
+        HolisticAction.URGENT_REFERRAL,
+    }
+    assert required_immediate <= set(result.urgent_actions)
+    assert required_immediate <= set(result.final_actions)
+    assert not required_immediate & set(result.deferred_actions)
 
 
 @pytest.mark.parametrize(

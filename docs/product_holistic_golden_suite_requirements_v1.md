@@ -2,7 +2,7 @@
 
 > **Authority:** `APPROVED_PRODUCT_POLICY` · **Lifecycle:** `CURRENT` · Construction and review contract; not a clinical-rule source.
 
-**Status:** Construction implemented as a 78-case proposal against `imci-major-sick-child-review-decisions-v1`. Domain review and freeze are pending; this is hackathon-scope work, not production clinical authorization.
+**Status:** Construction implemented as a 78-case proposal against `imci-major-sick-child-review-decisions-v1` plus `imci-major-sick-child-oxygen-referral-disposition-v1`. Oracle-v3 remediation re-review and freeze are pending; this is hackathon-scope work, not production clinical authorization.
 
 **Artifacts:** `data/golden/holistic_product_v1/semantic_cases.jsonl`, its YAML mirror and manifest, plus `docs/product_holistic_golden_review_v1.md`.
 
@@ -22,9 +22,10 @@ holistic completeness policy
 whole-encounter schema
 integrated action-synthesis oracle
 clinical-question disposition set
+source-literal oxygen-referral disposition
 ```
 
-The pinned hackathon-scope substrate is `imci-major-sick-child-v1` with `imci-major-sick-child-holistic-completeness-v2` and `imci-major-sick-child-review-decisions-v1`. The recorded domain/policy gate is satisfied for construction of the holistic golden suite; production clinical authorization remains outside this approval.
+The pinned hackathon-scope substrate is `imci-major-sick-child-v1` with `imci-major-sick-child-holistic-completeness-v2`, `imci-major-sick-child-review-decisions-v1`, and `imci-major-sick-child-oxygen-referral-disposition-v1`. The recorded domain/policy gate is satisfied for construction and re-review of the holistic golden suite; production clinical authorization remains outside this approval.
 
 ## Required semantic families
 

@@ -29,6 +29,15 @@ HOLISTIC_DECISIONS_PATH = (
     / "imci_major_sick_child_review_decisions_v1.json"
 )
 HOLISTIC_DECISIONS_YAML_PATH = HOLISTIC_DECISIONS_PATH.with_suffix(".yaml")
+HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_PATH = (
+    _ROOT
+    / "configs"
+    / "information_policy"
+    / "imci_major_sick_child_oxygen_referral_disposition_v1.json"
+)
+HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_YAML_PATH = (
+    HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_PATH.with_suffix(".yaml")
+)
 
 
 @dataclass(frozen=True)
@@ -36,6 +45,7 @@ class HolisticArtifacts:
     rule_set: RuleSet
     policy: dict[str, Any]
     decisions: dict[str, Any]
+    oxygen_referral_disposition: dict[str, Any]
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -52,6 +62,7 @@ def load_holistic_artifacts() -> HolisticArtifacts:
         rule_set=load_rule_set(HOLISTIC_RULE_PATH),
         policy=_load_json(HOLISTIC_POLICY_PATH),
         decisions=_load_json(HOLISTIC_DECISIONS_PATH),
+        oxygen_referral_disposition=_load_json(HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_PATH),
     )
     validate_holistic_artifacts(artifacts)
     return artifacts
@@ -60,6 +71,7 @@ def load_holistic_artifacts() -> HolisticArtifacts:
 def validate_holistic_artifacts(artifacts: HolisticArtifacts) -> None:
     policy = artifacts.policy
     decisions = artifacts.decisions
+    oxygen_disposition = artifacts.oxygen_referral_disposition
     if artifacts.rule_set.rule_set_id != HOLISTIC_RULE_SET_ID:
         raise ValueError("unexpected holistic rule-set ID")
     if policy.get("policy_id") != HOLISTIC_COMPLETENESS_POLICY_ID:
@@ -102,6 +114,24 @@ def validate_holistic_artifacts(artifacts: HolisticArtifacts) -> None:
         raise ValueError("v2 must not reintroduce legacy sufficiency diagnostics")
     if not policy.get("encounter_specific_unresolved_question_ids_block_completion"):
         raise ValueError("clinically significant unresolved branches must block completion")
+    expected_oxygen_disposition = {
+        "disposition_id": "imci-major-sick-child-oxygen-referral-disposition-v1",
+        "status": "APPROVED_FOR_HACKATHON_SCOPE",
+        "rule_set_id": HOLISTIC_RULE_SET_ID,
+        "source_rule_id": "IMCI-MSC-RESP-OXYGEN-SATURATION",
+        "clinical_rule_change": False,
+        "production_clinical_use_authorized": False,
+    }
+    for key, expected in expected_oxygen_disposition.items():
+        if oxygen_disposition.get(key) != expected:
+            raise ValueError(f"incorrect oxygen-referral disposition {key}")
+    if oxygen_disposition.get("implementation") != {
+        "action": "REFER_FOR_OXYGEN_SATURATION_BELOW_90",
+        "urgent_action_required": False,
+        "activates_ip_cq_004": False,
+        "retain_other_applicable_actions": True,
+    }:
+        raise ValueError("oxygen-referral disposition must preserve source-literal non-urgent referral")
     unknown = policy.get("unknown_semantics", {})
     if not unknown.get("omitted_is_unknown") or unknown.get("unknown_is_negative"):
         raise ValueError("v2 must preserve UNKNOWN and must not treat omission as negative")

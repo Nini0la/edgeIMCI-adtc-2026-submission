@@ -16,6 +16,7 @@ from edge_imci.generation.holistic_golden import (
     DEFAULT_SCOPE_DISPOSITIONS_YAML_PATH,
     DEFAULT_YAML_PATH,
     DECISION_SET_ID,
+    OXYGEN_REFERRAL_DISPOSITION_ID,
     RECORD_SCHEMA_ID,
     SUITE_ID,
     SCOPE_DISPOSITION_SET_ID,
@@ -73,12 +74,149 @@ def test_all_approved_review_decisions_are_represented(records: list[dict]) -> N
     assert represented == approved
 
 
+def test_review_decision_applicability_is_exact_for_all_thirteen_decisions(
+    records: list[dict],
+) -> None:
+    actual: dict[str, set[str]] = {
+        item["question_id"]: set()
+        for item in load_holistic_artifacts().decisions["decisions"]
+    }
+    for record in records:
+        for question_id in record["provenance"]["review_decision_ids"]:
+            actual[question_id].add(record["golden_case_id"])
+
+    expected = {
+        "IP-CQ-001": {
+            "hpg-002-danger-unable-to-drink-or-breastfeed",
+            "hpg-003-danger-vomits-everything",
+            "hpg-004-danger-had-convulsions",
+            "hpg-005-danger-lethargic-or-unconscious",
+            "hpg-006-danger-convulsing-now",
+            "hpg-037-diarrhoea-positive-drinking-reuse",
+            "hpg-070-cross-multiple-urgent",
+            "hpg-073-incomplete-known-urgent",
+            "hpg-076-complete-danger-plus-all-pathways",
+        },
+        "IP-CQ-002": {
+            "hpg-037-diarrhoea-positive-drinking-reuse",
+            "hpg-038-diarrhoea-negative-does-not-reuse",
+            "hpg-075-contradiction-drinking",
+        },
+        "IP-CQ-003": {
+            record["golden_case_id"]
+            for record in records
+            if record["input"]["encounter"].get("patient_facts", {}).get(
+                "has_cough_or_difficult_breathing"
+            )
+            is True
+        },
+        "IP-CQ-004": {
+            "hpg-034-diarrhoea-severe-persistent",
+            "hpg-055-fever-severe-measles-cornea",
+            "hpg-069-cross-urgent-dehydration-ear",
+            "hpg-070-cross-multiple-urgent",
+            "hpg-076-complete-danger-plus-all-pathways",
+        },
+        "MSC-CQ-SCOPE-001": {
+            "hpg-001-all-negative",
+            "hpg-071-incomplete-entry-unknown",
+            "hpg-072-incomplete-multiple-groups",
+            "hpg-073-incomplete-known-urgent",
+            "hpg-074-incomplete-internal-classification-withheld",
+            "hpg-077-out-of-scope-age-1",
+            "hpg-078-out-of-scope-age-60",
+        },
+        "MSC-CQ-RESP-001": {
+            "hpg-020-resp-post-bronchodilator-improved",
+            "hpg-021-resp-post-bronchodilator-fast",
+            "hpg-022-resp-trial-outstanding",
+        },
+        "MSC-CQ-RESP-002": {"hpg-014-resp-chest-hiv-positive"},
+        "MSC-CQ-DIARRHOEA-001": {
+            "hpg-030-diarrhoea-severe-age-24-no-cholera",
+            "hpg-031-diarrhoea-severe-age-24-cholera",
+            "hpg-040-diarrhoea-cholera-context-unknown",
+        },
+        "MSC-CQ-REASSESS-001": {
+            "hpg-028-diarrhoea-some-dehydration",
+            "hpg-029-diarrhoea-severe-plan-c-under-24m",
+            "hpg-030-diarrhoea-severe-age-24-no-cholera",
+            "hpg-031-diarrhoea-severe-age-24-cholera",
+            "hpg-034-diarrhoea-severe-persistent",
+            "hpg-040-diarrhoea-cholera-context-unknown",
+        },
+        "MSC-CQ-FEVER-001": {
+            record["golden_case_id"]
+            for record in records
+            if record["input"]["encounter"].get("patient_facts", {}).get("has_fever")
+            is True
+        },
+        "MSC-CQ-FEVER-002": {"hpg-052-fever-identified-bacterial-cause"},
+        "MSC-CQ-FEVER-003": {
+            record["golden_case_id"]
+            for record in records
+            if record["input"]["encounter"].get("patient_facts", {}).get("has_fever")
+            is True
+        },
+        "MSC-CQ-EAR-001": {"hpg-065-ear-observed-pus-no-history"},
+    }
+    assert actual == expected
+    assert all(case_ids for case_ids in actual.values())
+    assert all(len(case_ids) < len(records) for case_ids in actual.values())
+
+
+def test_coverage_tags_are_unique_within_each_case(records: list[dict]) -> None:
+    for record in records:
+        assert len(record["coverage"]) == len(set(record["coverage"]))
+
+
+def test_oxygen_referral_disposition_provenance_is_exact(records: list[dict]) -> None:
+    carrying = {
+        record["golden_case_id"]
+        for record in records
+        if OXYGEN_REFERRAL_DISPOSITION_ID
+        in record["provenance"]["product_policy_disposition_ids"]
+    }
+    assert carrying == {"hpg-016-resp-oximeter-89-9"}
+
+
+def test_non_firing_requirement_and_scope_provenance_is_explicit(records: list[dict]) -> None:
+    for record in records:
+        citations = record["provenance"]["requirement_citations"]
+        expected = record["expected"]
+        if expected["kind"] == "SCHEMA_REJECTION":
+            assert any(item["provenance_type"] == "SCOPE_BOUNDARY" for item in citations)
+            continue
+        evaluation = expected["evaluation"]
+        missing = {
+            field
+            for fields in evaluation["missing_elements"].values()
+            for field in fields
+        }
+        cited_fields = {field for item in citations for field in item["fields"]}
+        assert missing <= cited_fields
+        if evaluation["contradictions"]:
+            assert any(
+                item["provenance_type"] == "EVIDENCE_VALIDITY_REQUIREMENT"
+                for item in citations
+            )
+        if not evaluation["supported_encounter_complete"]:
+            assert citations
+    assert _by_id(records)["hpg-001-all-negative"]["provenance"][
+        "requirement_citations"
+    ]
+
+
 def test_manifest_pins_lifecycle_hash_and_noneligibility(records: list[dict]) -> None:
     manifest = json.loads(DEFAULT_MANIFEST_PATH.read_text(encoding="utf-8"))
     assert manifest["suite_id"] == SUITE_ID
     assert manifest["lifecycle_status"] == "PROPOSED_FOR_DOMAIN_REVIEW"
     assert manifest["case_count"] == len(records)
     assert manifest["artifact_pins"]["review_decision_set_id"] == DECISION_SET_ID
+    assert (
+        manifest["artifact_pins"]["oxygen_referral_disposition_id"]
+        == OXYGEN_REFERRAL_DISPOSITION_ID
+    )
     assert manifest["artifact_pins"]["scope_disposition_set_id"] == SCOPE_DISPOSITION_SET_ID
     assert manifest["artifact_pins"]["validator_id"] == VALIDATOR_ID
     assert manifest["semantic_cases_sha256"] == hashlib.sha256(DEFAULT_JSONL_PATH.read_bytes()).hexdigest()
@@ -155,6 +293,23 @@ def test_incomplete_cases_withhold_final_synthesis_but_keep_known_urgency(record
     assert nonurgent["urgent_action_required"] is False
     assert nonurgent["final_classifications"] == []
     assert nonurgent["final_actions"] == []
+
+
+def test_severe_measles_source_treatments_remain_in_immediate_urgent_workflow(
+    records: list[dict],
+) -> None:
+    evaluation = _by_id(records)["hpg-055-fever-severe-measles-cornea"]["expected"][
+        "evaluation"
+    ]
+    required = {
+        "GIVE_VITAMIN_A_TREATMENT",
+        "GIVE_FIRST_DOSE_APPROPRIATE_ANTIBIOTIC",
+        "APPLY_TETRACYCLINE_EYE_OINTMENT",
+        "URGENT_REFERRAL",
+    }
+    assert required <= set(evaluation["urgent_actions"])
+    assert required <= set(evaluation["final_actions"])
+    assert not required & set(evaluation["deferred_actions"])
 
 
 def test_explicit_negative_and_omission_remain_distinct(records: list[dict]) -> None:

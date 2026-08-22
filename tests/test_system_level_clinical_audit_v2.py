@@ -160,13 +160,15 @@ def test_oxygen_saturation_referral_boundary(saturation, referred) -> None:
         )
     )
     assert result.supported_encounter_complete
-    assert (
-        HolisticAction.REFER_FOR_OXYGEN_SATURATION_BELOW_90 in result.urgent_actions
-    ) is referred
+    assert not result.urgent_action_required
+    assert HolisticAction.REFER_FOR_OXYGEN_SATURATION_BELOW_90 not in result.urgent_actions
     if referred:
         assert not result.unresolved_question_ids
         assert HolisticAction.REFER_FOR_OXYGEN_SATURATION_BELOW_90 in result.final_actions
-        assert HolisticAction.SOOTHE_THROAT_AND_RELIEVE_COUGH in result.deferred_actions
+        assert HolisticAction.SOOTHE_THROAT_AND_RELIEVE_COUGH in result.final_actions
+        assert not result.deferred_actions
+    else:
+        assert HolisticAction.REFER_FOR_OXYGEN_SATURATION_BELOW_90 not in result.final_actions
 
 
 @pytest.mark.parametrize(
@@ -260,8 +262,9 @@ def test_severe_measles_precedence_and_conditional_eye_action() -> None:
         item.action for item in result.action_trace
     }
     assert HolisticAction.URGENT_REFERRAL in result.urgent_actions
-    assert HolisticAction.APPLY_TETRACYCLINE_EYE_OINTMENT in result.deferred_actions
-    assert HolisticAction.APPLY_TETRACYCLINE_EYE_OINTMENT not in result.final_actions
+    assert HolisticAction.APPLY_TETRACYCLINE_EYE_OINTMENT in result.urgent_actions
+    assert HolisticAction.APPLY_TETRACYCLINE_EYE_OINTMENT in result.final_actions
+    assert HolisticAction.APPLY_TETRACYCLINE_EYE_OINTMENT not in result.deferred_actions
 
 
 @pytest.mark.parametrize(

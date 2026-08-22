@@ -19,25 +19,27 @@ This repository is research software. It is **not** a production medical device,
 
 ## Current status
 
-The clinical-semantic foundation for the bounded hackathon scope is implemented. A 78-case product-level holistic semantic suite has been constructed deterministically and is awaiting domain review; it is not yet frozen.
+The clinical-semantic foundation for the bounded hackathon scope is implemented. A 78-case product-level holistic semantic suite has undergone two technical/source review cycles and oracle-v3 remediation. The current same-agent technical/source verification passes all 78 cases and recommends proceeding to human/domain approval; the suite is not yet approved or frozen.
 
 | Area | Status |
 | --- | --- |
 | Major sick-child clinical rule set and provenance | Implemented and versioned |
 | Whole-encounter schema | Implemented |
 | Mechanical completeness oracle | Implemented and deterministic |
-| Integrated classification/action oracle | Deterministic; approved for the bounded hackathon representation |
-| Clinical/policy review | All 13 recorded questions resolved and versioned |
+| Integrated classification/action oracle | Deterministic oracle v3; technical/source verification passes |
+| Clinical/policy review | All 13 original questions plus the source-literal oxygen-referral disposition are resolved and versioned |
 | Automated verification | Full deterministic suite maintained in `tests/` |
 | Archived selected-v0 14-case component slice | Frozen historical/component-regression artifact; product-ineligible |
-| Product-level holistic golden semantic set | 78 proposed cases constructed; domain review is the remaining freeze gate |
+| Product-level holistic golden semantic set | 78 proposed cases pass current technical/source verification; human/domain approval and freeze remain |
 | Golden language renderings | Not yet frozen |
-| Experiment/run registry infrastructure | Planned, not yet implemented |
+| Experiment/run registry infrastructure | Implemented with versioned registry, immutable run sidecars, accounting, and profiling support |
 | Bulk corpus generation | Not started |
 | SFT/model training | Not started |
 | Target-hardware profiling of a trained checkpoint | Not started |
 
 The approved review decisions are canonical in [`imci_major_sick_child_review_decisions_v1.json`](configs/information_policy/imci_major_sick_child_review_decisions_v1.json), with a generated YAML mirror. This approval is limited to the project’s hackathon representation and is not production clinical authorization.
+
+The later oxygen-referral disposition is canonical in [`imci_major_sick_child_oxygen_referral_disposition_v1.json`](configs/information_policy/imci_major_sick_child_oxygen_referral_disposition_v1.json). It preserves the source wording as non-urgent referral: saturation below 90% does not independently activate `IP-CQ-004` or suppress other applicable actions.
 
 ## Supported encounter scope
 
@@ -125,9 +127,9 @@ python scripts/sync_holistic_artifacts.py
 
 Tests reject JSON/YAML drift, unknown evaluator rule IDs, invalid scope pins, incomplete decision sets, and relevant clinical/completeness regressions.
 
-## Immediate next gate: review and freeze the holistic golden semantic set
+## Immediate next gate: human/domain approval and controlled semantic freeze
 
-The proposed `edge-imci-holistic-product-golden-v1` suite contains 78 structured cases using `corpus_role=HOLISTIC_PRODUCT_GOLDEN`. It is canonical as JSONL with a YAML mirror, pins the approved clinical/policy/oracle identities, and is mechanically recomputed by `edge-imci-holistic-golden-validator-v1`.
+The proposed `edge-imci-holistic-product-golden-v1` suite contains 78 structured cases using `corpus_role=HOLISTIC_PRODUCT_GOLDEN`. It is canonical as JSONL with a YAML mirror, pins the approved clinical/policy/oracle identities, and is mechanically recomputed by `edge-imci-holistic-golden-validator-v3`.
 
 Each structured golden case should pin:
 
@@ -143,7 +145,7 @@ The proposed set includes complete encounters, every encoded classification fami
 
 `HPG-GAP-REASSESS-001` is resolved by the versioned product-scope disposition `edge-imci-holistic-golden-scope-dispositions-v1`. Holistic golden v1 covers the initial dehydration classification, Plan B/C action, and timed-reassessment instruction. It does not execute longitudinal treatment state or automatic plan loops; a later full updated assessment may be submitted and evaluated afresh. This is an interaction/product-scope decision, not a new clinical rule.
 
-The current suite is eligible only for domain review and component validation. Its manifest rejects holistic generation, product evaluation, teacher bake-offs, and training. Only after the semantic review is complete and the suite is frozen should the project establish golden language renderings and run the decisive teacher/prompt bake-off. See the [requirements](docs/product_holistic_golden_suite_requirements_v1.md) and [review package](docs/product_holistic_golden_review_v1.md).
+The first review’s four findings and the second review’s three respiratory findings are closed in oracle/generator/validator v3. The current technical/source verification gives all 78 cases `PASS_SOURCE_ALIGNED` and recommends `READY_FOR_HUMAN_DOMAIN_APPROVAL`, while explicitly noting that the implementing agent performed that verification. The suite remains eligible only for domain review and component validation until a human/domain approver accepts the current hash and authorizes freeze. See the [requirements](docs/product_holistic_golden_suite_requirements_v1.md), [generated review package](docs/product_holistic_golden_review_v1.md), [second finding record](docs/product_holistic_golden_domain_re_review_v1.md), and [current v3 verification](docs/product_holistic_golden_domain_re_review_v2.md).
 
 ## Experimental campaign
 
@@ -234,7 +236,9 @@ Documentation authority and lifecycle are defined in [`docs/README.md`](docs/REA
 - [`docs/product_holistic_golden_suite_requirements_v1.md`](docs/product_holistic_golden_suite_requirements_v1.md): product-level semantic-suite contract.
 - [`configs/golden/holistic_product_golden_scope_dispositions_v1.json`](configs/golden/holistic_product_golden_scope_dispositions_v1.json): versioned product-scope resolution for later Plan B/C treatment-stage execution.
 - [`docs/product_holistic_golden_review_v1.md`](docs/product_holistic_golden_review_v1.md): case index, pinned substrate, review instructions, and resolved scope disposition.
-- [`docs/holistic_golden_domain_review_agent_instructions.md`](docs/holistic_golden_domain_review_agent_instructions.md): strict handoff protocol for the 78-case technical/source review.
+- [`docs/product_holistic_golden_domain_review_v1.md`](docs/product_holistic_golden_domain_review_v1.md): superseded technical/source review of the pre-remediation hash and its four findings.
+- [`docs/product_holistic_golden_domain_re_review_v1.md`](docs/product_holistic_golden_domain_re_review_v1.md): superseded oracle-v2 independent review and respiratory finding record.
+- [`docs/product_holistic_golden_domain_re_review_v2.md`](docs/product_holistic_golden_domain_re_review_v2.md): current oracle-v3 technical/source verification and human/domain-approval recommendation.
 - [`docs/interaction_design_retrieval_assessment_bundles.md`](docs/interaction_design_retrieval_assessment_bundles.md): current holistic interaction framing.
 - [`docs/synthetic_data_generation_experiment_notes.md`](docs/synthetic_data_generation_experiment_notes.md): structured-first language-generation hypotheses and experiments.
 - [`data/archive/selected_v0/`](data/archive/selected_v0): quarantined historical 14-case selected-v0 component semantics and proposed renderings; lifecycle restrictions are machine-readable in its archive manifest.

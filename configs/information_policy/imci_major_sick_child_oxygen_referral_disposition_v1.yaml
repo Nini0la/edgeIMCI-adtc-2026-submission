@@ -1,0 +1,24 @@
+# Generated from configs/information_policy/imci_major_sick_child_oxygen_referral_disposition_v1.json.
+# Edit the canonical JSON and rerun scripts/sync_holistic_artifacts.py; do not edit this mirror.
+disposition_id: imci-major-sick-child-oxygen-referral-disposition-v1
+status: APPROVED_FOR_HACKATHON_SCOPE
+approved_date: '2026-08-22'
+authority_type: HUMAN_APPROVED_SOURCE_LITERAL_PRODUCT_POLICY
+rule_set_id: imci-major-sick-child-v1
+source_rule_id: IMCI-MSC-RESP-OXYGEN-SATURATION
+source:
+  section: Cough or difficult breathing footnote
+  source_pdf_page: 6
+  source_printed_page: 2 of 76
+decision: When pulse oximetry is available and oxygen saturation is below 90%, emit the source instruction to refer.
+  Do not strengthen this to urgent referral, do not activate the urgent pre-referral workflow solely from this finding,
+  and do not suppress other applicable routine management actions.
+implementation:
+  action: REFER_FOR_OXYGEN_SATURATION_BELOW_90
+  urgent_action_required: false
+  activates_ip_cq_004: false
+  retain_other_applicable_actions: true
+clinical_rule_change: false
+production_clinical_use_authorized: false
+scope_note: This records the source-literal presentation selected for the bounded EdgeIMCI hackathon representation.
+  It is not production clinical authorization.

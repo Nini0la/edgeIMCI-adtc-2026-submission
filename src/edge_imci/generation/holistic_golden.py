@@ -41,10 +41,11 @@ from edge_imci.schemas.trajectory import CorpusRole
 
 ROOT = Path(__file__).resolve().parents[3]
 SUITE_ID = "edge-imci-holistic-product-golden-v1"
-RECORD_SCHEMA_ID = "edge-imci-holistic-golden-semantic-record-v1"
-GENERATOR_VERSION = "edge-imci-holistic-golden-generator-v1"
-VALIDATOR_ID = "edge-imci-holistic-golden-validator-v1"
+RECORD_SCHEMA_ID = "edge-imci-holistic-golden-semantic-record-v3"
+GENERATOR_VERSION = "edge-imci-holistic-golden-generator-v3"
+VALIDATOR_ID = "edge-imci-holistic-golden-validator-v3"
 DECISION_SET_ID = "imci-major-sick-child-review-decisions-v1"
+OXYGEN_REFERRAL_DISPOSITION_ID = "imci-major-sick-child-oxygen-referral-disposition-v1"
 SCOPE_DISPOSITION_SET_ID = "edge-imci-holistic-golden-scope-dispositions-v1"
 GENERATION_SEED = 20260822
 DEFAULT_SCOPE_DISPOSITIONS_PATH = ROOT / "configs" / "golden" / "holistic_product_golden_scope_dispositions_v1.json"
@@ -334,7 +335,15 @@ def holistic_golden_specs() -> tuple[HolisticGoldenSpec, ...]:
         ("high-test-unavailable", _fever(malaria_test_available=False, malaria_test_result=None), ("malaria", "test_unavailable")),
         ("low-obvious-cause", _fever(malaria_risk=MalariaRisk.LOW, obvious_cause_of_fever_present=True, malaria_test_available=None, malaria_test_result=None), ("fever_no_malaria", "low_risk", "obvious_cause")),
         ("low-no-cause-positive", _fever(malaria_risk=MalariaRisk.LOW, malaria_test_result=MalariaTestResult.POSITIVE), ("malaria", "low_risk", "test_positive")),
-        ("no-risk", _fever(malaria_risk=MalariaRisk.NONE_NO_TRAVEL, malaria_test_available=None, malaria_test_result=None), ("fever", "no_malaria_risk")),
+        (
+            "no-risk",
+            _fever(
+                malaria_risk=MalariaRisk.NONE_NO_TRAVEL,
+                malaria_test_available=None,
+                malaria_test_result=None,
+            ),
+            ("no_malaria_risk",),
+        ),
         ("temperature-38-4", _fever(temperature_c=38.4), ("temperature_boundary", "no_high_fever_action")),
         ("temperature-38-5", _fever(temperature_c=38.5), ("temperature_boundary", "high_fever_action")),
         ("duration-7", _fever(fever_duration_days=7), ("duration_boundary", "not_prolonged")),
@@ -415,6 +424,212 @@ def _source_provenance(rule_ids: list[str]) -> dict[str, Any]:
     }
 
 
+def _bronchodilator_trial_indicated(
+    age_months: int | None,
+    respiratory: HolisticRespiratoryObservations,
+) -> bool:
+    """Return whether the initial respiratory findings trigger the approved trial sequence."""
+    if respiratory.wheezing is not True:
+        return False
+    if respiratory.chest_indrawing is True:
+        return True
+    if age_months is None or respiratory.respiratory_rate is None:
+        return False
+    threshold = 50 if age_months < 12 else 40
+    return respiratory.respiratory_rate >= threshold
+
+
+def _derived_review_decision_ids(
+    encounter: HolisticEncounter | None,
+    coverage: tuple[str, ...] | list[str],
+    expected: dict[str, Any],
+) -> list[str]:
+    """Derive exact approved-decision applicability from semantic factors."""
+    applicable: set[str] = set()
+    tags = set(coverage)
+    if encounter is None:
+        applicable.add("MSC-CQ-SCOPE-001")
+    else:
+        facts = encounter.patient_facts
+        danger_values = tuple(asdict(encounter.danger_signs).values())
+        known_danger = any(value is True for value in danger_values)
+        entries = (
+            facts.has_cough_or_difficult_breathing,
+            facts.has_diarrhoea,
+            facts.has_fever,
+            facts.has_ear_problem,
+        )
+        evaluation = expected["evaluation"]
+
+        if known_danger:
+            applicable.add("IP-CQ-001")
+        if (
+            facts.has_diarrhoea is True
+            and encounter.diarrhoea is not None
+            and (
+                encounter.danger_signs.unable_to_drink_or_breastfeed is True
+                or (
+                    encounter.danger_signs.unable_to_drink_or_breastfeed is False
+                    and encounter.diarrhoea.dehydration.drinking_status
+                    in {None, DrinkingStatus.UNABLE}
+                )
+            )
+        ):
+            applicable.add("IP-CQ-002")
+        if facts.has_cough_or_difficult_breathing is True and encounter.respiratory is not None:
+            applicable.add("IP-CQ-003")
+        classifications = {
+            item["classification"] for item in evaluation["internal_classifications"]
+        }
+        if evaluation["urgent_action_required"] and (
+            evaluation["deferred_actions"]
+            or "SEVERE_COMPLICATED_MEASLES" in classifications
+            or tags
+            & {
+                "cross_pathway_action_dependency",
+                "multiple_urgent",
+                "deferred_routine_actions",
+            }
+        ):
+            applicable.add("IP-CQ-004")
+        if (
+            all(value is False for value in entries)
+            and not known_danger
+            or any(value is None for value in entries)
+        ):
+            applicable.add("MSC-CQ-SCOPE-001")
+
+        respiratory = encounter.respiratory
+        if facts.has_cough_or_difficult_breathing is True and respiratory is not None:
+            if _bronchodilator_trial_indicated(facts.age_months, respiratory):
+                applicable.add("MSC-CQ-RESP-001")
+            if respiratory.chest_indrawing is True and respiratory.hiv_exposed_or_infected is True:
+                applicable.add("MSC-CQ-RESP-002")
+
+        if facts.has_diarrhoea is True and encounter.diarrhoea is not None:
+            if (
+                facts.age_months is not None
+                and facts.age_months >= 24
+                and "SEVERE_DEHYDRATION" in classifications
+            ):
+                applicable.add("MSC-CQ-DIARRHOEA-001")
+            if {
+                "REASSESS_DEHYDRATION_AFTER_PLAN_B",
+                "REASSESS_DEHYDRATION_AFTER_PLAN_C",
+            } & set(evaluation["intermediate_actions"]):
+                applicable.add("MSC-CQ-REASSESS-001")
+
+        if facts.has_fever is True and encounter.fever is not None:
+            applicable.update({"MSC-CQ-FEVER-001", "MSC-CQ-FEVER-003"})
+            if encounter.fever.identified_bacterial_cause_present is True:
+                applicable.add("MSC-CQ-FEVER-002")
+
+        if (
+            facts.has_ear_problem is True
+            and encounter.ear is not None
+            and encounter.ear.pus_draining_from_ear is True
+            and encounter.ear.ear_discharge_reported is False
+            and encounter.ear.tender_swelling_behind_ear is False
+        ):
+            applicable.add("MSC-CQ-EAR-001")
+
+    decision_order = [
+        item["question_id"] for item in load_holistic_artifacts().decisions["decisions"]
+    ]
+    return [question_id for question_id in decision_order if question_id in applicable]
+
+
+def _requirement_provenance(
+    encounter: HolisticEncounter | None,
+    coverage: tuple[str, ...] | list[str],
+    expected: dict[str, Any],
+) -> list[dict[str, Any]]:
+    """Cite non-firing completeness requirements and scope without claiming a rule fired."""
+    policy = load_holistic_artifacts().policy
+    artifact_path = "configs/information_policy/imci_major_sick_child_holistic_completeness_v2.json"
+    common = {
+        "artifact_id": HOLISTIC_COMPLETENESS_POLICY_ID,
+        "artifact_path": artifact_path,
+    }
+    if encounter is None:
+        return [
+            {
+                "provenance_id": "HC-SCOPE-AGE-2-59",
+                "provenance_type": "SCOPE_BOUNDARY",
+                **common,
+                "artifact_section": "population.age_months",
+                "fields": ["patient_facts.age_months"],
+            }
+        ]
+
+    evaluation = expected["evaluation"]
+    missing_fields = {
+        field
+        for fields in evaluation["missing_elements"].values()
+        for field in fields
+    }
+    entries: list[dict[str, Any]] = []
+    always = set(policy["always_required"])
+    missing_always = sorted(missing_fields & always)
+    if missing_always:
+        entries.append(
+            {
+                "provenance_id": "HC-REQ-ALWAYS",
+                "provenance_type": "COMPLETENESS_REQUIREMENT",
+                **common,
+                "artifact_section": "always_required",
+                "fields": missing_always,
+            }
+        )
+    for index, requirement in enumerate(policy["conditional_requirements"], start=1):
+        fields = sorted(missing_fields & set(requirement["require"]))
+        if fields:
+            entries.append(
+                {
+                    "provenance_id": f"HC-REQ-CONDITIONAL-{index:02d}",
+                    "provenance_type": "COMPLETENESS_REQUIREMENT",
+                    **common,
+                    "artifact_section": f"conditional_requirements[{index - 1}]",
+                    "fields": fields,
+                    "trigger": requirement["when"],
+                }
+            )
+    if evaluation["contradictions"]:
+        invalid_respiratory = all(
+            message.startswith("respiratory") for message in evaluation["contradictions"]
+        )
+        entries.append(
+            {
+                "provenance_id": (
+                    "HC-INVALID-EVIDENCE" if invalid_respiratory else "HC-CONTRADICTION-BLOCKS-COMPLETION"
+                ),
+                "provenance_type": "EVIDENCE_VALIDITY_REQUIREMENT",
+                **common,
+                "artifact_section": (
+                    "invalid_evidence_blocks_completion"
+                    if invalid_respiratory
+                    else "contradictions_block_completion"
+                ),
+                "fields": [],
+                "details": list(evaluation["contradictions"]),
+            }
+        )
+    if "low_severity" in coverage and not missing_fields:
+        entries.append(
+            {
+                "provenance_id": "HC-EXPLICIT-NEGATIVE-PATHWAY-EXCLUSION",
+                "provenance_type": "COMPLETENESS_REQUIREMENT",
+                **common,
+                "artifact_section": "always_required + unknown_semantics",
+                "fields": list(policy["always_required"]),
+                "details": [
+                    "All always-required observations are supplied explicitly; negative pathway-entry findings make those pathways not applicable."
+                ],
+            }
+        )
+    return entries
+
+
 def build_holistic_golden_suite() -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     for spec in holistic_golden_specs():
@@ -442,13 +657,32 @@ def build_holistic_golden_suite() -> list[dict[str, Any]]:
                 "expected": expected,
                 "provenance": {
                     **_source_provenance(rule_ids),
-                    "review_decision_ids": list(spec.review_decision_ids),
+                    "review_decision_ids": _derived_review_decision_ids(
+                        spec.encounter,
+                        spec.coverage,
+                        expected,
+                    ),
+                    "requirement_citations": _requirement_provenance(
+                        spec.encounter,
+                        spec.coverage,
+                        expected,
+                    ),
+                    "product_policy_disposition_ids": (
+                        [OXYGEN_REFERRAL_DISPOSITION_ID]
+                        if spec.encounter is not None
+                        and spec.encounter.respiratory is not None
+                        and spec.encounter.respiratory.pulse_oximeter_available is True
+                        and spec.encounter.respiratory.oxygen_saturation_percent is not None
+                        and spec.encounter.respiratory.oxygen_saturation_percent < 90
+                        else []
+                    ),
                 },
                 "metadata": {
                     "holistic_schema_version": HOLISTIC_SCHEMA_VERSION,
                     "rule_set_id": HOLISTIC_RULE_SET_ID,
                     "completeness_policy_id": HOLISTIC_COMPLETENESS_POLICY_ID,
                     "review_decision_set_id": DECISION_SET_ID,
+                    "oxygen_referral_disposition_id": OXYGEN_REFERRAL_DISPOSITION_ID,
                     "scope_disposition_set_id": SCOPE_DISPOSITION_SET_ID,
                     "oracle_id": HOLISTIC_ORACLE_ID,
                     "validator_id": VALIDATOR_ID,
@@ -473,6 +707,7 @@ def validate_holistic_golden_record(record: dict[str, Any]) -> None:
         "rule_set_id": HOLISTIC_RULE_SET_ID,
         "completeness_policy_id": HOLISTIC_COMPLETENESS_POLICY_ID,
         "review_decision_set_id": DECISION_SET_ID,
+        "oxygen_referral_disposition_id": OXYGEN_REFERRAL_DISPOSITION_ID,
         "scope_disposition_set_id": SCOPE_DISPOSITION_SET_ID,
         "oracle_id": HOLISTIC_ORACLE_ID,
         "validator_id": VALIDATOR_ID,
@@ -492,8 +727,21 @@ def validate_holistic_golden_record(record: dict[str, Any]) -> None:
         item["question_id"] for item in load_holistic_artifacts().decisions["decisions"]
     }
     review_decisions = record["provenance"]["review_decision_ids"]
-    if not review_decisions or not set(review_decisions) <= approved_decisions:
-        raise ValueError("golden record has missing or unknown review-decision provenance")
+    if not set(review_decisions) <= approved_decisions:
+        raise ValueError("golden record has unknown review-decision provenance")
+    coverage = record["coverage"]
+    if len(coverage) != len(set(coverage)):
+        raise ValueError("golden record has duplicate coverage tags")
+    respiratory_payload = payload.get("respiratory") or {}
+    expected_oxygen_dispositions = (
+        [OXYGEN_REFERRAL_DISPOSITION_ID]
+        if respiratory_payload.get("pulse_oximeter_available") is True
+        and respiratory_payload.get("oxygen_saturation_percent") is not None
+        and respiratory_payload["oxygen_saturation_percent"] < 90
+        else []
+    )
+    if record["provenance"].get("product_policy_disposition_ids") != expected_oxygen_dispositions:
+        raise ValueError("oxygen-referral product-policy provenance is not exact")
     if expected["kind"] == "SCHEMA_REJECTION":
         try:
             encounter_from_dict(payload)
@@ -502,10 +750,27 @@ def validate_holistic_golden_record(record: dict[str, Any]) -> None:
                 raise ValueError("schema rejection changed") from error
         else:
             raise ValueError("expected schema rejection did not occur")
+        if review_decisions != _derived_review_decision_ids(None, coverage, expected):
+            raise ValueError("schema-rejection review-decision provenance is not exact")
+        if record["provenance"]["requirement_citations"] != _requirement_provenance(
+            None,
+            coverage,
+            expected,
+        ):
+            raise ValueError("schema-rejection requirement provenance is not exact")
         return
-    actual = evaluate_holistic_encounter(encounter_from_dict(payload)).to_dict()
+    encounter = encounter_from_dict(payload)
+    actual = evaluate_holistic_encounter(encounter).to_dict()
     if actual != expected["evaluation"]:
         raise ValueError("holistic evaluation no longer matches the golden record")
+    if review_decisions != _derived_review_decision_ids(encounter, coverage, expected):
+        raise ValueError("review-decision provenance is not exact")
+    if record["provenance"]["requirement_citations"] != _requirement_provenance(
+        encounter,
+        coverage,
+        expected,
+    ):
+        raise ValueError("requirement provenance is not exact")
     expected_rules = expected["evaluation"]["fired_rule_ids"]
     if record["provenance"]["source_rule_ids"] != [
         item["rule_id"] for item in record["provenance"]["source_citations"]
@@ -581,6 +846,7 @@ def _manifest(
                 "rule_set_id",
                 "completeness_policy_id",
                 "review_decision_set_id",
+                "oxygen_referral_disposition_id",
                 "scope_disposition_set_id",
                 "oracle_id",
                 "validator_id",
@@ -625,7 +891,7 @@ def render_holistic_golden_review(records: list[dict[str, Any]]) -> str:
         "",
         f"**Cases:** {len(records)}. **Corpus role:** `{CorpusRole.HOLISTIC_PRODUCT_GOLDEN.value}`.",
         "",
-        f"**Pinned substrate:** `{HOLISTIC_RULE_SET_ID}` / `{HOLISTIC_COMPLETENESS_POLICY_ID}` / `{DECISION_SET_ID}` / `{SCOPE_DISPOSITION_SET_ID}` / `{HOLISTIC_ORACLE_ID}`.",
+        f"**Pinned substrate:** `{HOLISTIC_RULE_SET_ID}` / `{HOLISTIC_COMPLETENESS_POLICY_ID}` / `{DECISION_SET_ID}` / `{OXYGEN_REFERRAL_DISPOSITION_ID}` / `{SCOPE_DISPOSITION_SET_ID}` / `{HOLISTIC_ORACLE_ID}`.",
         "",
         "Every evaluable record is deterministically recomputed. The expected output is a review proposal, not independent clinical approval.",
         "",
@@ -667,7 +933,15 @@ def render_holistic_golden_review(records: list[dict[str, Any]]) -> str:
                 "",
                 f"**Coverage:** {', '.join(f'`{item}`' for item in record['coverage'])}",
                 "",
-                f"**Applicable approved decisions:** {', '.join(f'`{item}`' for item in record['provenance']['review_decision_ids'])}",
+                f"**Applicable approved decisions:** {', '.join(f'`{item}`' for item in record['provenance']['review_decision_ids']) or 'none'}",
+                "",
+                f"**Applicable product-policy dispositions:** {', '.join(f'`{item}`' for item in record['provenance']['product_policy_disposition_ids']) or 'none'}",
+                "",
+                "**Non-firing requirement / scope provenance:**",
+                "",
+                "```json",
+                json.dumps(record["provenance"]["requirement_citations"], indent=2, sort_keys=True),
+                "```",
                 "",
                 "**Structured input:**",
                 "",

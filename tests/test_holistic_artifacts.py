@@ -11,6 +11,8 @@ from edge_imci.information_policy.holistic_artifacts import (
     HOLISTIC_DECISIONS_YAML_PATH,
     HOLISTIC_POLICY_PATH,
     HOLISTIC_POLICY_YAML_PATH,
+    HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_PATH,
+    HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_YAML_PATH,
     HOLISTIC_RULE_PATH,
     HOLISTIC_RULE_YAML_PATH,
     load_holistic_artifacts,
@@ -34,15 +36,28 @@ def test_holistic_artifacts_pin_scope_and_completion_authority() -> None:
     assert artifacts.decisions["status"] == "APPROVED_FOR_HACKATHON_SCOPE"
     assert len(artifacts.decisions["decisions"]) == 13
     assert policy["unresolved_questions"] == []
+    assert artifacts.oxygen_referral_disposition["implementation"] == {
+        "action": "REFER_FOR_OXYGEN_SATURATION_BELOW_90",
+        "urgent_action_required": False,
+        "activates_ip_cq_004": False,
+        "retain_other_applicable_actions": True,
+    }
 
 
 def test_holistic_yaml_mirrors_match_canonical_json() -> None:
     rule_json = json.loads(HOLISTIC_RULE_PATH.read_text(encoding="utf-8"))
     policy_json = json.loads(HOLISTIC_POLICY_PATH.read_text(encoding="utf-8"))
     decisions_json = json.loads(HOLISTIC_DECISIONS_PATH.read_text(encoding="utf-8"))
+    oxygen_disposition_json = json.loads(
+        HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_PATH.read_text(encoding="utf-8")
+    )
     assert yaml.safe_load(HOLISTIC_RULE_YAML_PATH.read_text(encoding="utf-8")) == rule_json
     assert yaml.safe_load(HOLISTIC_POLICY_YAML_PATH.read_text(encoding="utf-8")) == policy_json
     assert yaml.safe_load(HOLISTIC_DECISIONS_YAML_PATH.read_text(encoding="utf-8")) == decisions_json
+    assert (
+        yaml.safe_load(HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_YAML_PATH.read_text(encoding="utf-8"))
+        == oxygen_disposition_json
+    )
     assert HOLISTIC_RULE_YAML_PATH.read_text(encoding="utf-8") == render_rule_yaml(
         rule_json,
         HOLISTIC_RULE_PATH,
@@ -56,6 +71,13 @@ def test_holistic_yaml_mirrors_match_canonical_json() -> None:
     assert HOLISTIC_DECISIONS_YAML_PATH.read_text(encoding="utf-8") == render_generated_yaml(
         decisions_json,
         HOLISTIC_DECISIONS_PATH.name,
+        "scripts/sync_holistic_artifacts.py",
+    )
+    assert HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_YAML_PATH.read_text(
+        encoding="utf-8"
+    ) == render_generated_yaml(
+        oxygen_disposition_json,
+        HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_PATH.name,
         "scripts/sync_holistic_artifacts.py",
     )
 

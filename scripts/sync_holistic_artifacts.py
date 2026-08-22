@@ -9,6 +9,8 @@ from edge_imci.information_policy.holistic_artifacts import (
     HOLISTIC_DECISIONS_YAML_PATH,
     HOLISTIC_POLICY_PATH,
     HOLISTIC_POLICY_YAML_PATH,
+    HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_PATH,
+    HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_YAML_PATH,
     HOLISTIC_RULE_PATH,
     HOLISTIC_RULE_YAML_PATH,
 )
@@ -45,6 +47,15 @@ if __name__ == "__main__":
         ),
         encoding="utf-8",
     )
+    HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_YAML_PATH.write_text(
+        render_generated_yaml(
+            _load(HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_PATH),
+            HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_PATH.name,
+            "scripts/sync_holistic_artifacts.py",
+        ),
+        encoding="utf-8",
+    )
     print(HOLISTIC_RULE_YAML_PATH)
     print(HOLISTIC_POLICY_YAML_PATH)
     print(HOLISTIC_DECISIONS_YAML_PATH)
+    print(HOLISTIC_OXYGEN_REFERRAL_DISPOSITION_YAML_PATH)

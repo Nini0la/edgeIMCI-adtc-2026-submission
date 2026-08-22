@@ -4,6 +4,8 @@
 
 This file records source-dependent questions that must not be resolved from general medical knowledge. The 13 questions that blocked the expanded major sick-child hackathon substrate were resolved on 2026-08-22 and are canonically recorded in `configs/information_policy/imci_major_sick_child_review_decisions_v1.json` (with a generated YAML mirror).
 
+A later golden-suite re-review identified the source-presentation question for oxygen saturation below 90%. The approved source-literal answer is separately versioned in `configs/information_policy/imci_major_sick_child_oxygen_referral_disposition_v1.json`: emit `REFER_FOR_OXYGEN_SATURATION_BELOW_90`, but do not strengthen it to urgent referral, activate `IP-CQ-004`, or suppress other applicable actions solely from that finding.
+
 Each question must identify the proposed rule ID, source location, a faithful summary of the source wording, the exact ambiguity, the expert decision required, and the blocked implementation.
 
 ## Resolution status

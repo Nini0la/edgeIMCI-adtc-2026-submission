@@ -32,7 +32,7 @@ from edge_imci.schemas.holistic import (
 
 HOLISTIC_RULE_SET_ID = "imci-major-sick-child-v1"
 HOLISTIC_COMPLETENESS_POLICY_ID = "imci-major-sick-child-holistic-completeness-v2"
-HOLISTIC_ORACLE_ID = "edge-imci-holistic-deterministic-oracle-v1"
+HOLISTIC_ORACLE_ID = "edge-imci-holistic-deterministic-oracle-v3"
 
 _DANGER_FIELDS = (
     "unable_to_drink_or_breastfeed",
@@ -261,8 +261,13 @@ def _evaluate_respiratory(
     if obs.pulse_oximeter_available is True and obs.oxygen_saturation_percent is None:
         state.add_missing(MajorAssessment.RESPIRATORY, "respiratory.oxygen_saturation_percent")
 
-    initial_fast = _fast_breathing(encounter.patient_facts.age_months, obs.respiratory_rate)
-    if encounter.patient_facts.age_months is not None and obs.respiratory_rate is not None:
+    initial_rate_valid = obs.child_calm is True and obs.breaths_counted_one_minute is True
+    initial_fast = (
+        _fast_breathing(encounter.patient_facts.age_months, obs.respiratory_rate)
+        if initial_rate_valid
+        else None
+    )
+    if initial_fast is True:
         state.fire(
             "IMCI-MSC-RESP-FAST-BREATHING-2-12M"
             if encounter.patient_facts.age_months < 12
@@ -272,6 +277,7 @@ def _evaluate_respiratory(
     trial_required = obs.wheezing is True and (initial_fast is True or obs.chest_indrawing is True) and not severe_known
     effective_rate = obs.respiratory_rate
     effective_chest = obs.chest_indrawing
+    effective_rate_valid = initial_rate_valid
     if trial_required:
         rule_id = "IMCI-MSC-RESP-WHEEZE-BRONCHODILATOR-REASSESS"
         state.add_action(HolisticAction.GIVE_RAPID_ACTING_INHALED_BRONCHODILATOR_TRIAL, rule_id, intermediate=True)
@@ -293,6 +299,10 @@ def _evaluate_respiratory(
         if obs.bronchodilator_trial_completed is True:
             effective_rate = obs.post_bronchodilator_respiratory_rate
             effective_chest = obs.post_bronchodilator_chest_indrawing
+            effective_rate_valid = (
+                obs.post_bronchodilator_child_calm is True
+                and obs.post_bronchodilator_breaths_counted_one_minute is True
+            )
 
     if severe_known:
         rule_id = "IMCI-MSC-RESP-SEVERE-DANGER-SIGN" if state.danger_signs else "IMCI-MSC-RESP-SEVERE-STRIDOR"
@@ -305,7 +315,20 @@ def _evaluate_respiratory(
 
     if any(getattr(encounter.danger_signs, name) is None for name in _DANGER_FIELDS):
         return None
-    effective_fast = _fast_breathing(encounter.patient_facts.age_months, effective_rate)
+    if trial_required and obs.bronchodilator_trial_completed is not True:
+        return None
+    effective_fast = (
+        _fast_breathing(encounter.patient_facts.age_months, effective_rate)
+        if effective_rate_valid
+        else None
+    )
+    if effective_fast is True:
+        state.fire(
+            "IMCI-MSC-RESP-FAST-BREATHING-2-12M"
+            if encounter.patient_facts.age_months is not None
+            and encounter.patient_facts.age_months < 12
+            else "IMCI-MSC-RESP-FAST-BREATHING-12-60M"
+        )
     if effective_chest is True:
         rule_id = "IMCI-MSC-RESP-PNEUMONIA-CHEST-INDRAWING"
         state.classify(MajorAssessment.RESPIRATORY, HolisticClassification.PNEUMONIA, rule_id)
@@ -622,7 +645,6 @@ def _add_respiratory_actions(
             state.add_action(
                 HolisticAction.REFER_FOR_OXYGEN_SATURATION_BELOW_90,
                 "IMCI-MSC-RESP-OXYGEN-SATURATION",
-                urgent=True,
             )
 
 
@@ -754,12 +776,21 @@ def _add_fever_actions(
         HolisticClassification.MEASLES_WITH_EYE_OR_MOUTH_COMPLICATIONS: "IMCI-MSC-MEASLES-EYE-OR-MOUTH-COMPLICATIONS",
         HolisticClassification.MEASLES: "IMCI-MSC-MEASLES",
     }[measles]
-    state.add_action(HolisticAction.GIVE_VITAMIN_A_TREATMENT, rule_id)
-    if measles is HolisticClassification.SEVERE_COMPLICATED_MEASLES:
+    severe_complicated = measles is HolisticClassification.SEVERE_COMPLICATED_MEASLES
+    state.add_action(
+        HolisticAction.GIVE_VITAMIN_A_TREATMENT,
+        rule_id,
+        urgent=severe_complicated,
+    )
+    if severe_complicated:
         state.add_action(HolisticAction.GIVE_FIRST_DOSE_APPROPRIATE_ANTIBIOTIC, rule_id, urgent=True)
         state.add_action(HolisticAction.URGENT_REFERRAL, rule_id, urgent=True)
     if obs.clouding_of_cornea is True or obs.pus_draining_from_eye is True:
-        state.add_action(HolisticAction.APPLY_TETRACYCLINE_EYE_OINTMENT, rule_id)
+        state.add_action(
+            HolisticAction.APPLY_TETRACYCLINE_EYE_OINTMENT,
+            rule_id,
+            urgent=severe_complicated,
+        )
     if obs.mouth_ulcers is True:
         state.add_action(HolisticAction.TREAT_MOUTH_ULCERS_WITH_GENTIAN_VIOLET, rule_id)
     if measles is HolisticClassification.MEASLES_WITH_EYE_OR_MOUTH_COMPLICATIONS:

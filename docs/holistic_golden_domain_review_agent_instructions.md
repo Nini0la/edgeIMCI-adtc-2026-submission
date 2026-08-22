@@ -1,6 +1,6 @@
 # Instructions for the holistic golden semantic domain-review agent
 
-> **Authority:** `WORKING_PLAN` · **Lifecycle:** `CURRENT` · Operational protocol for a source-backed technical review; it does not itself approve clinical semantics.
+> **Authority:** `WORKING_PLAN` · **Lifecycle:** `SUPERSEDED` · Original review protocol retained for audit history; use `holistic_golden_respiratory_remediation_re_review_agent_instructions.md` for the current re-review.
 
 ## Assignment
 

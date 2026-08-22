@@ -2,13 +2,14 @@
   "artifact_pins": {
     "completeness_policy_id": "imci-major-sick-child-holistic-completeness-v2",
     "generation_seed": 20260822,
-    "generator_version": "edge-imci-holistic-golden-generator-v1",
+    "generator_version": "edge-imci-holistic-golden-generator-v3",
     "holistic_schema_version": "edge-imci-major-sick-child-encounter-v1",
-    "oracle_id": "edge-imci-holistic-deterministic-oracle-v1",
+    "oracle_id": "edge-imci-holistic-deterministic-oracle-v3",
+    "oxygen_referral_disposition_id": "imci-major-sick-child-oxygen-referral-disposition-v1",
     "review_decision_set_id": "imci-major-sick-child-review-decisions-v1",
     "rule_set_id": "imci-major-sick-child-v1",
     "scope_disposition_set_id": "edge-imci-holistic-golden-scope-dispositions-v1",
-    "validator_id": "edge-imci-holistic-golden-validator-v1"
+    "validator_id": "edge-imci-holistic-golden-validator-v3"
   },
   "assets": [
     "data/golden/holistic_product_v1/semantic_cases.jsonl",
@@ -160,7 +161,7 @@
       ]
     }
   ],
-  "semantic_cases_sha256": "6cc773cf467e69135ad29e6018b894b749c8689122e6c92d585ce5bffd3df8b9",
+  "semantic_cases_sha256": "e8c538ac7a82b8faae7b7e36644eb3c44751c88380621e87625d1f703c5a70a1",
   "suite_id": "edge-imci-holistic-product-golden-v1",
   "unknown_semantics": {
     "omitted_is_unknown": true,

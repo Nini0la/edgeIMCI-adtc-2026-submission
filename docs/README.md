@@ -41,6 +41,7 @@ Lifecycle values are `CURRENT`, `PROPOSED_FOR_REVIEW`, `SUPERSEDED`, and `ARCHIV
 | `data/rules/imci_major_sick_child_v1.json` | `.yaml` sibling | `NORMATIVE_CLINICAL_ARTIFACT` | `CURRENT` |
 | `configs/information_policy/imci_major_sick_child_holistic_completeness_v2.json` | `.yaml` sibling | `NORMATIVE_CLINICAL_ARTIFACT` | `CURRENT` |
 | `configs/information_policy/imci_major_sick_child_review_decisions_v1.json` | `.yaml` sibling | `APPROVED_DECISION_ARTIFACT` | `CURRENT` |
+| `configs/information_policy/imci_major_sick_child_oxygen_referral_disposition_v1.json` | `.yaml` sibling | `APPROVED_PRODUCT_POLICY` | `CURRENT` |
 | `configs/golden/holistic_product_golden_scope_dispositions_v1.json` | `.yaml` sibling | `APPROVED_DECISION_ARTIFACT` | `CURRENT` |
 | `data/golden/holistic_product_v1/semantic_cases.jsonl` | `semantic_cases.yaml` | `REVIEW_RECORD` | `PROPOSED_FOR_REVIEW` |
 | `data/archive/selected_v0/archive_manifest.json` | none | `HISTORICAL_ARCHIVE` | `ARCHIVED` |
@@ -56,10 +57,15 @@ The proposed holistic golden suite does not become frozen product authority unti
 | `clinical_questions.md` | `REVIEW_RECORD` | `CURRENT` | Question/disposition index; canonical answers live in approved decision artifacts. |
 | `major_sick_child_expansion_map_v1.md` | `REVIEW_RECORD` | `CURRENT` | Source-derived engineering map; read with the approved decision set. |
 | `major_sick_child_domain_review_v1.md` | `REVIEW_RECORD` | `CURRENT` | Hackathon-scope domain-review record. |
-| `system_level_clinical_audit_v2.md` | `REVIEW_RECORD` | `CURRENT` | Current deterministic substrate audit. |
+| `system_level_clinical_audit_v2.md` | `REVIEW_RECORD` | `SUPERSEDED` | Pre-oracle-v3 substrate audit retained for history. |
 | `product_holistic_golden_suite_requirements_v1.md` | `APPROVED_PRODUCT_POLICY` | `CURRENT` | Approved construction/review contract for product semantics. |
 | `product_holistic_golden_review_v1.md` | `REVIEW_RECORD` | `PROPOSED_FOR_REVIEW` | Generated domain-review surface; not frozen semantics. |
-| `holistic_golden_domain_review_agent_instructions.md` | `WORKING_PLAN` | `CURRENT` | Review-only protocol for the 78-case technical/source audit. |
+| `holistic_golden_domain_review_agent_instructions.md` | `WORKING_PLAN` | `SUPERSEDED` | Original review-only protocol retained for audit history. |
+| `product_holistic_golden_domain_review_v1.md` | `REVIEW_RECORD` | `SUPERSEDED` | Technical/source review of the pre-remediation corpus hash; records four findings and no approval. |
+| `holistic_golden_remediation_re_review_agent_instructions.md` | `WORKING_PLAN` | `SUPERSEDED` | Completed oracle-v2 re-review protocol retained for history. |
+| `product_holistic_golden_domain_re_review_v1.md` | `REVIEW_RECORD` | `SUPERSEDED` | Independent review of corpus hash `bba39ee0...`; records the three respiratory findings remediated in v3. |
+| `holistic_golden_respiratory_remediation_re_review_agent_instructions.md` | `WORKING_PLAN` | `SUPERSEDED` | Completed oracle-v3 verification protocol retained for audit history. |
+| `product_holistic_golden_domain_re_review_v2.md` | `REVIEW_RECORD` | `CURRENT` | Same-agent technical/source verification of oracle-v3; recommends human/domain approval while explicitly recording its independence limitation. |
 | `interaction_design_retrieval_assessment_bundles.md` | `APPROVED_PRODUCT_POLICY` | `CURRENT` | Current interaction framing; cannot override clinical artifacts. |
 | `experiment_operations_and_tracking_plan.md` | `WORKING_PLAN` | `CURRENT` | Maintained Markdown working version; corresponding DOCX is its source snapshot. |
 | `experimental_campaign_map.md` | `WORKING_PLAN` | `CURRENT` | Maintained Markdown working version; corresponding DOCX is its source snapshot. |
@@ -83,5 +89,8 @@ The proposed holistic golden suite does not become frozen product authority unti
 | `EdgeIMCI - Experimental Campaign Map.docx` | Original user-authored/source snapshot for the maintained Markdown working plan. |
 | `EdgeIMCI - Synthetic Data Generation Experiment Plan.docx` | Original user-authored/source snapshot for the maintained Markdown working plan. |
 | `cases_crosscheck.csv`, `rules_crosscheck.csv`, `rules_crosscheck.pdf` | Generated/companion selected-v0 historical review material. |
+| `product_holistic_golden_domain_review_v1.csv` | Per-case companion to the superseded pre-remediation technical/source review. |
+| `product_holistic_golden_domain_re_review_v1.csv` | Per-case companion to the superseded oracle-v2 independent review. |
+| `product_holistic_golden_domain_re_review_v2.csv` | Current 78-row companion to the oracle-v3 technical/source verification. |
 
 Changes to document authority, lifecycle, canonicality, or supersession must update this index in the same commit.

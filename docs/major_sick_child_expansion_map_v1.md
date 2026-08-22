@@ -84,7 +84,7 @@ Completeness requires all five observations even when one known sign has already
 | No severe/pneumonia sign | `COUGH_OR_COLD` | Fallback after complete valid assessment | Direct |
 | Wheeze now or before trial | Inhaled bronchodilator for 5 days | Conditional action | Direct |
 | Cough >14 days or recurrent wheeze | Refer for possible TB/asthma assessment | Conditional action | Direct |
-| Saturation <90%, when oximetry available | Refer | Conditional action | Direct; product urgency presentation requires review |
+| Saturation <90%, when oximetry available | Refer without independently activating urgent pre-referral workflow | Conditional action | Direct source + `imci-major-sick-child-oxygen-referral-disposition-v1` |
 | Chest indrawing with HIV exposure/infection | First dose amoxicillin and refer | Changes routine pneumonia management | `MSC-CQ-RESP-002` |
 
 The three-day amoxicillin footnote and unavailable-referral behavior require local/national or Pocket Book policy not supplied by the generic chart. V1 uses the main five-day row and does not invent unavailable-referral management.

@@ -1,6 +1,6 @@
 # `imci-major-sick-child-v1` system-level clinical audit
 
-> **Authority:** `REVIEW_RECORD` · **Lifecycle:** `CURRENT` · Verification evidence for the bounded hackathon substrate.
+> **Authority:** `REVIEW_RECORD` · **Lifecycle:** `SUPERSEDED` · Pre-oracle-v3 audit retained for history; later golden re-review identified respiratory defects not captured here.
 
 **Audit date:** 2026-08-22
 
