@@ -9,6 +9,8 @@ from typing import Any
 
 
 class CorpusUse(str, Enum):
+    DOMAIN_REVIEW = "DOMAIN_REVIEW"
+    COMPONENT_VALIDATION = "COMPONENT_VALIDATION"
     COMPONENT_REGRESSION = "COMPONENT_REGRESSION"
     HISTORICAL_REPRODUCTION = "HISTORICAL_REPRODUCTION"
     HOLISTIC_GENERATION = "HOLISTIC_GENERATION"
@@ -41,13 +43,16 @@ def assert_corpus_use_allowed(
 
     manifest_file = Path(manifest_path).resolve()
     manifest = load_corpus_manifest(manifest_file)
+    corpus_id = manifest.get("archive_id") or manifest.get("suite_id")
+    if not corpus_id:
+        raise ValueError(f"Corpus manifest has no archive_id or suite_id: {manifest_file}")
     repository_root = manifest_file.parents[3]
     registered_assets = {(repository_root / item).resolve() for item in manifest["assets"]}
     requested_path = Path(corpus_path)
     requested_asset = (requested_path if requested_path.is_absolute() else repository_root / requested_path).resolve()
     if requested_asset not in registered_assets:
-        raise ValueError(f"Corpus asset is not registered by {manifest['archive_id']}: {requested_asset}")
+        raise ValueError(f"Corpus asset is not registered by {corpus_id}: {requested_asset}")
     if not manifest["eligibility"].get(use.value, False):
         raise ValueError(
-            f"Corpus {manifest['archive_id']} is {manifest['lifecycle_status']} and is not eligible for {use.value}"
+            f"Corpus {corpus_id} is {manifest['lifecycle_status']} and is not eligible for {use.value}"
         )

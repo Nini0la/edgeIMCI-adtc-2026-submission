@@ -1,7 +1,5 @@
 from __future__ import annotations
 
-from pathlib import Path
-
 import pytest
 
 from edge_imci.corpus_policy import (
@@ -22,7 +20,9 @@ def test_selected_v0_archive_is_explicit_and_all_assets_exist() -> None:
     assert manifest["corpus_role"] == CorpusRole.LEGACY_SELECTED_V0_COMPONENT_REGRESSION.value
     root = SELECTED_V0_ARCHIVE_MANIFEST.resolve().parents[3]
     assert all((root / asset).is_file() for asset in manifest["assets"])
-    assert not (root / "data" / "golden").exists()
+    assert not (root / "data" / "golden" / "golden_conversion_slice_v1.jsonl").exists()
+    assert not (root / "data" / "golden" / "golden_conversion_slice_v1.yaml").exists()
+    assert not (root / "data" / "golden" / "golden_reference_renderings_v1.jsonl").exists()
 
 
 @pytest.mark.parametrize(

@@ -32,6 +32,7 @@ from edge_imci.schemas.holistic import (
 
 HOLISTIC_RULE_SET_ID = "imci-major-sick-child-v1"
 HOLISTIC_COMPLETENESS_POLICY_ID = "imci-major-sick-child-holistic-completeness-v2"
+HOLISTIC_ORACLE_ID = "edge-imci-holistic-deterministic-oracle-v1"
 
 _DANGER_FIELDS = (
     "unable_to_drink_or_breastfeed",

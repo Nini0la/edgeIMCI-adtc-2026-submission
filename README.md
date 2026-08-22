@@ -19,7 +19,7 @@ This repository is research software. It is **not** a production medical device,
 
 ## Current status
 
-The clinical-semantic foundation for the bounded hackathon scope is implemented and approved for construction of the product-level golden suite.
+The clinical-semantic foundation for the bounded hackathon scope is implemented. A 78-case product-level holistic semantic suite has been constructed deterministically and is awaiting domain review; it is not yet frozen.
 
 | Area | Status |
 | --- | --- |
@@ -28,9 +28,9 @@ The clinical-semantic foundation for the bounded hackathon scope is implemented 
 | Mechanical completeness oracle | Implemented and deterministic |
 | Integrated classification/action oracle | Deterministic; approved for the bounded hackathon representation |
 | Clinical/policy review | All 13 recorded questions resolved and versioned |
-| Automated verification | 218 tests passing at the current checkpoint |
+| Automated verification | Full deterministic suite maintained in `tests/` |
 | Archived selected-v0 14-case component slice | Frozen historical/component-regression artifact; product-ineligible |
-| Product-level holistic golden semantic set | Requirements approved; construction is next |
+| Product-level holistic golden semantic set | 78 proposed cases constructed; domain review and one recorded reassessment coverage gap remain |
 | Golden language renderings | Not yet frozen |
 | Experiment/run registry infrastructure | Planned, not yet implemented |
 | Bulk corpus generation | Not started |
@@ -125,9 +125,9 @@ python scripts/sync_holistic_artifacts.py
 
 Tests reject JSON/YAML drift, unknown evaluator rule IDs, invalid scope pins, incomplete decision sets, and relevant clinical/completeness regressions.
 
-## Immediate next gate: the holistic golden semantic set
+## Immediate next gate: review and freeze the holistic golden semantic set
 
-The next substantive task is to construct, review, and freeze a 50–100-case product-level holistic semantic set and its validator version.
+The proposed `edge-imci-holistic-product-golden-v1` suite contains 78 structured cases using `corpus_role=HOLISTIC_PRODUCT_GOLDEN`. It is canonical as JSONL with a YAML mirror, pins the approved clinical/policy/oracle identities, and is mechanically recomputed by `edge-imci-holistic-golden-validator-v1`.
 
 Each structured golden case should pin:
 
@@ -139,9 +139,11 @@ Each structured golden case should pin:
 - exact rule/action traces and provenance; and
 - any applicable approved review decision.
 
-The set must include complete encounters, multiple simultaneous conditions, explicit-negative/omission twins, urgent-incomplete cases, respiratory reassessment, initial Plan B/C behavior and separate later reassessment states, malaria contexts, HIV/chest-indrawing, cholera, measles, ear boundaries, contradictions, and unsupported/out-of-scope cases.
+The proposed set includes complete encounters, every encoded classification family, multiple simultaneous conditions, explicit-negative/omission twins, urgent-incomplete cases, respiratory reassessment, initial Plan B/C behavior, malaria contexts, HIV/chest-indrawing, cholera, measles, ear boundaries, contradictions, and schema-rejected out-of-scope cases.
 
-Only after those semantics are reviewed and frozen should the project establish golden language renderings and run the decisive teacher/prompt bake-off. See [`product_holistic_golden_suite_requirements_v1.md`](docs/product_holistic_golden_suite_requirements_v1.md).
+One requirement remains explicitly blocked as `HPG-GAP-REASSESS-001`: the repository has no approved separate treatment-stage evaluator for later Plan B/C reassessment submissions. The suite does not invent those semantics. This gap must be resolved or the review requirement amended before the suite is frozen.
+
+The current suite is eligible only for domain review and component validation. Its manifest rejects holistic generation, product evaluation, teacher bake-offs, and training. Only after the semantic review is complete and the suite is frozen should the project establish golden language renderings and run the decisive teacher/prompt bake-off. See the [requirements](docs/product_holistic_golden_suite_requirements_v1.md) and [review package](docs/product_holistic_golden_review_v1.md).
 
 ## Experimental campaign
 
@@ -226,7 +228,9 @@ External results must identify the pinned revision and one of the repository’s
 
 ### Golden semantics and language work
 
-- [`docs/product_holistic_golden_suite_requirements_v1.md`](docs/product_holistic_golden_suite_requirements_v1.md): next product-level semantic-suite contract.
+- [`data/golden/holistic_product_v1/`](data/golden/holistic_product_v1): proposed 78-case product-level holistic semantic suite, canonical manifest, and YAML mirror.
+- [`docs/product_holistic_golden_suite_requirements_v1.md`](docs/product_holistic_golden_suite_requirements_v1.md): product-level semantic-suite contract.
+- [`docs/product_holistic_golden_review_v1.md`](docs/product_holistic_golden_review_v1.md): case index, pinned substrate, review instructions, and recorded construction gap.
 - [`docs/interaction_design_retrieval_assessment_bundles.md`](docs/interaction_design_retrieval_assessment_bundles.md): current holistic interaction framing.
 - [`docs/synthetic_data_generation_experiment_notes.md`](docs/synthetic_data_generation_experiment_notes.md): structured-first language-generation hypotheses and experiments.
 - [`data/archive/selected_v0/`](data/archive/selected_v0): quarantined historical 14-case selected-v0 component semantics and proposed renderings; lifecycle restrictions are machine-readable in its archive manifest.
@@ -235,6 +239,7 @@ External results must identify the pinned revision and one of the repository’s
 ### Infrastructure
 
 - [`scripts/sync_holistic_artifacts.py`](scripts/sync_holistic_artifacts.py): deterministic expanded JSON-to-YAML synchronization.
+- [`scripts/generate_holistic_golden_suite.py`](scripts/generate_holistic_golden_suite.py): deterministic proposed holistic semantic-suite generation and review package.
 - [`src/edge_imci/information_policy/`](src/edge_imci/information_policy): policy artifact validation and legacy selected-v0 information-policy machinery.
 - [`src/edge_imci/generation/`](src/edge_imci/generation): deterministic case, split, and historical golden-slice utilities.
 - [`src/edge_imci/evaluation/`](src/edge_imci/evaluation): clinical, parsing, scoring, external-evaluation, and reporting logic.

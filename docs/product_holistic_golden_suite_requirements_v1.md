@@ -1,16 +1,18 @@
 # Product-level holistic golden suite — requirements v1
 
-**Status:** Definition approved for construction against `imci-major-sick-child-review-decisions-v1`. The suite has not yet been constructed; this is hackathon-scope approval, not production clinical authorization.
+**Status:** Construction implemented as a 78-case proposal against `imci-major-sick-child-review-decisions-v1`. Domain review and freeze are pending; this is hackathon-scope work, not production clinical authorization.
+
+**Artifacts:** `data/golden/holistic_product_v1/semantic_cases.jsonl`, its YAML mirror and manifest, plus `docs/product_holistic_golden_review_v1.md`.
 
 ## Relationship to the existing golden slice
 
 The archived 14-case `LEGACY_SELECTED_V0_COMPONENT_REGRESSION` remains fixed under `data/archive/selected_v0/` for selected-v0 component regression and historical reproduction only.
 
-It is not the product-level golden suite for holistic v2 behavior. It is mechanically ineligible for holistic generation, product evaluation, teacher selection, and training. Existing v1 cases that emit an early classification while assessment is incomplete must not be reused as affirmative v2 product targets. The future suite must use `corpus_role=HOLISTIC_PRODUCT_GOLDEN` and pin the major-sick-child rule, policy, oracle, and review-decision identifiers.
+It is not the product-level golden suite for holistic v2 behavior. It is mechanically ineligible for holistic generation, product evaluation, teacher selection, and training. Existing v1 cases that emit an early classification while assessment is incomplete must not be reused as affirmative v2 product targets. The new product suite uses `corpus_role=HOLISTIC_PRODUCT_GOLDEN` and pins the major-sick-child rule, policy, oracle, validator, and review-decision identifiers.
 
 ## Pinned prerequisites
 
-The future suite must pin approved versions of:
+The proposed suite pins approved versions of:
 
 ```text
 clinical rule set
@@ -45,6 +47,12 @@ The reviewed suite should include at least:
 - malaria-risk and test-availability branches;
 - measles with simultaneous respiratory/diarrhoea/ear classifications;
 - out-of-scope cases that must not receive unsupported synthesis.
+
+## Construction result
+
+The proposed suite contains 78 cases, including 60 complete encounters and 18 incomplete or schema-rejected cases. Every encoded classification family appears in at least one review case. JSONL is canonical, YAML is the human-readable mirror, and each evaluable expected result is exactly recomputed from the pinned deterministic oracle.
+
+One required family is not yet representable: separate later Plan B/Plan C timed-reassessment submissions. `MSC-CQ-REASSESS-001` establishes that these are separate treatment-stage submissions, but the repository currently has no approved treatment-stage schema/evaluator that consumes them. The suite records this as `HPG-GAP-REASSESS-001`; it covers the initial Plan B/C classifications and reassessment instructions and does not invent later-state semantics.
 
 ## Target behavior
 
