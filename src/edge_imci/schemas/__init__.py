@@ -1,6 +1,7 @@
 """Data schemas for Edge IMCI inputs and outputs."""
 
 from edge_imci.schemas.case import ClinicalCase, EvaluationResult
+from edge_imci.schemas.holistic import HolisticEncounter, HolisticEvaluationResult
 from edge_imci.schemas.prediction import ModelPrediction
 from edge_imci.schemas.trajectory import (
     AcquisitionMode,
@@ -46,6 +47,8 @@ __all__ = [
     "ExpectedAssistantSemantics",
     "InformationPolicyResult",
     "KnowledgeState",
+    "HolisticEncounter",
+    "HolisticEvaluationResult",
     "LatentClinicalCase",
     "LatentObservation",
     "ModelPrediction",

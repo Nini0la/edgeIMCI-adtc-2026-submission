@@ -2,13 +2,15 @@
 
 EdgeIMCI is an experimental effort to test whether small, locally deployable language models can be specialized to reliably follow bounded IMCI clinical decision pathways on constrained hardware.
 
-This repository is research software, not a production medical device or autonomous clinical decision-support application. The initial benchmark is intentionally limited to sick children aged 2–59 months and covers only these selected areas:
+This repository is research software, not a production medical device or autonomous clinical decision-support application. The frozen v0 development benchmark remains intentionally limited to sick children aged 2–59 months and covers only these selected areas:
 
 - general danger signs;
 - cough or difficult breathing;
 - diarrhoea dehydration classification.
 
-The deterministic rule engine—not a language model—constructs and verifies the current benchmark ground truth. Model training is future work.
+The repository now also contains a separate, provisional expansion for the five major sick-child assessment areas: general danger signs, cough/difficult breathing, diarrhoea, fever including measles, and ear problem. Its final holistic synthesis is authorized only for a complete supported encounter. This expanded substrate requires domain-expert approval and is not training data or a production clinical system.
+
+The deterministic rule engines—not a language model—construct and verify clinical semantics. Model training remains future work.
 
 ## Clinical source
 
@@ -19,6 +21,8 @@ data/sources/IMCI chartbooklet 2014.pdf
 ```
 
 See `data/sources/README.md` and `docs/clinical_questions.md`. Wheeze/bronchodilator reassessment, prolonged cough or recurrent wheeze, HIV-specific chest-indrawing handling, persistent diarrhoea, dysentery, cholera treatment, and oxygen-saturation handling are outside `imci-selected-v0`. The selected respiratory and dehydration classifications must not be described as the complete IMCI respiratory or diarrhoea algorithms.
+
+`imci-major-sick-child-v1` is a separate expansion derived from PDF viewer pages 5–9 and the linked treatment/reassessment pages. It preserves v0 historically and is paired with `imci-major-sick-child-holistic-completeness-v2`. Open clinical and local-adaptation questions are recorded in `docs/clinical_questions.md`; until resolved, the expanded artifacts must be described as proposed and domain-review-gated.
 
 ## Install
 
@@ -93,6 +97,14 @@ python scripts/sync_rule_yaml.py
 
 The test suite fails if the committed YAML does not deserialize to the same rule set or does not match deterministic regeneration.
 
+The expanded canonical/mirror pair is `data/rules/imci_major_sick_child_v1.json` and `.yaml`. Its source map, audit, and domain-review package are separate from the frozen v0 review artifacts.
+
+Regenerate both expanded mirrors with:
+
+```bash
+python scripts/sync_holistic_artifacts.py
+```
+
 ## Run the mock baseline
 
 The mock adapter exercises serialization, prompting, structured scoring, and run-artifact generation without downloading or invoking a model.
@@ -130,6 +142,13 @@ Runs are local MLX inference only. No checkpoint is selected from evaluation res
 
 - `data/rules/imci_selected_v0.json`: canonical `imci-selected-v0` machine-readable rule set and provenance, derived from the WHO IMCI Chart Booklet.
 - `data/rules/imci_selected_v0.yaml`: generated human-readable mirror of the canonical JSON.
+- `data/rules/imci_major_sick_child_v1.json` and `.yaml`: proposed five-area major sick-child clinical model and generated review mirror; domain approval required.
+- `configs/information_policy/imci_major_sick_child_holistic_completeness_v2.json` and `.yaml`: completeness-gated final-synthesis policy; v1 information-policy artifacts remain historical and unchanged.
+- `src/edge_imci/schemas/holistic.py` and `evaluation/holistic.py`: separate whole-encounter schema and deterministic expanded evaluator.
+- `docs/major_sick_child_expansion_map_v1.md`: source-derived expansion map and computational interpretations.
+- `docs/major_sick_child_domain_review_v1.md`: compact clinical review package.
+- `docs/system_level_clinical_audit_v2.md`: expanded system-level verification and readiness decision.
+- `docs/product_holistic_golden_suite_requirements_v1.md`: requirements for the next reviewed product-level golden suite; no suite or corpus is generated here.
 - `data/generated/split_demo_v1.jsonl` and `split_manifest_v1.json`: deterministic split-machinery demonstration and leakage manifest, not final benchmark data.
 - `configs/external_benchmarks.json`: immutable Lundin revision, integrity, license, and paper pins.
 - `configs/model_baselines.json`: immutable Qwen/runtime matrix and sampling settings.
@@ -140,6 +159,8 @@ Runs are local MLX inference only. No checkpoint is selected from evaluation res
 - `configs/information_policy/`: canonical approved v1 information-policy and valid-completion JSON artifacts with generated YAML review mirrors.
 - `src/edge_imci/information_policy/`: artifact validation plus deterministic valid-completion information-policy evaluation above the frozen clinical oracle.
 - `docs/information_policy_v1.md`: executable policy contract, unresolved-question handling, and golden-slice handoff.
+- `docs/interaction_design_retrieval_assessment_bundles.md`: current holistic-assessment product framing; guided questions, bundles, and cards are secondary modes.
+- `docs/synthetic_data_generation_experiment_notes.md`: structured-first generation experiments updated for whole encounters, omissions, and urgent incomplete cases.
 - `src/edge_imci/generation/golden.py`: deterministic structured-first factory and conservative renderer for the 14-record `GOLDEN_CONVERSION_SLICE`; no paraphrase sampling.
 - `src/edge_imci/validation/golden.py`: isolated controlled-language semantic round-trip validator; not a clinical oracle.
 - `data/golden/golden_conversion_slice_v1.jsonl` and `.yaml`: tiny equivalent machine-readable validation slices; explicitly not training data, not a benchmark, and not a bulk corpus.

@@ -2,12 +2,12 @@
 
 ## Purpose
 
-This document records practical guidance, teacher-model options, and experimental hypotheses for generating the natural-language portion of the EdgeIMCI training corpus.
+This document records practical guidance, teacher-model options, and experimental hypotheses for generating the natural-language portion of the EdgeIMCI training corpus. The primary corpus target is now the complete supported major sick-child encounter, not an isolated pathway or a next-question trajectory.
 
 EdgeIMCI separates:
 
-- **deterministic clinical semantics** — clinical truth, information state, required acquisitions, classifications, actions, and trajectory logic;
-- **LLM-generated language** — realistic user presentations, PHC-worker phrasing, questions, measurements, observations, multi-turn dialogue, and final assistant responses.
+- **deterministic clinical semantics** — whole-encounter truth, explicit completeness, classifications, integrated actions, urgency, reassessment, and trace logic;
+- **LLM-generated language** — realistic whole-assessment PHC documentation, grouped omission responses, urgent incomplete responses, and faithful integrated final answers.
 
 The language-generation layer is therefore a **core part of the dataset factory** and should be treated as an experimental component of model training.
 
@@ -22,9 +22,9 @@ Generate in this direction:
 ```text
 structured clinical truth
         ↓
-partial-reveal / trajectory logic
+whole-encounter applicability and completeness
         ↓
-deterministic information-policy result
+deterministic classification/action-synthesis oracle
         ↓
 structured expected assistant semantics
         ↓
@@ -33,7 +33,11 @@ teacher LLM
 natural-language realization
 ```
 
-The structured semantic trajectory is the durable asset. Natural-language realizations can be regenerated with different teachers, prompts, styles, and sampling settings without changing the underlying clinical truth.
+The structured whole encounter is the durable primary asset. Natural-language realizations can be regenerated with different teachers, prompts, styles, and sampling settings without changing clinical truth.
+
+For incomplete cases, omissions must be selected structurally before rendering. A teacher must never decide which clinical findings to omit or infer.
+
+Progressive partial-reveal trajectories remain a secondary corpus track for guided or fallback interaction; they do not define the primary product behavior.
 
 ---
 
@@ -41,14 +45,22 @@ The structured semantic trajectory is the durable asset. Natural-language realiz
 
 The teacher should perform **controlled semantic-to-language transformation**, not generic paraphrasing.
 
-Useful rendering modes may include:
+Primary rendering modes should include:
+
+- complete free-form PHC whole-assessment input;
+- integrated classification and management response;
+- incomplete whole-assessment input with grouped missing-elements response;
+- incomplete encounter with an immediate urgent/pre-referral response and final synthesis withheld;
+- simultaneous-classification and cross-pathway action synthesis.
+
+Secondary rendering modes may include:
 
 - caregiver-style initial presentation;
 - concise PHC-worker presentation;
 - clinical shorthand;
 - measurement-acquisition interaction;
 - clinician-observation interaction;
-- incomplete multi-turn dialogue;
+- guided incomplete multi-turn dialogue;
 - urgent-escalation dialogue;
 - final classification/action response.
 
@@ -92,7 +104,17 @@ Track generation-level metrics such as:
 - latency / throughput;
 - cost per accepted sample.
 
-But ultimately compare teacher/rendering choices by the resulting student model:
+But ultimately compare teacher/rendering choices by the resulting student model. Primary whole-encounter metrics include:
+
+- complete-versus-incomplete detection;
+- false conversion of omissions into negative findings;
+- grouped missing-element accuracy;
+- correct withholding of final holistic synthesis;
+- encounter-level simultaneous-classification accuracy;
+- integrated action, precedence, interaction, urgency, and referral correctness;
+- faithfulness of free-form extraction and final language to the canonical encounter.
+
+Secondary guided-interaction metrics may still include:
 
 - final classification accuracy;
 - premature-classification rate;
@@ -140,17 +162,17 @@ A cheap teacher with high semantic-failure rates may be more expensive in practi
 
 ## 6. Generate semantic trajectories once; render them many ways
 
-A canonical semantic trajectory should be reusable.
+A canonical semantic whole encounter should be reusable.
 
 Example:
 
 ```text
-semantic trajectory #1842
+whole encounter #1842
         ↓
-renderer A → concise PHC English
-renderer B → conversational PHC English
-renderer C → caregiver-heavy presentation
-renderer D → terse worker shorthand
+renderer A → concise complete PHC note + integrated answer
+renderer B → conversational complete PHC note + integrated answer
+renderer C → clinically plausible omission + grouped missing-elements response
+renderer D → terse worker shorthand + faithful integrated answer
 ```
 
 This means later fine-tuning experiments can change the language distribution without regenerating the clinical substrate.
@@ -159,7 +181,7 @@ This means later fine-tuning experiments can change the language distribution wi
 
 ## 7. Multiple variants are a useful experimental axis
 
-For each semantic trajectory, test values such as:
+For each semantic encounter, test values such as:
 
 ```text
 N = 1
@@ -184,13 +206,13 @@ Whether more variants improve the student should be tested rather than assumed.
 
 Useful diversity includes:
 
-- different caregiver wording for the same fact;
+- different PHC-worker wording for the same complete assessment;
 - concise vs verbose worker input;
 - different ordering of supplied facts;
 - measured values vs qualitative reports;
-- partial information;
+- structurally controlled omissions;
 - realistic distractors;
-- different conversational lengths;
+- different documentation styles and encounter complexity;
 - different levels of clinical shorthand.
 
 Avoid lexical variation that adds no meaningful robustness.
@@ -328,18 +350,23 @@ This option is operationally heavier than using an API, so it should be selected
 
 # 10. Initial teacher bake-off
 
-Use the very small golden semantic slice as the first teacher benchmark.
+Use golden semantics in two distinct roles:
+
+1. the existing 14-case component slice remains a conversion/regression suite for v1 information-policy and fallback interaction behavior;
+2. a new, clinically approved product-level holistic slice must be the decisive benchmark for the primary whole-encounter renderer.
+
+Do not mutate the historical 14 cases to simulate the new product objective. Do not run the decisive teacher bake-off until the expanded clinical oracle and holistic golden semantics are approved.
 
 Hold the clinical semantics constant.
 
 Example:
 
-| Teacher | Provider | Renderer | Variants | Semantic pass rate | Naturalness | Cost / accepted | Student result |
-|---|---|---|---:|---:|---:|---:|---:|
-| Teacher A | Azure | v1 | 1 | ? | ? | ? | ? |
-| Teacher A | Azure | v2 | 4 | ? | ? | ? | ? |
-| Teacher B | Azure | v1 | 1 | ? | ? | ? | ? |
-| Teacher C | Modal/vLLM | v1 | 1 | ? | ? | ? | ? |
+| Teacher | Provider | Renderer | Variants | Whole-semantic pass | Omission pass | Naturalness | Cost / accepted | Student result |
+|---|---|---|---:|---:|---:|---:|---:|---:|
+| Teacher A | Azure | v1 | 1 | ? | ? | ? | ? | ? |
+| Teacher A | Azure | v2 | 4 | ? | ? | ? | ? | ? |
+| Teacher B | Azure | v1 | 1 | ? | ? | ? | ? | ? |
+| Teacher C | Modal/vLLM | v1 | 1 | ? | ? | ? | ? | ? |
 
 Do not select the final teacher solely by inspecting prose.
 
@@ -377,6 +404,10 @@ Each generation run should record at least:
 semantic_dataset_version
 rule_set_id
 information_policy_id
+holistic_completeness_policy_id
+supported_encounter_scope_id
+integrated_action_synthesis_version
+interaction_mode
 teacher_provider
 teacher_model
 teacher_version
@@ -406,7 +437,7 @@ These are hypotheses to test, not assumptions:
 4. Deterministic semantic truth may make filtering / Best-of-N unusually valuable for EdgeIMCI.
 5. Teacher quality should ultimately be judged by student-model improvement.
 6. The optimal corpus size may be relatively modest because the current clinical scope is bounded.
-7. Once the generation pipeline is stable, new IMCI areas such as **fever** should reuse substantially the same language-generation infrastructure.
+7. The five-area major sick-child expansion should reuse the same structured-first language-generation infrastructure after its clinical substrate is approved.
 
 ---
 
@@ -415,7 +446,7 @@ These are hypotheses to test, not assumptions:
 Treat synthetic language generation as an experiment over:
 
 ```text
-semantic truth
+whole-encounter semantic truth
 × rendering strategy
 × teacher model
 × inference source
@@ -427,7 +458,7 @@ semantic truth
 
 The objective is not to generate the largest dataset possible.
 
-The objective is to find the **cheapest, fastest, semantically faithful generation setup that produces the best student model**.
+The objective is to find the **cheapest, fastest, semantically faithful generation setup that produces the best student model on complete holistic encounters, omissions, and urgent incomplete cases**.
 
 ---
 

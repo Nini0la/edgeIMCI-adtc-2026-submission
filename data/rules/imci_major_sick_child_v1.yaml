@@ -1,0 +1,650 @@
+# Generated from data/rules/imci_major_sick_child_v1.json.
+# Review this file freely, but edit the canonical JSON and rerun scripts/sync_holistic_artifacts.py.
+rule_set_id: imci-major-sick-child-v1
+document: WHO Integrated Management of Childhood Illness, Chart Booklet
+edition: March 2014
+encoding_statement: EdgeIMCI machine-readable clinical rule set derived from the WHO IMCI Chart Booklet;
+  not WHO-authored machine-readable rules.
+population:
+  age_months:
+    gte: 2
+    lt: 60
+supported_assessments:
+  - general_danger_signs
+  - cough_or_difficult_breathing
+  - diarrhoea
+  - fever_including_measles
+  - ear_problem
+explicitly_out_of_scope:
+  - young_infant_0_to_under_2_months
+  - acute_malnutrition
+  - anaemia
+  - hiv_assessment_except_respiratory_action_dependency
+  - immunization_vitamin_a_and_deworming_status
+  - feeding_assessment
+  - well_child_care
+rules:
+  - rule_id: IMCI-MSC-GDS-UNABLE-TO-DRINK
+    kind: danger_sign
+    source:
+      section: General danger signs
+      source_pdf_page: 5
+      source_printed_page: 1 of 76
+    conditions:
+      field: danger_signs.unable_to_drink_or_breastfeed
+      equals: true
+    result:
+      danger_sign: UNABLE_TO_DRINK_OR_BREASTFEED
+      classification: VERY_SEVERE_DISEASE
+      urgent: true
+      actions:
+        - COMPLETE_ASSESSMENT_QUICKLY
+        - GIVE_PRE_REFERRAL_TREATMENT_IMMEDIATELY
+        - PREVENT_LOW_BLOOD_SUGAR
+        - KEEP_WARM
+        - URGENT_REFERRAL
+  - rule_id: IMCI-MSC-GDS-VOMITS-EVERYTHING
+    kind: danger_sign
+    source:
+      section: General danger signs
+      source_pdf_page: 5
+      source_printed_page: 1 of 76
+    conditions:
+      field: danger_signs.vomits_everything
+      equals: true
+    result:
+      danger_sign: VOMITS_EVERYTHING
+      classification: VERY_SEVERE_DISEASE
+      urgent: true
+      actions:
+        - COMPLETE_ASSESSMENT_QUICKLY
+        - GIVE_PRE_REFERRAL_TREATMENT_IMMEDIATELY
+        - PREVENT_LOW_BLOOD_SUGAR
+        - KEEP_WARM
+        - URGENT_REFERRAL
+  - rule_id: IMCI-MSC-GDS-CONVULSIONS-HISTORY
+    kind: danger_sign
+    source:
+      section: General danger signs
+      source_pdf_page: 5
+      source_printed_page: 1 of 76
+    conditions:
+      field: danger_signs.had_convulsions
+      equals: true
+    result:
+      danger_sign: HAD_CONVULSIONS
+      classification: VERY_SEVERE_DISEASE
+      urgent: true
+      actions:
+        - COMPLETE_ASSESSMENT_QUICKLY
+        - GIVE_PRE_REFERRAL_TREATMENT_IMMEDIATELY
+        - PREVENT_LOW_BLOOD_SUGAR
+        - KEEP_WARM
+        - URGENT_REFERRAL
+  - rule_id: IMCI-MSC-GDS-LETHARGIC-OR-UNCONSCIOUS
+    kind: danger_sign
+    source:
+      section: General danger signs
+      source_pdf_page: 5
+      source_printed_page: 1 of 76
+    conditions:
+      field: danger_signs.lethargic_or_unconscious
+      equals: true
+    result:
+      danger_sign: LETHARGIC_OR_UNCONSCIOUS
+      classification: VERY_SEVERE_DISEASE
+      urgent: true
+      actions:
+        - COMPLETE_ASSESSMENT_QUICKLY
+        - GIVE_PRE_REFERRAL_TREATMENT_IMMEDIATELY
+        - PREVENT_LOW_BLOOD_SUGAR
+        - KEEP_WARM
+        - URGENT_REFERRAL
+  - rule_id: IMCI-MSC-GDS-CONVULSING-NOW
+    kind: danger_sign
+    source:
+      section: General danger signs
+      source_pdf_page: 5
+      source_printed_page: 1 of 76
+    conditions:
+      field: danger_signs.convulsing_now
+      equals: true
+    result:
+      danger_sign: CONVULSING_NOW
+      classification: VERY_SEVERE_DISEASE
+      urgent: true
+      actions:
+        - GIVE_DIAZEPAM_IF_CONVULSING_NOW
+        - COMPLETE_ASSESSMENT_QUICKLY
+        - GIVE_PRE_REFERRAL_TREATMENT_IMMEDIATELY
+        - PREVENT_LOW_BLOOD_SUGAR
+        - KEEP_WARM
+        - URGENT_REFERRAL
+  - rule_id: IMCI-MSC-RESP-FAST-BREATHING-2-12M
+    kind: derived_finding
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      age_months:
+        gte: 2
+        lt: 12
+      respiratory_rate:
+        gte: 50
+    result:
+      derived_finding: FAST_BREATHING
+  - rule_id: IMCI-MSC-RESP-FAST-BREATHING-12-60M
+    kind: derived_finding
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      age_months:
+        gte: 12
+        lt: 60
+      respiratory_rate:
+        gte: 40
+    result:
+      derived_finding: FAST_BREATHING
+  - rule_id: IMCI-MSC-RESP-WHEEZE-BRONCHODILATOR-REASSESS
+    kind: intervention_reassessment
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      wheezing: true
+      any_of:
+        - FAST_BREATHING
+        - chest_indrawing
+    result:
+      intervention: RAPID_ACTING_INHALED_BRONCHODILATOR_UP_TO_THREE_TIMES
+      reassessment:
+        - respiratory_rate
+        - chest_indrawing
+      classify_after_reassessment: true
+  - rule_id: IMCI-MSC-RESP-SEVERE-DANGER-SIGN
+    kind: respiratory_classification
+    priority: 1
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      any_general_danger_sign: true
+    result:
+      classification: SEVERE_PNEUMONIA_OR_VERY_SEVERE_DISEASE
+      actions:
+        - GIVE_FIRST_DOSE_APPROPRIATE_ANTIBIOTIC
+        - URGENT_REFERRAL
+  - rule_id: IMCI-MSC-RESP-SEVERE-STRIDOR
+    kind: respiratory_classification
+    priority: 2
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      field: respiratory.stridor_when_calm
+      equals: true
+    result:
+      classification: SEVERE_PNEUMONIA_OR_VERY_SEVERE_DISEASE
+      actions:
+        - GIVE_FIRST_DOSE_APPROPRIATE_ANTIBIOTIC
+        - URGENT_REFERRAL
+  - rule_id: IMCI-MSC-RESP-PNEUMONIA-CHEST-INDRAWING
+    kind: respiratory_classification
+    priority: 3
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      field: respiratory.chest_indrawing
+      equals: true
+      after_reassessment_when_required: true
+    result:
+      classification: PNEUMONIA
+      actions:
+        - GIVE_ORAL_AMOXICILLIN_5_DAYS
+        - SOOTHE_THROAT_AND_RELIEVE_COUGH
+        - ADVISE_WHEN_TO_RETURN_IMMEDIATELY
+        - FOLLOW_UP_3_DAYS
+      hiv_action_dependency: true
+  - rule_id: IMCI-MSC-RESP-PNEUMONIA-FAST-BREATHING
+    kind: respiratory_classification
+    priority: 4
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      derived_finding: FAST_BREATHING
+      after_reassessment_when_required: true
+    result:
+      classification: PNEUMONIA
+      actions:
+        - GIVE_ORAL_AMOXICILLIN_5_DAYS
+        - SOOTHE_THROAT_AND_RELIEVE_COUGH
+        - ADVISE_WHEN_TO_RETURN_IMMEDIATELY
+        - FOLLOW_UP_3_DAYS
+  - rule_id: IMCI-MSC-RESP-COUGH-OR-COLD
+    kind: respiratory_classification
+    priority: 5
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      fallback: true
+      after_reassessment_when_required: true
+    result:
+      classification: COUGH_OR_COLD
+      actions:
+        - SOOTHE_THROAT_AND_RELIEVE_COUGH
+        - ADVISE_WHEN_TO_RETURN_IMMEDIATELY
+        - FOLLOW_UP_5_DAYS_IF_NOT_IMPROVING
+  - rule_id: IMCI-MSC-RESP-HIV-CHEST-INDRAWING
+    kind: cross_pathway_action_dependency
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      classification: PNEUMONIA
+      chest_indrawing: true
+      hiv_exposed_or_infected: true
+    result:
+      replaces: GIVE_ORAL_AMOXICILLIN_5_DAYS
+      actions:
+        - GIVE_FIRST_DOSE_AMOXICILLIN_AND_REFER
+    computational_interpretation_question_id: MSC-CQ-RESP-002
+  - rule_id: IMCI-MSC-RESP-WHEEZE-HOME-TREATMENT
+    kind: conditional_action
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      wheezing_now_or_before_rapid_bronchodilator: true
+    result:
+      action: GIVE_INHALED_BRONCHODILATOR_5_DAYS
+  - rule_id: IMCI-MSC-RESP-PROLONGED-OR-RECURRENT
+    kind: conditional_action
+    source:
+      section: Cough or difficult breathing
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      any_of:
+        - cough_duration_days:
+            gt: 14
+        - recurrent_wheeze: true
+    result:
+      action: REFER_FOR_TB_OR_ASTHMA_ASSESSMENT
+  - rule_id: IMCI-MSC-RESP-OXYGEN-SATURATION
+    kind: conditional_referral
+    source:
+      section: Cough or difficult breathing footnote
+      source_pdf_page: 6
+      source_printed_page: 2 of 76
+    conditions:
+      pulse_oximeter_available: true
+      oxygen_saturation_percent:
+        lt: 90
+    result:
+      action: REFER_FOR_OXYGEN_SATURATION_BELOW_90
+  - rule_id: IMCI-MSC-DIARRHOEA-SEVERE-DEHYDRATION
+    kind: diarrhoea_classification
+    priority: 1
+    source:
+      section: Diarrhoea - dehydration
+      source_pdf_page: 7
+      source_printed_page: 3 of 76
+    conditions:
+      minimum_count: 2
+      sign_set: severe_dehydration
+    result:
+      classification: SEVERE_DEHYDRATION
+      actions_without_other_severe:
+        - GIVE_FLUID_FOR_SEVERE_DEHYDRATION_PLAN_C
+      actions_with_other_severe:
+        - URGENT_REFERRAL
+        - FREQUENT_ORS_SIPS_DURING_REFERRAL
+        - CONTINUE_BREASTFEEDING
+  - rule_id: IMCI-MSC-DIARRHOEA-SOME-DEHYDRATION
+    kind: diarrhoea_classification
+    priority: 2
+    source:
+      section: Diarrhoea - dehydration
+      source_pdf_page: 7
+      source_printed_page: 3 of 76
+    conditions:
+      minimum_count: 2
+      sign_set: some_dehydration
+    result:
+      classification: SOME_DEHYDRATION
+      actions_without_other_severe:
+        - GIVE_FLUID_ZINC_AND_FOOD_PLAN_B
+        - ADVISE_WHEN_TO_RETURN_IMMEDIATELY
+        - FOLLOW_UP_5_DAYS_IF_NOT_IMPROVING
+      actions_with_other_severe:
+        - URGENT_REFERRAL
+        - FREQUENT_ORS_SIPS_DURING_REFERRAL
+        - CONTINUE_BREASTFEEDING
+  - rule_id: IMCI-MSC-DIARRHOEA-NO-DEHYDRATION
+    kind: diarrhoea_classification
+    priority: 3
+    source:
+      section: Diarrhoea - dehydration
+      source_pdf_page: 7
+      source_printed_page: 3 of 76
+    conditions:
+      fallback: true
+    result:
+      classification: NO_DEHYDRATION
+      action: GIVE_FLUID_ZINC_AND_FOOD_PLAN_A
+  - rule_id: IMCI-MSC-DIARRHOEA-SEVERE-PERSISTENT
+    kind: diarrhoea_classification
+    source:
+      section: Diarrhoea - persistent diarrhoea
+      source_pdf_page: 7
+      source_printed_page: 3 of 76
+    conditions:
+      duration_days:
+        gte: 14
+      dehydration_present: true
+    result:
+      classification: SEVERE_PERSISTENT_DIARRHOEA
+      actions:
+        - TREAT_DEHYDRATION_BEFORE_REFERRAL_UNLESS_OTHER_SEVERE
+        - REFER_TO_HOSPITAL
+  - rule_id: IMCI-MSC-DIARRHOEA-PERSISTENT
+    kind: diarrhoea_classification
+    source:
+      section: Diarrhoea - persistent diarrhoea
+      source_pdf_page: 7
+      source_printed_page: 3 of 76
+    conditions:
+      duration_days:
+        gte: 14
+      dehydration_present: false
+    result:
+      classification: PERSISTENT_DIARRHOEA
+      actions:
+        - ADVISE_FEEDING_FOR_PERSISTENT_DIARRHOEA
+        - GIVE_MULTIVITAMINS_MINERALS_ZINC_14_DAYS
+        - FOLLOW_UP_5_DAYS
+  - rule_id: IMCI-MSC-DIARRHOEA-DYSENTERY
+    kind: diarrhoea_classification
+    source:
+      section: Diarrhoea - blood in stool
+      source_pdf_page: 7
+      source_printed_page: 3 of 76
+    conditions:
+      field: diarrhoea.blood_in_stool
+      equals: true
+    result:
+      classification: DYSENTERY
+      actions:
+        - GIVE_CIPROFLOXACIN_3_DAYS
+        - FOLLOW_UP_3_DAYS
+  - rule_id: IMCI-MSC-DIARRHOEA-CHOLERA-CONTEXT
+    kind: conditional_action
+    source:
+      section: Diarrhoea - severe dehydration
+      source_pdf_page: 7
+      source_printed_page: 3 of 76
+    conditions:
+      age_months:
+        gte: 24
+      cholera_in_area: true
+      classification: SEVERE_DEHYDRATION
+    result:
+      action: GIVE_CHOLERA_ANTIBIOTIC_PER_LOCAL_PROTOCOL
+      local_protocol_required: true
+  - rule_id: IMCI-MSC-DIARRHOEA-PLAN-B-REASSESS
+    kind: intervention_reassessment
+    source:
+      section: 'Plan B: Treat some dehydration with ORS'
+      source_pdf_page: 23
+      source_printed_page: 19 of 76
+    conditions:
+      classification: SOME_DEHYDRATION
+      no_other_severe_classification: true
+    result:
+      intervention: PLAN_B
+      reassess_after_hours: 4
+      reclassify_dehydration: true
+  - rule_id: IMCI-MSC-DIARRHOEA-PLAN-C-REASSESS
+    kind: intervention_reassessment
+    source:
+      section: 'Plan C: Treat severe dehydration quickly'
+      source_pdf_page: 24
+      source_printed_page: 20 of 76
+    conditions:
+      classification: SEVERE_DEHYDRATION
+      no_other_severe_classification: true
+    result:
+      intervention: PLAN_C
+      age_dependent_reassessment: true
+      reclassify_dehydration: true
+  - rule_id: IMCI-MSC-FEVER-VERY-SEVERE
+    kind: fever_classification
+    priority: 1
+    source:
+      section: Fever
+      source_pdf_page: 8
+      source_printed_page: 4 of 76
+    conditions:
+      any_of:
+        - any_general_danger_sign
+        - stiff_neck
+    result:
+      classification: VERY_SEVERE_FEBRILE_DISEASE
+      common_actions:
+        - GIVE_FIRST_DOSE_APPROPRIATE_ANTIBIOTIC
+        - PREVENT_LOW_BLOOD_SUGAR
+        - URGENT_REFERRAL
+      malaria_risk_actions:
+        - GIVE_FIRST_DOSE_SEVERE_MALARIA_TREATMENT
+      high_fever_action: GIVE_PARACETAMOL_FOR_HIGH_FEVER
+  - rule_id: IMCI-MSC-FEVER-MALARIA
+    kind: fever_classification
+    priority: 2
+    source:
+      section: Fever - high or low malaria risk
+      source_pdf_page: 8
+      source_printed_page: 4 of 76
+    conditions:
+      malaria_test_positive_or_source_fallback_when_unavailable: true
+    result:
+      classification: MALARIA
+      actions:
+        - GIVE_FIRST_LINE_ORAL_ANTIMALARIAL
+        - ADVISE_WHEN_TO_RETURN_IMMEDIATELY
+        - FOLLOW_UP_3_DAYS_IF_FEVER_PERSISTS
+  - rule_id: IMCI-MSC-FEVER-NO-MALARIA
+    kind: fever_classification
+    priority: 3
+    source:
+      section: Fever - high or low malaria risk
+      source_pdf_page: 8
+      source_printed_page: 4 of 76
+    conditions:
+      malaria_test_negative_or_other_cause_present: true
+    result:
+      classification: FEVER_NO_MALARIA
+      actions:
+        - ADVISE_WHEN_TO_RETURN_IMMEDIATELY
+        - FOLLOW_UP_3_DAYS_IF_FEVER_PERSISTS
+    computational_interpretation_question_id: MSC-CQ-FEVER-001
+  - rule_id: IMCI-MSC-FEVER-NO-MALARIA-RISK
+    kind: fever_classification
+    priority: 4
+    source:
+      section: Fever - no malaria risk and no travel
+      source_pdf_page: 8
+      source_printed_page: 4 of 76
+    conditions:
+      malaria_risk: NONE_NO_TRAVEL
+      no_general_danger_sign: true
+      stiff_neck: false
+    result:
+      classification: FEVER
+      actions:
+        - ADVISE_WHEN_TO_RETURN_IMMEDIATELY
+        - FOLLOW_UP_2_DAYS_IF_FEVER_PERSISTS
+  - rule_id: IMCI-MSC-FEVER-HIGH-TEMPERATURE
+    kind: conditional_action
+    source:
+      section: Fever
+      source_pdf_page: 8
+      source_printed_page: 4 of 76
+    conditions:
+      axillary_temperature_c:
+        gte: 38.5
+    result:
+      action: GIVE_PARACETAMOL_FOR_HIGH_FEVER
+  - rule_id: IMCI-MSC-FEVER-IDENTIFIED-BACTERIAL-CAUSE
+    kind: conditional_action
+    source:
+      section: Fever
+      source_pdf_page: 8
+      source_printed_page: 4 of 76
+    conditions:
+      identified_bacterial_cause_present: true
+    result:
+      action: GIVE_APPROPRIATE_ANTIBIOTIC_FOR_IDENTIFIED_BACTERIAL_CAUSE
+      specific_cause_required: true
+  - rule_id: IMCI-MSC-FEVER-PROLONGED
+    kind: conditional_referral
+    source:
+      section: Fever
+      source_pdf_page: 8
+      source_printed_page: 4 of 76
+    conditions:
+      fever_duration_days:
+        gt: 7
+      fever_present_every_day: true
+    result:
+      action: REFER_PROLONGED_FEVER_FOR_ASSESSMENT
+  - rule_id: IMCI-MSC-MEASLES-SEVERE-COMPLICATED
+    kind: measles_classification
+    priority: 1
+    source:
+      section: Measles
+      source_pdf_page: 8
+      source_printed_page: 4 of 76
+    conditions:
+      measles_now_or_within_3_months: true
+      any_of:
+        - any_general_danger_sign
+        - clouding_of_cornea
+        - deep_or_extensive_mouth_ulcers
+    result:
+      classification: SEVERE_COMPLICATED_MEASLES
+      actions:
+        - GIVE_VITAMIN_A_TREATMENT
+        - GIVE_FIRST_DOSE_APPROPRIATE_ANTIBIOTIC
+        - URGENT_REFERRAL
+      conditional_eye_action: APPLY_TETRACYCLINE_EYE_OINTMENT
+  - rule_id: IMCI-MSC-MEASLES-EYE-OR-MOUTH-COMPLICATIONS
+    kind: measles_classification
+    priority: 2
+    source:
+      section: Measles
+      source_pdf_page: 8
+      source_printed_page: 4 of 76
+    conditions:
+      measles_now_or_within_3_months: true
+      any_of:
+        - pus_draining_from_eye
+        - mouth_ulcers
+    result:
+      classification: MEASLES_WITH_EYE_OR_MOUTH_COMPLICATIONS
+      actions:
+        - GIVE_VITAMIN_A_TREATMENT
+        - FOLLOW_UP_3_DAYS
+      conditional_actions:
+        - APPLY_TETRACYCLINE_EYE_OINTMENT
+        - TREAT_MOUTH_ULCERS_WITH_GENTIAN_VIOLET
+  - rule_id: IMCI-MSC-MEASLES
+    kind: measles_classification
+    priority: 3
+    source:
+      section: Measles
+      source_pdf_page: 8
+      source_printed_page: 4 of 76
+    conditions:
+      measles_now_or_within_3_months: true
+      fallback: true
+    result:
+      classification: MEASLES
+      action: GIVE_VITAMIN_A_TREATMENT
+  - rule_id: IMCI-MSC-EAR-MASTOIDITIS
+    kind: ear_classification
+    priority: 1
+    source:
+      section: Ear problem
+      source_pdf_page: 9
+      source_printed_page: 5 of 76
+    conditions:
+      field: ear.tender_swelling_behind_ear
+      equals: true
+    result:
+      classification: MASTOIDITIS
+      urgent: true
+      actions:
+        - GIVE_FIRST_DOSE_APPROPRIATE_ANTIBIOTIC
+        - GIVE_PARACETAMOL_FOR_EAR_PAIN
+        - URGENT_REFERRAL
+  - rule_id: IMCI-MSC-EAR-ACUTE-INFECTION
+    kind: ear_classification
+    priority: 2
+    source:
+      section: Ear problem
+      source_pdf_page: 9
+      source_printed_page: 5 of 76
+    conditions:
+      any_of:
+        - ear_pain
+        - pus_with_reported_discharge_under_14_days
+    result:
+      classification: ACUTE_EAR_INFECTION
+      actions:
+        - GIVE_ANTIBIOTIC_5_DAYS
+        - GIVE_PARACETAMOL_FOR_EAR_PAIN
+        - DRY_EAR_BY_WICKING
+        - FOLLOW_UP_5_DAYS
+  - rule_id: IMCI-MSC-EAR-CHRONIC-INFECTION
+    kind: ear_classification
+    priority: 3
+    source:
+      section: Ear problem
+      source_pdf_page: 9
+      source_printed_page: 5 of 76
+    conditions:
+      pus_with_reported_discharge_days:
+        gte: 14
+    result:
+      classification: CHRONIC_EAR_INFECTION
+      actions:
+        - DRY_EAR_BY_WICKING
+        - GIVE_TOPICAL_QUINOLONE_EARDROPS_14_DAYS
+        - FOLLOW_UP_5_DAYS
+  - rule_id: IMCI-MSC-EAR-NO-INFECTION
+    kind: ear_classification
+    priority: 4
+    source:
+      section: Ear problem
+      source_pdf_page: 9
+      source_printed_page: 5 of 76
+    conditions:
+      ear_pain: false
+      pus_draining_from_ear: false
+    result:
+      classification: NO_EAR_INFECTION
+      action: NO_EAR_TREATMENT

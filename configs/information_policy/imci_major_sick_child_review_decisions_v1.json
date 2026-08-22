@@ -1,0 +1,115 @@
+{
+  "decision_set_id": "imci-major-sick-child-review-decisions-v1",
+  "rule_set_id": "imci-major-sick-child-v1",
+  "completeness_policy_id": "imci-major-sick-child-holistic-completeness-v2",
+  "status": "APPROVED_FOR_HACKATHON_SCOPE",
+  "approved_date": "2026-08-22",
+  "production_clinical_use_authorized": false,
+  "scope_note": "These decisions approve the bounded EdgeIMCI hackathon representation. They do not constitute approval for production clinical deployment or add unsupported drug-level local adaptations.",
+  "decisions": [
+    {
+      "question_id": "IP-CQ-001",
+      "decision": "When a general danger sign is detected, mark the encounter urgent immediately. Perform any immediately required stabilization, rapidly complete the remaining supported assessment, give all source-indicated pre-referral treatments, and refer urgently. Routine activities must not delay referral.",
+      "implementation": [
+        "Urgent action remains independent of encounter completeness.",
+        "Known urgent action must never be withheld while other supported findings remain unknown."
+      ]
+    },
+    {
+      "question_id": "IP-CQ-002",
+      "decision": "During the same continuous initial assessment, a clinically confirmed positive finding of inability to drink or breastfeed may populate both the general-danger-sign domain and diarrhoea drinking status UNABLE. A negative general-danger-sign finding does not populate diarrhoea drinking status.",
+      "implementation": [
+        "Positive reuse is one-directional and must be recorded in both domains.",
+        "Do not infer NORMAL, POORLY, or EAGER_OR_THIRSTY from a negative danger-sign answer."
+      ]
+    },
+    {
+      "question_id": "IP-CQ-003",
+      "decision": "Respiratory rate is valid for classification only when the child was calm and breaths were counted for one full minute. Other source-required respiratory observations independently gate pathway completion.",
+      "implementation": [
+        "Invalid respiratory-rate evidence must be repeated and must not be used for classification.",
+        "Adequate visualization is an implementation and worker-training requirement, not attributed source wording."
+      ]
+    },
+    {
+      "question_id": "IP-CQ-004",
+      "decision": "When urgent referral is triggered, preserve all classifications but present only source-mandated pre-referral and transfer-related actions in the immediate workflow. Defer routine home-care courses and scheduled follow-up. Never convert an ordinary medication course into a first-dose instruction unless the source explicitly requires it.",
+      "implementation": [
+        "Urgent and transfer actions lead the output.",
+        "Deferred routine actions remain traceable but do not compete with referral."
+      ]
+    },
+    {
+      "question_id": "MSC-CQ-SCOPE-001",
+      "decision": "The supported scope is the initial major sick-child assessment only. Initial management may state follow-up timing, but EdgeIMCI does not execute later IMCI follow-up-visit algorithms.",
+      "implementation": [
+        "Do not process a follow-up encounter through the initial-assessment algorithm as a substitute."
+      ]
+    },
+    {
+      "question_id": "MSC-CQ-RESP-001",
+      "decision": "When a bronchodilator trial is indicated and successfully performed, final respiratory classification uses valid post-bronchodilator respiratory rate and chest-indrawing findings. The assessment remains incomplete while the trial or reassessment is outstanding.",
+      "implementation": [
+        "Record whether the trial was completed and the final post-treatment findings.",
+        "Do not model individual administrations in hackathon v1.",
+        "Do not substitute pre-treatment findings or invent a fallback when the trial cannot be completed."
+      ]
+    },
+    {
+      "question_id": "MSC-CQ-RESP-002",
+      "decision": "Chest indrawing in an HIV-exposed or infected child remains PNEUMONIA. Complete the supported assessment, give the first dose of amoxicillin, and refer without automatically making the referral urgent. Do not issue the ordinary five-day outpatient course or routine pneumonia follow-up.",
+      "implementation": [
+        "The receiving facility determines subsequent treatment.",
+        "Another independently applicable rule may still make referral urgent."
+      ]
+    },
+    {
+      "question_id": "MSC-CQ-DIARRHOEA-001",
+      "decision": "When the source criteria are met, emit the generic instruction to give the locally recommended antibiotic for cholera. Hackathon v1 does not name or invent a drug, dose, or duration and does not require local-protocol retrieval.",
+      "implementation": [
+        "The generic action is complete at the supported abstraction and does not block final synthesis.",
+        "Exact local configuration is a possible future production concern."
+      ]
+    },
+    {
+      "question_id": "MSC-CQ-REASSESS-001",
+      "decision": "Plan B or Plan C does not block completion of the initial holistic assessment. Emit the initial dehydration classification and plan immediately, with timed reassessment required as a separate treatment-stage submission.",
+      "implementation": [
+        "Never assume a later submission is complete and never repeat a plan automatically.",
+        "Hackathon v1 emits Plan C at plan level and does not execute detailed facility-capability branches."
+      ]
+    },
+    {
+      "question_id": "MSC-CQ-FEVER-001",
+      "decision": "Fever-pathway entry follows the source: history, feeling hot, or temperature at least 37.5 C. Malaria-test result and obvious or identified cause remain separate observations and provide their applicable routes through the fever logic without inference between them.",
+      "implementation": [
+        "Explicit absence of fever makes the pathway not applicable; silence remains unknown.",
+        "A positive malaria test still produces MALARIA when another cause is also identified."
+      ]
+    },
+    {
+      "question_id": "MSC-CQ-FEVER-002",
+      "decision": "When the worker supplies an identified bacterial cause of fever, emit the generic source-backed instruction to give appropriate antibiotic treatment. Do not invent a diagnosis, drug, dose, duration, regimen, or drug-level reconciliation rule.",
+      "implementation": [
+        "Preserve distinct source-backed antibiotic indications and deduplicate only exact duplicate actions.",
+        "The generic action does not block final synthesis at the hackathon abstraction."
+      ]
+    },
+    {
+      "question_id": "MSC-CQ-FEVER-003",
+      "decision": "The applicable local area's HIGH, LOW, or NONE malaria-risk category is normally supplied as application context. Relevant travel remains patient-specific. If required context is absent, request it; never infer risk from place names or general model knowledge.",
+      "implementation": [
+        "The worker may supply the area category when application context does not.",
+        "Malaria-risk context remains required for an applicable fever assessment."
+      ]
+    },
+    {
+      "question_id": "MSC-CQ-EAR-001",
+      "decision": "Observed pus establishes current ear discharge. If the caregiver reports no previous discharge, treat the duration as less than 14 days and, after excluding mastoiditis, classify ACUTE_EAR_INFECTION.",
+      "implementation": [
+        "Do not let negative history override observed pus.",
+        "Do not classify NO_EAR_INFECTION when pus is observed."
+      ]
+    }
+  ]
+}

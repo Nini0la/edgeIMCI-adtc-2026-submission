@@ -1,11 +1,15 @@
 # Experiment and edge-profiling guidance
 
-This directory is the home for EdgeIMCI model experiments and their evidence. Before the project begins running many SFT, RL, quantization, and edge-deployment variants, it should add two first-class pieces of infrastructure:
+This directory is the home for EdgeIMCI model experiments and their evidence. The primary hackathon research question is now whether a small instruct model can transform free-form findings from a supported whole sick-child encounter into the complete set of classifications and an integrated treatment, referral, follow-up, and management synthesis—while handling incomplete encounters safely.
+
+The current expanded substrate is `imci-major-sick-child-v1`, paired with `imci-major-sick-child-holistic-completeness-v2` and the approved hackathon decision set `imci-major-sick-child-review-decisions-v1`. Its scope is children aged `2 <= age_months < 60` across general danger signs, cough/difficult breathing, diarrhoea, fever including measles, and ear problem. This is complete only relative to that supported initial-encounter scope, not every IMCI activity. The 13 blocking clinical/policy questions are resolved for this bounded hackathon representation; this is not production clinical approval. Product-level golden-slice work may proceed after verification, while bulk generation and training remain not started.
+
+Before the project begins running many SFT, RL, quantization, and edge-deployment variants, it should add two first-class pieces of infrastructure:
 
 1. an **experiment registry** that records every model/training configuration and links it to its evaluation results; and
 2. a **profiling registry** that stores the ASUS/ADTC edge evidence separately from model-quality results.
 
-The purpose is to make the state of the experimental program explicit and machine-readable. An experiment should be discoverable from committed artifacts rather than reconstructed from conversation, filenames, or memory.
+The purpose is to make the state of the experimental program explicit and machine-readable. An experiment should be discoverable from committed artifacts rather than reconstructed from conversation, filenames, or memory. The matrix is a research map, not a commitment to run every possible branch.
 
 ## Planned layout
 
@@ -33,37 +37,36 @@ The registry is an index, not a replacement for the detailed artifacts in these 
 
 `experiments/registry/experiment_matrix.json` should be the canonical experiment matrix. Its YAML counterpart should be generated from the JSON and should deserialize to the same data. Do not edit the JSON and YAML independently.
 
-Each experiment is one row/object. At minimum, it identifies the model configuration, training stage, deployed precision, evaluation artifacts, and edge profile:
+Each experiment is one row/object. At minimum, it identifies the model configuration, training stage, deployed precision, experimental priority and lifecycle, product-evaluation artifacts, and edge profile:
 
 ```json
 {
-  "experiment_id": "qwen3-1.7b-base-q8",
+  "experiment_id": "qwen3-1.7b-sft-v1-q8",
   "base_model": "Qwen3-1.7B",
-  "training": "base",
+  "training": "sft-v1",
   "precision": "Q8",
-  "internal_eval": null,
-  "multiturn_eval": null,
+
+  "priority": "CORE",
+  "status": "PLANNED",
+
+  "applicable_evaluations": [
+    "holistic_classification_eval",
+    "integrated_management_eval",
+    "completeness_eval",
+    "urgent_incomplete_eval",
+    "lundin_eval"
+  ],
+  "holistic_classification_eval": null,
+  "integrated_management_eval": null,
+  "completeness_eval": null,
+  "urgent_incomplete_eval": null,
   "lundin_eval": null,
-  "edge_profile": "asus-qwen3-1.7b-q8-v1"
+  "edge_profiling_applicable": true,
+  "edge_profile": null
 }
 ```
 
-A later trained variant follows the same shape:
-
-```json
-{
-  "experiment_id": "qwen3-1.7b-sft-v2-q8",
-  "base_model": "Qwen3-1.7B",
-  "training": "sft-v2",
-  "precision": "Q8",
-  "internal_eval": "experiments/sft/qwen3-1.7b-sft-v2/internal-v1/run.json",
-  "multiturn_eval": "experiments/sft/qwen3-1.7b-sft-v2/multiturn-v1/run.json",
-  "lundin_eval": "experiments/sft/qwen3-1.7b-sft-v2/lundin-current-strict/run.json",
-  "edge_profile": "asus-qwen3-1.7b-sft-v2-q8-v1"
-}
-```
-
-The evaluation fields should contain repository-relative paths or stable artifact IDs, according to the convention selected when the registry is implemented. Use one convention consistently throughout the matrix. A `null` value means that the evaluation or profile has not been run yet; it must not mean that a run failed or that its result is unknown.
+The evaluation fields should contain repository-relative paths or stable artifact IDs, according to the convention selected when the registry is implemented. Use one convention consistently throughout the matrix. For a declared applicable evaluation or profile, a `null` value means that it has not been run yet; it must not mean that a run failed or that its result is unknown. Applicability is declared separately so `null` never has to carry two meanings.
 
 ### Field meanings
 
@@ -73,22 +76,140 @@ The evaluation fields should contain repository-relative paths or stable artifac
 | `base_model` | Human-readable base model family and size. The exact checkpoint revision remains in the detailed run artifact. |
 | `training` | Training state, such as `base`, `sft-v1`, `sft-v2`, or a later RL variant. |
 | `precision` | The representation used for this experiment, such as `BF16`, `FP16`, `Q8`, `Q6`, or `Q4_K_M`. |
-| `internal_eval` | Reference to the strict internal diagnostic evaluation artifact. |
-| `multiturn_eval` | Reference to the natural-language, information-gathering evaluation artifact. |
+| `priority` | Research importance: `CORE`, `CONDITIONAL`, or `OPTIONAL`. This is independent of lifecycle state. |
+| `status` | Lifecycle: `PLANNED`, `READY`, `RUNNING`, `COMPLETE`, `SUPERSEDED`, or `FAILED`. |
+| `applicable_evaluations` | Fixed names of the model-quality evaluations this row is intended to run; absence means not applicable, not silently missing. |
+| `holistic_classification_eval` | Reference to evaluation of the complete set of supported whole-encounter classifications, including simultaneous classifications across pathways. |
+| `integrated_management_eval` | Reference to evaluation of the combined treatment, referral/pre-referral, follow-up, modification, and cross-pathway management plan. |
+| `completeness_eval` | Reference to evaluation of complete/incomplete behavior, grouped missing elements, unknown preservation, and false-completion or premature-synthesis errors. |
+| `urgent_incomplete_eval` | Reference to evaluation of immediate source-backed urgent action while encounter status remains incomplete and final synthesis remains withheld. |
 | `lundin_eval` | Reference to the pinned external Lundin evaluation artifact, including its named scoring policy. |
+| `edge_profiling_applicable` | Whether the row represents a deployable artifact that should receive edge profiling. |
 | `edge_profile` | Reference to an ASUS/ADTC profile summary; never an inline block of hardware metrics. |
 
 Add fields when needed to identify an experiment unambiguously, but keep detailed per-case results, prompts, runtime metadata, and hardware measurements in their own artifacts. The matrix should remain compact enough to scan and automate against.
+
+Classification and management are separate evaluation axes. A model may return the right labels while producing an unsafe or incomplete management plan. Completeness and urgent-incomplete behavior are likewise separate: early urgent action is authorized when source-required, but early encounter completion is not. Lundin remains a complementary external competence/generalization benchmark and must not be merged with EdgeIMCI product metrics into a single accuracy number.
+
+### Secondary and component evaluation
+
+The older narrow evaluation machinery remains useful for:
+
+- strict structured diagnostics;
+- narrow v0 regression testing;
+- progressive acquisition and multi-turn behavior;
+- the existing 14-case component golden suite; and
+- controlled semantic-to-language conversion checks.
+
+These are secondary/component/regression evaluations under the v2 product framing. Preserve their historical artifacts and continue running them where relevant, but do not treat them as substitutes for whole-encounter classification, integrated management, completeness, or urgent-incomplete evaluation. Progressive one-question-at-a-time interaction is a fallback and research mode rather than the primary product axis.
+
+### Priority and lifecycle
+
+`priority` distinguishes near-term importance from the broader research map:
+
+| Priority | Meaning |
+| --- | --- |
+| `CORE` | Critical-path evidence for the first credible holistic model and hackathon submission. |
+| `CONDITIONAL` | Run only when earlier evidence, available time, or a clear comparison justifies it. |
+| `OPTIONAL` | Useful exploratory evidence that must not appear to be a submission prerequisite. |
+
+`status` records what has happened:
+
+| Status | Meaning |
+| --- | --- |
+| `PLANNED` | Defined, but prerequisites or scheduling are not complete. |
+| `READY` | Inputs, approvals, and execution configuration are available. |
+| `RUNNING` | Execution is currently in progress. |
+| `COMPLETE` | Required artifacts for the experiment's declared scope exist and passed validation. |
+| `SUPERSEDED` | Retained historically but replaced by a newer experiment; never silently repurposed. |
+| `FAILED` | Attempted but did not complete successfully; detailed evidence records the failure. |
+
+Changing lifecycle status must not mutate an experiment into a different model, checkpoint, recipe, dataset, or precision. Those changes require a new `experiment_id`.
 
 ### Registry rules
 
 - Create the matrix row when an experiment is planned, not only after every run is complete.
 - Use a stable, unique `experiment_id`; do not reuse an ID for a materially different checkpoint, dataset mixture, training recipe, or precision.
+- Before a row becomes `READY`, its fields or linked versioned configuration must resolve the exact checkpoint revision, dataset version and mixture, training recipe, conversion settings, and deployed precision. A human-readable model name alone is not reproducible identity.
 - Fill evaluation references only after the referenced artifacts exist and have passed their relevant checks.
-- Keep unavailable evaluations as `null`. Never use placeholder paths or fabricated scores.
-- Keep internal, multi-turn, and Lundin results separate. Do not collapse incompatible benchmarks into one score.
+- Keep applicable but unavailable evaluations as `null`. Declare non-applicability explicitly; never use placeholder paths or fabricated scores.
+- Keep holistic classification, integrated management, completeness, urgent-incomplete, Lundin, and any secondary/component results separate. Do not collapse incompatible benchmarks into one score.
 - Treat JSON as canonical. Regenerate YAML after every JSON change and verify semantic equality.
 - Prefer append-only history. If an experiment is superseded, record that state explicitly rather than silently turning its row into another experiment.
+- Validate `priority` and `status` against their fixed enumerations.
+
+### Current experiment strategy
+
+The matrix should show the research landscape without implying that every row will be executed. The current approximate prioritization is:
+
+**Core / critical path**
+
+- Qwen3-1.7B base holistic baseline;
+- the first Qwen3-1.7B SFT;
+- post-SFT holistic classification, integrated-management, completeness, and urgent-incomplete evaluation;
+- Lundin evaluation when appropriate; and
+- ADTC profiling of the exact deployment representation.
+
+Qwen3-4B may serve as a larger capacity anchor when that comparison is affordable and useful.
+
+**Useful if inexpensive**
+
+- Qwen3-0.6B as a lower-capacity bound;
+- additional quantizations of Qwen3-1.7B for edge trade-offs; and
+- further SFT variants only when preceding evidence motivates them.
+
+**Conditional / optional branches**
+
+- Qwen3.5-2B challenger;
+- Qwen3.5-4B or Tinker-based work;
+- RL or preference optimization;
+- SVD experiments;
+- additional compression; and
+- extensive hyperparameter sweeps.
+
+None of these conditional branches is required before the first hackathon submission. They should not consume critical-path time without evidence that they address a measured limitation.
+
+The following is a conceptual planning view, not an implemented registry and not a claim that these evaluations have run:
+
+| Model | Training | Precision | Priority | Status | Holistic classification | Integrated management | Completeness | Urgent incomplete | Lundin | Edge profile |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| Qwen3-1.7B | base | deployment candidate TBD | `CORE` | `PLANNED` | applicable | applicable | applicable | applicable | applicable | applicable |
+| Qwen3-1.7B | sft-v1 | deployment candidate TBD | `CORE` | `PLANNED` | applicable | applicable | applicable | applicable | applicable | applicable |
+| Qwen3-4B | base comparison | Q4_K_M candidate | `CONDITIONAL` | `PLANNED` | conditional | conditional | conditional | conditional | conditional | conditional |
+| Qwen3-0.6B | base lower bound | deployment candidate TBD | `OPTIONAL` | `PLANNED` | optional | optional | optional | optional | optional | optional |
+
+The cells above describe intended applicability and priority only. They are not result claims or fabricated artifact references.
+
+### Hackathon model versus practical deployment
+
+For the hackathon, the model itself is the research object:
+
+```text
+free-form whole-encounter PHC findings
+        ↓
+EdgeIMCI instruct model
+        ↓
+integrated classifications and management
++ safe incomplete-assessment behavior
+```
+
+Do not assume that a hidden deterministic clinical engine will correct the model during hackathon evaluation unless the competition explicitly permits and evaluates that architecture.
+
+A future practical deployment may use a safer separation:
+
+```text
+free-form PHC findings
+        ↓
+structured extraction
+        ↓
+validated deterministic IMCI engine
+        ↓
+classifications and actions
+        ↓
+LLM presentation or explanation
+```
+
+The registry described here concerns the model-training and hackathon research program. It does not claim that the hackathon architecture is the final production safety architecture.
 
 ## 2. ASUS/ADTC profiling registry
 
@@ -104,9 +225,12 @@ Conceptually:
 EXPERIMENT MATRIX
        |
        |-- model and training configuration
-       |-- internal evaluation result
+       |-- holistic-classification evaluation
+       |-- integrated-management evaluation
+       |-- completeness evaluation
+       |-- urgent-incomplete safety evaluation
        |-- Lundin external evaluation result
-       |-- multi-turn evaluation result
+       |-- secondary/component evidence, when applicable
        `-- edge_profile ----------------------.
                                                 |
                                                 v
@@ -120,7 +244,7 @@ EXPERIMENT MATRIX
                                       - reproducibility metadata
 ```
 
-The initial configurations worth profiling are:
+Earlier planning identified these candidate profiling configurations:
 
 ```text
 asus-qwen3-0.6b-fp16
@@ -130,7 +254,7 @@ asus-qwen3-1.7b-q6
 asus-qwen3-4b-q4_k_m
 ```
 
-These names describe configurations, not results. A trained checkpoint should include its training identifier so that it cannot be confused with the untuned base model, for example `asus-qwen3-1.7b-sft-v2-q8-v1`.
+These names describe configurations, not results or obligations to run every profile. Select them according to the current priority strategy and evidence from earlier stages. A trained checkpoint should include its training identifier so that it cannot be confused with the untuned base model, for example `asus-qwen3-1.7b-sft-v2-q8-v1`.
 
 ### Official report contract
 
@@ -253,34 +377,51 @@ The published leaderboard formula weights accuracy at 50%, generation-throughput
 
 Agents and contributors should use the following sequence:
 
-1. **Register the configuration.** Add a unique row to the canonical JSON matrix with unavailable results set to `null`.
-2. **Produce detailed run artifacts.** Run the relevant baseline, training, internal, multi-turn, and external evaluation workflows in the appropriate experiment directory.
-3. **Link results, do not copy them.** Update the matrix with stable references to the completed artifacts; do not paste scores or hardware metrics into the row.
-4. **Profile the deployable representation.** Run the exact GGUF checkpoint and quantization intended for ASUS deployment with a pinned official profiler revision.
-5. **Preserve every raw profiling run.** Keep the untouched official report and its EdgeIMCI sidecar in a new immutable run directory.
-6. **Compute the profile summary.** Aggregate an explicit set of comparable runs and update the matrix's `edge_profile` reference.
-7. **Regenerate the YAML mirror.** Produce it deterministically from the canonical JSON and verify that the two deserialize to identical content.
-8. **Validate references.** Check that every non-null evaluation/profile reference resolves, every ID is unique, and every summary names existing immutable runs.
+1. **Register the configuration.** Add a unique row for the exact model, checkpoint/training state, and precision; set unavailable applicable references to `null`.
+2. **Mark priority and lifecycle.** Record whether the experiment is `CORE`, `CONDITIONAL`, or `OPTIONAL`, and its current status.
+3. **Produce the relevant model artifact.** Preserve exact checkpoint, dataset, training-recipe, and conversion provenance. A base-model evaluation does not require a training artifact.
+4. **Run applicable v2 product evaluations.** Evaluate holistic classification, integrated management, completeness, and urgent-incomplete safety when the experiment is intended to answer those questions.
+5. **Run relevant component regressions.** Preserve narrow v0, structured diagnostic, 14-case golden, acquisition, or multi-turn checks when they provide useful regression evidence.
+6. **Run Lundin when appropriate.** Keep the named external revision and scoring policy separate from EdgeIMCI product metrics.
+7. **Profile the deployable representation when relevant.** Run the exact GGUF checkpoint and quantization with a pinned official profiler revision.
+8. **Preserve immutable raw evidence.** Keep detailed evaluation artifacts and every untouched official profiling report with its EdgeIMCI sidecar.
+9. **Link results, do not copy them.** Update the matrix only with stable references to completed, validated artifacts; never paste scores or hardware measurements into a row.
+10. **Regenerate and validate the registry.** Produce YAML deterministically from canonical JSON, check semantic equality, validate priority/status values, resolve every non-null reference, enforce unique IDs, and ensure each profile summary names existing immutable runs.
+
+Not every planned experiment must immediately run every evaluation. Applicability should be explicit in the eventual registry schema; lack of applicability must not be represented by a fabricated path or score.
 
 ## 4. Separation of concerns
 
 Keep the following boundaries intact:
 
 - The **experiment matrix** answers: What configurations exist, and where is their evidence?
-- An **evaluation artifact** answers: How did this configuration perform on one named benchmark under one policy?
+- An **evaluation artifact** answers: How did this configuration perform on one named product, component, regression, or external benchmark under one versioned policy?
 - A **raw profiling artifact** answers: What happened in one edge-performance invocation?
 - A **profile summary** answers: What aggregate edge performance was observed across a declared set of comparable runs?
 
 This structure lets humans review the program as a matrix while allowing scripts and agents to fill missing cells, validate provenance, compare variants, and compute edge Pareto trade-offs without depending on conversational context.
 
-## 5. Infrastructure gate
+## 5. Current infrastructure status and gate
+
+The registry infrastructure described above does **not** exist yet. The repository currently has baseline and rendering-bake-off artifacts, but it does not have:
+
+- `experiments/registry/experiment_matrix.json`;
+- its generated YAML mirror;
+- a canonical experiment-matrix schema;
+- initial versioned registry rows;
+- JSON-to-YAML synchronization for the matrix;
+- priority/status enumeration validation;
+- experiment-ID uniqueness and artifact-reference validation; or
+- implemented profiling sidecar and summary schemas/generators.
+
+The existing experiment artifacts remain valid historical evidence. Their existence must not be confused with implementation of the registry.
 
 Before the experiment volume increases substantially, add and test:
 
 - the canonical experiment-matrix JSON schema and initial rows;
 - deterministic JSON-to-YAML synchronization;
 - an EdgeIMCI run-sidecar schema and profile-summary schema without modifying the official ADTC report schema;
-- uniqueness and reference-integrity validation;
+- experiment-ID uniqueness, priority/status, applicability, and reference-integrity validation;
 - validation of every `submission.json` against the schema bundled with its pinned profiler revision;
 - immutable run naming/storage; and
 - deterministic summary generation with documented aggregation rules.
