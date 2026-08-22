@@ -1,0 +1,76 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edgeimci.local/schemas/experiment-matrix-1.0.0",
+  "title": "EdgeIMCI experiment matrix",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "registry_id", "experiments"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "registry_id": {"type": "string", "minLength": 1},
+    "experiments": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/experiment"}
+    }
+  },
+  "$defs": {
+    "reference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["reference_kind", "reference_id", "version", "remote_only"],
+      "properties": {
+        "reference_kind": {"enum": ["CONFIG", "MODEL", "CHECKPOINT", "DATASET", "PROMPT", "VALIDATOR", "ARTIFACT"]},
+        "reference_id": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "location": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "remote_only": {"type": "boolean"},
+        "immutable_revision": {"type": "string", "minLength": 1},
+        "role": {"enum": ["TEACHER", "STUDENT", "EVALUATOR", "DEPLOYED_ARTIFACT", "BASE", "INPUT", "OUTPUT"]}
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_id", "evidence_class", "applicability", "artifact_ref"],
+      "properties": {
+        "evidence_id": {"type": "string", "minLength": 1},
+        "evidence_class": {"enum": ["SCIENTIFIC", "EXECUTION", "PROFILE", "EXTERNAL"]},
+        "applicability": {"enum": ["APPLICABLE", "CONDITIONAL", "NOT_APPLICABLE"]},
+        "artifact_ref": {"type": ["string", "null"]},
+        "condition": {"type": "string", "minLength": 1}
+      }
+    },
+    "experiment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["experiment_id", "definition_version", "experiment_type", "priority", "status", "hypothesis", "decision_question", "branch_id", "prerequisites", "branch_trigger", "material_configuration", "reproducibility", "evidence", "run_ids"],
+      "properties": {
+        "experiment_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+        "definition_version": {"type": "string", "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"},
+        "experiment_type": {"enum": ["TRAINING", "CLINICAL_EVAL", "SYNTHETIC_GENERATION", "EDGE_PROFILE", "COMPRESSION", "ALIGNMENT", "EXTERNAL_EVAL"]},
+        "priority": {"enum": ["CORE", "CONDITIONAL", "OPTIONAL"]},
+        "status": {"enum": ["PLANNED", "READY", "RUNNING", "COMPLETE", "SUPERSEDED", "FAILED"]},
+        "hypothesis": {"type": "string", "minLength": 1},
+        "decision_question": {"type": "string", "minLength": 1},
+        "branch_id": {"type": "string", "minLength": 1},
+        "prerequisites": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "branch_trigger": {"type": ["string", "null"]},
+        "material_configuration": {"type": "object", "additionalProperties": true},
+        "reproducibility": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["required_reference_kinds", "references", "unresolved_inputs"],
+          "properties": {
+            "required_reference_kinds": {"type": "array", "items": {"enum": ["CONFIG", "MODEL", "CHECKPOINT", "DATASET", "PROMPT", "VALIDATOR", "ARTIFACT"]}, "uniqueItems": true},
+            "references": {"type": "array", "items": {"$ref": "#/$defs/reference"}},
+            "unresolved_inputs": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+          }
+        },
+        "evidence": {"type": "array", "items": {"$ref": "#/$defs/evidence"}},
+        "run_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+        "supersedes_experiment_id": {"type": "string", "minLength": 1}
+      }
+    }
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edgeimci.local/schemas/campaign-branches-1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "campaign_id", "branches"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "campaign_id": {"type": "string", "minLength": 1},
+    "branches": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["branch_id", "title", "priority", "critical_path", "state", "evidence_trigger", "prerequisites", "expected_comparison", "experiment_ids"],
+        "properties": {
+          "branch_id": {"type": "string", "pattern": "^[a-z0-9][a-z0-9._-]+$"},
+          "title": {"type": "string", "minLength": 1},
+          "priority": {"enum": ["CORE", "CONDITIONAL", "OPTIONAL"]},
+          "critical_path": {"type": "boolean"},
+          "state": {"enum": ["DORMANT", "OPEN", "SELECTED", "CLOSED"]},
+          "evidence_trigger": {"type": "string", "minLength": 1},
+          "prerequisites": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+          "expected_comparison": {"type": "string", "minLength": 1},
+          "experiment_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true}
+        }
+      }
+    }
+  }
+}

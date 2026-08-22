@@ -244,6 +244,9 @@ Documentation authority and lifecycle are defined in [`docs/README.md`](docs/REA
 
 - [`scripts/sync_holistic_artifacts.py`](scripts/sync_holistic_artifacts.py): deterministic expanded JSON-to-YAML synchronization.
 - [`scripts/generate_holistic_golden_suite.py`](scripts/generate_holistic_golden_suite.py): deterministic proposed holistic semantic-suite generation and review package.
+- [`experiments/registry/`](experiments/registry): versioned planned experiment definitions, campaign branches, schemas, generated YAML mirror, and generated run index.
+- [`src/edge_imci/experiments/`](src/edge_imci/experiments): provider-neutral automatic run tracking, provenance, telemetry, accounting, profiling, and CLI infrastructure.
+- [`experiments/README.md`](experiments/README.md): implemented experiment operations, immutable sidecar, accounting, and ADTC profiling conventions.
 - [`src/edge_imci/information_policy/`](src/edge_imci/information_policy): policy artifact validation and legacy selected-v0 information-policy machinery.
 - [`src/edge_imci/generation/`](src/edge_imci/generation): deterministic case, split, and historical golden-slice utilities.
 - [`src/edge_imci/evaluation/`](src/edge_imci/evaluation): clinical, parsing, scoring, external-evaluation, and reporting logic.

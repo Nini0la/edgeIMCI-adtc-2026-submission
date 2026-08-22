@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://edgeimci.local/schemas/run-sidecar-1.0.0",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "run_id", "experiment_id", "experiment_definition_sha256", "status", "started_at", "finished_at", "wall_duration_seconds", "parent_run_id", "component_run_ids", "provenance", "execution", "config", "models", "datasets", "prompts", "scientific_results", "validation", "telemetry", "usage", "artifacts", "accounting", "accounting_audit", "error"],
+  "properties": {
+    "schema_version": {"const": "1.0.0"},
+    "run_id": {"type": "string", "minLength": 1},
+    "experiment_id": {"type": "string", "minLength": 1},
+    "experiment_definition_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+    "status": {"enum": ["RUNNING", "SUCCEEDED", "FAILED", "INTERRUPTED"]},
+    "started_at": {"type": "string", "format": "date-time"},
+    "finished_at": {"type": ["string", "null"], "format": "date-time"},
+    "wall_duration_seconds": {"type": ["number", "null"], "minimum": 0},
+    "parent_run_id": {"type": ["string", "null"]},
+    "component_run_ids": {"type": "array", "items": {"type": "string", "minLength": 1}, "uniqueItems": true},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["git", "runtime"],
+      "properties": {
+        "git": {"type": "object", "additionalProperties": true},
+        "runtime": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "execution": {"$ref": "#/$defs/execution"},
+    "config": {"$ref": "#/$defs/config"},
+    "models": {"type": "array", "items": {"$ref": "#/$defs/model"}},
+    "datasets": {"type": "array", "items": {"$ref": "#/$defs/dataset"}},
+    "prompts": {"type": "array", "items": {"$ref": "#/$defs/prompt"}},
+    "scientific_results": {"type": "object", "additionalProperties": true},
+    "validation": {"type": "array", "items": {"$ref": "#/$defs/validation"}},
+    "telemetry": {"type": "object", "additionalProperties": true},
+    "usage": {"type": "array", "items": {"$ref": "#/$defs/usage"}},
+    "artifacts": {"type": "array", "items": {"$ref": "#/$defs/artifact"}},
+    "accounting": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "accounting_audit": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+    "error": {"oneOf": [{"type": "null"}, {"$ref": "#/$defs/error"}]},
+    "profiling": {"type": "object", "additionalProperties": true}
+  },
+  "$defs": {
+    "config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["config_id", "version", "snapshot_path", "sha256"],
+      "properties": {
+        "config_id": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "source_path": {"type": "string", "minLength": 1},
+        "snapshot_path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "model": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["role", "model_provider", "model_source", "model_id", "remote_only"],
+      "properties": {
+        "role": {"enum": ["TEACHER", "STUDENT", "EVALUATOR", "DEPLOYED_ARTIFACT", "BASE"]},
+        "model_provider": {"type": "string", "minLength": 1},
+        "model_source": {"type": "string", "minLength": 1},
+        "model_id": {"type": "string", "minLength": 1},
+        "revision": {"type": "string", "minLength": 1},
+        "tokenizer_revision": {"type": "string", "minLength": 1},
+        "checkpoint_id": {"type": "string", "minLength": 1},
+        "checkpoint_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "base_checkpoint_id": {"type": "string", "minLength": 1},
+        "representation": {"type": "string", "minLength": 1},
+        "precision": {"type": "string", "minLength": 1},
+        "conversion_id": {"type": "string", "minLength": 1},
+        "quantization": {"type": "string", "minLength": 1},
+        "artifact_path": {"type": "string", "minLength": 1},
+        "artifact_bytes": {"type": "integer", "minimum": 0},
+        "remote_only": {"type": "boolean"}
+      }
+    },
+    "dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["dataset_id", "version", "sha256", "split"],
+      "properties": {
+        "dataset_id": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "manifest_path": {"type": "string", "minLength": 1},
+        "uri": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "split": {"type": "string", "minLength": 1},
+        "mixture": {"type": "array", "items": {"type": "object", "additionalProperties": true}},
+        "record_count": {"type": "integer", "minimum": 0},
+        "semantic_set_id": {"type": "string", "minLength": 1},
+        "semantic_set_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "oracle_version": {"type": "string", "minLength": 1}
+      }
+    },
+    "prompt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["prompt_id", "version", "source_path", "sha256", "strategy", "sampling"],
+      "properties": {
+        "prompt_id": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "source_path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "strategy": {"type": "string", "minLength": 1},
+        "sampling": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["validator_id", "version", "status", "pass_count", "fail_count", "error_codes"],
+      "properties": {
+        "validator_id": {"type": "string", "minLength": 1},
+        "version": {"type": "string", "minLength": 1},
+        "status": {"enum": ["PASSED", "FAILED", "PARTIAL", "NOT_RUN"]},
+        "pass_count": {"type": "integer", "minimum": 0},
+        "fail_count": {"type": "integer", "minimum": 0},
+        "error_codes": {"type": "object", "additionalProperties": {"type": "integer", "minimum": 0}},
+        "rejected_reason": {"type": "string"},
+        "reviewer_override": {"type": "object", "additionalProperties": false, "required": ["identity", "reason"], "properties": {"identity": {"type": "string"}, "reason": {"type": "string"}}},
+        "artifact_path": {"type": "string", "minLength": 1},
+        "artifact_sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"}
+      }
+    },
+    "usage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["usage_id", "source", "metrics", "raw_sanitized"],
+      "properties": {
+        "usage_id": {"type": "string", "minLength": 1},
+        "source": {"type": "string", "minLength": 1},
+        "metrics": {"type": "object", "additionalProperties": {"type": ["integer", "number", "string"]}},
+        "raw_sanitized": {"type": "object", "additionalProperties": true}
+      }
+    },
+    "artifact": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["artifact_id", "role", "path", "sha256", "bytes", "creation", "validation_state"],
+      "properties": {
+        "artifact_id": {"type": "string", "minLength": 1},
+        "role": {"type": "string", "minLength": 1},
+        "path": {"type": "string", "minLength": 1},
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "bytes": {"type": "integer", "minimum": 0},
+        "media_type": {"type": "string", "minLength": 1},
+        "creation": {"enum": ["PRODUCED", "CONSUMED", "OFFICIAL_EXTERNAL"]},
+        "validation_state": {"enum": ["UNVALIDATED", "VALID", "INVALID"]}
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["exception_type", "message"],
+      "properties": {
+        "exception_type": {"type": "string", "minLength": 1},
+        "message": {"type": "string"}
+      }
+    },
+    "executionBase": {
+      "type": "object",
+      "required": ["environment_kind", "execution_provider"],
+      "properties": {
+        "environment_kind": {"enum": ["LOCAL_DEV", "TARGET_HARDWARE", "MODAL", "EXTERNAL_API", "HYBRID", "OFFICIAL_ADTC", "MANAGED_TRAINING"]},
+        "execution_provider": {"type": "string", "minLength": 1},
+        "api_provider": {"type": "string", "minLength": 1}
+      }
+    },
+    "execution": {
+      "oneOf": [
+        {"type": "object", "additionalProperties": false, "required": ["environment_kind", "execution_provider", "local_dev"], "properties": {"environment_kind": {"const": "LOCAL_DEV"}, "execution_provider": {"type": "string"}, "local_dev": {"type": "object", "additionalProperties": true}}},
+        {"type": "object", "additionalProperties": false, "required": ["environment_kind", "execution_provider", "target_hardware"], "properties": {"environment_kind": {"const": "TARGET_HARDWARE"}, "execution_provider": {"type": "string"}, "target_hardware": {"type": "object", "additionalProperties": true}}},
+        {"type": "object", "additionalProperties": false, "required": ["environment_kind", "execution_provider", "modal"], "properties": {"environment_kind": {"const": "MODAL"}, "execution_provider": {"type": "string"}, "modal": {"type": "object", "additionalProperties": true}}},
+        {"type": "object", "additionalProperties": false, "required": ["environment_kind", "execution_provider", "api_provider", "external_api"], "properties": {"environment_kind": {"const": "EXTERNAL_API"}, "execution_provider": {"type": "string"}, "api_provider": {"type": "string"}, "external_api": {"type": "object", "additionalProperties": true}}},
+        {"type": "object", "additionalProperties": false, "required": ["environment_kind", "execution_provider", "hybrid"], "properties": {"environment_kind": {"const": "HYBRID"}, "execution_provider": {"type": "string"}, "hybrid": {"type": "object", "additionalProperties": true}}},
+        {"type": "object", "additionalProperties": false, "required": ["environment_kind", "execution_provider", "official_adtc"], "properties": {"environment_kind": {"const": "OFFICIAL_ADTC"}, "execution_provider": {"type": "string"}, "official_adtc": {"type": "object", "additionalProperties": true}}},
+        {"type": "object", "additionalProperties": false, "required": ["environment_kind", "execution_provider", "managed_training"], "properties": {"environment_kind": {"const": "MANAGED_TRAINING"}, "execution_provider": {"type": "string"}, "managed_training": {"type": "object", "additionalProperties": true}}}
+      ]
+    }
+  }
+}

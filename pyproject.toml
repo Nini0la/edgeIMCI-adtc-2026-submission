@@ -9,7 +9,10 @@ description = "Experimental benchmark for bounded IMCI decision pathways on cons
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
-dependencies = ["PyYAML>=6.0", "certifi>=2024.0"]
+dependencies = ["PyYAML>=6.0", "certifi>=2024.0", "jsonschema>=4.23"]
+
+[project.scripts]
+edgeimci-experiments = "edge_imci.experiments.cli:main"
 
 [project.optional-dependencies]
 dev = ["pytest>=8.0"]

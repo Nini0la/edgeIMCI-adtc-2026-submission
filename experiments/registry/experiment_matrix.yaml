@@ -1,0 +1,424 @@
+# Generated from experiments/registry/experiment_matrix.json.
+# Edit canonical JSON and run `python -m edge_imci.experiments.cli sync-yaml`.
+schema_version: 1.0.0
+registry_id: edgeimci-experiment-registry-v1
+experiments:
+  - experiment_id: holistic-teacher-prompt-bakeoff-v1
+    definition_version: 1.0.0
+    experiment_type: SYNTHETIC_GENERATION
+    priority: CORE
+    status: PLANNED
+    hypothesis: A controlled teacher and prompt comparison can identify a source-faithful whole-encounter rendering
+      recipe.
+    decision_question: Which teacher and rendering strategy should be used for the first controlled corpus?
+    branch_id: teacher-prompt-bakeoff
+    prerequisites:
+      - Human domain approval and freeze of the holistic golden semantic slice
+    branch_trigger: null
+    material_configuration:
+      semantic_unit: WHOLE_ENCOUNTER
+      shared_slice_size_range:
+        - 50
+        - 100
+      teacher_candidates: UNRESOLVED
+      prompt_strategies: UNRESOLVED
+    reproducibility:
+      required_reference_kinds:
+        - CONFIG
+        - MODEL
+        - DATASET
+        - PROMPT
+        - VALIDATOR
+      references: []
+      unresolved_inputs:
+        - approved frozen semantic slice
+        - teacher snapshots
+        - prompt versions
+        - validator version
+        - bake-off config
+    evidence:
+      - evidence_id: generation_acceptance
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+      - evidence_id: semantic_error_distribution
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+      - evidence_id: language_quality_review
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+      - evidence_id: api_usage
+        evidence_class: EXECUTION
+        applicability: APPLICABLE
+        artifact_ref: null
+    run_ids: []
+  - experiment_id: holistic-fast-api-generation-v1
+    definition_version: 1.0.0
+    experiment_type: SYNTHETIC_GENERATION
+    priority: CORE
+    status: PLANNED
+    hypothesis: A stable standard-API recipe can produce 500–1,000 accepted whole-encounter examples quickly enough
+      for SFT-v1.
+    decision_question: Does the selected recipe produce a sufficiently faithful first training corpus?
+    branch_id: fast-standard-api-generation
+    prerequisites:
+      - Frozen authorized holistic semantics
+      - Selected teacher/prompt recipe
+    branch_trigger: null
+    material_configuration:
+      request_mode: STANDARD_API
+      accepted_target_range:
+        - 500
+        - 1000
+      semantic_unit: WHOLE_ENCOUNTER
+    reproducibility:
+      required_reference_kinds:
+        - CONFIG
+        - MODEL
+        - DATASET
+        - PROMPT
+        - VALIDATOR
+      references: []
+      unresolved_inputs:
+        - approved semantic source
+        - selected teacher snapshot
+        - selected prompt
+        - validator
+        - generation config
+    evidence:
+      - evidence_id: accepted_corpus
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+      - evidence_id: generation_quality
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+      - evidence_id: api_execution
+        evidence_class: EXECUTION
+        applicability: APPLICABLE
+        artifact_ref: null
+    run_ids: []
+  - experiment_id: qwen3-1.7b-base-holistic-baseline-v1
+    definition_version: 1.0.0
+    experiment_type: CLINICAL_EVAL
+    priority: CORE
+    status: PLANNED
+    hypothesis: The untuned Qwen3-1.7B baseline establishes the matched starting point for holistic student comparisons.
+    decision_question: How does the exact base checkpoint perform on the approved holistic evaluation battery?
+    branch_id: qwen3-1.7b-base-baseline
+    prerequisites:
+      - Frozen authorized holistic evaluation set and policies
+    branch_trigger: null
+    material_configuration:
+      model_family: Qwen3-1.7B
+      training_state: BASE
+      evaluation_scope: HOLISTIC_PRODUCT
+    reproducibility:
+      required_reference_kinds:
+        - CONFIG
+        - MODEL
+        - DATASET
+        - VALIDATOR
+      references: []
+      unresolved_inputs:
+        - exact model revision
+        - approved evaluation dataset
+        - evaluation config
+        - validator version
+    evidence:
+      - evidence_id: holistic_classification
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+      - evidence_id: integrated_management
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+      - evidence_id: completeness_withholding
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+      - evidence_id: urgent_incomplete
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+    run_ids: []
+  - experiment_id: qwen3-1.7b-sft-v1-modal
+    definition_version: 1.0.0
+    experiment_type: TRAINING
+    priority: CORE
+    status: PLANNED
+    hypothesis: Whole-encounter supervised fine-tuning improves the 1.7B model on the approved clinical product
+      task.
+    decision_question: Does SFT-v1 produce a viable first EdgeIMCI student checkpoint?
+    branch_id: qwen3-1.7b-sft-v1
+    prerequisites:
+      - Validated fast controlled corpus
+    branch_trigger: null
+    material_configuration:
+      model_family: Qwen3-1.7B
+      training_stage: SFT_V1
+      preferred_environment: MODAL
+    reproducibility:
+      required_reference_kinds:
+        - CONFIG
+        - MODEL
+        - DATASET
+      references: []
+      unresolved_inputs:
+        - base checkpoint revision
+        - approved training dataset and mixture
+        - training recipe
+        - Modal image/config
+    evidence:
+      - evidence_id: training_metrics
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+      - evidence_id: checkpoint
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+      - evidence_id: modal_execution
+        evidence_class: EXECUTION
+        applicability: APPLICABLE
+        artifact_ref: null
+    run_ids: []
+  - experiment_id: qwen3-1.7b-sft-v1-classification-eval
+    definition_version: 1.0.0
+    experiment_type: CLINICAL_EVAL
+    priority: CORE
+    status: PLANNED
+    hypothesis: SFT-v1 improves simultaneous whole-encounter classification over the matched base checkpoint.
+    decision_question: Does SFT-v1 meet the holistic classification target?
+    branch_id: core-clinical-evaluations
+    prerequisites:
+      - SFT-v1 checkpoint
+      - Frozen authorized holistic evaluation set
+    branch_trigger: null
+    material_configuration:
+      evaluation_axis: HOLISTIC_CLASSIFICATION
+      comparison: QWEN3_1.7B_BASE_VS_SFT_V1
+    reproducibility:
+      required_reference_kinds:
+        - CONFIG
+        - CHECKPOINT
+        - DATASET
+        - VALIDATOR
+      references: []
+      unresolved_inputs:
+        - SFT-v1 checkpoint
+        - approved evaluation set
+        - evaluation and validator versions
+    evidence:
+      - evidence_id: holistic_classification
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+    run_ids: []
+  - experiment_id: qwen3-1.7b-sft-v1-management-eval
+    definition_version: 1.0.0
+    experiment_type: CLINICAL_EVAL
+    priority: CORE
+    status: PLANNED
+    hypothesis: SFT-v1 improves integrated management without collapsing distinct source-backed actions.
+    decision_question: Does SFT-v1 meet the integrated-management target?
+    branch_id: core-clinical-evaluations
+    prerequisites:
+      - SFT-v1 checkpoint
+      - Frozen authorized holistic evaluation set
+    branch_trigger: null
+    material_configuration:
+      evaluation_axis: INTEGRATED_MANAGEMENT
+      comparison: QWEN3_1.7B_BASE_VS_SFT_V1
+    reproducibility:
+      required_reference_kinds:
+        - CONFIG
+        - CHECKPOINT
+        - DATASET
+        - VALIDATOR
+      references: []
+      unresolved_inputs:
+        - SFT-v1 checkpoint
+        - approved evaluation set
+        - evaluation and validator versions
+    evidence:
+      - evidence_id: integrated_management
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+    run_ids: []
+  - experiment_id: qwen3-1.7b-sft-v1-completeness-eval
+    definition_version: 1.0.0
+    experiment_type: CLINICAL_EVAL
+    priority: CORE
+    status: PLANNED
+    hypothesis: SFT-v1 preserves unknowns and withholds final synthesis until the supported assessment is complete.
+    decision_question: Does SFT-v1 meet completeness and withholding requirements?
+    branch_id: core-clinical-evaluations
+    prerequisites:
+      - SFT-v1 checkpoint
+      - Frozen authorized holistic evaluation set
+    branch_trigger: null
+    material_configuration:
+      evaluation_axis: COMPLETENESS_WITHHOLDING
+      comparison: QWEN3_1.7B_BASE_VS_SFT_V1
+    reproducibility:
+      required_reference_kinds:
+        - CONFIG
+        - CHECKPOINT
+        - DATASET
+        - VALIDATOR
+      references: []
+      unresolved_inputs:
+        - SFT-v1 checkpoint
+        - approved evaluation set
+        - evaluation and validator versions
+    evidence:
+      - evidence_id: completeness_withholding
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+    run_ids: []
+  - experiment_id: qwen3-1.7b-sft-v1-urgent-incomplete-eval
+    definition_version: 1.0.0
+    experiment_type: CLINICAL_EVAL
+    priority: CORE
+    status: PLANNED
+    hypothesis: SFT-v1 surfaces known urgent actions without falsely declaring an incomplete assessment complete.
+    decision_question: Does SFT-v1 meet urgent-incomplete safety requirements?
+    branch_id: core-clinical-evaluations
+    prerequisites:
+      - SFT-v1 checkpoint
+      - Frozen authorized holistic evaluation set
+    branch_trigger: null
+    material_configuration:
+      evaluation_axis: URGENT_INCOMPLETE
+      comparison: QWEN3_1.7B_BASE_VS_SFT_V1
+    reproducibility:
+      required_reference_kinds:
+        - CONFIG
+        - CHECKPOINT
+        - DATASET
+        - VALIDATOR
+      references: []
+      unresolved_inputs:
+        - SFT-v1 checkpoint
+        - approved evaluation set
+        - evaluation and validator versions
+    evidence:
+      - evidence_id: urgent_incomplete
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+    run_ids: []
+  - experiment_id: selected-artifact-target-profile-v1
+    definition_version: 1.0.0
+    experiment_type: EDGE_PROFILE
+    priority: CORE
+    status: PLANNED
+    hypothesis: The selected exact deployment artifact is usable on the ASUS participant-laptop proxy.
+    decision_question: Does the selected artifact meet the observed target-runtime, memory, and latency needs?
+    branch_id: target-hardware-profile
+    prerequisites:
+      - Selected checkpoint and exact deployable representation
+      - Core clinical evaluation evidence
+    branch_trigger: null
+    material_configuration:
+      measurement_designation: PARTICIPANT_PROXY
+      device: ASUS
+      runtime: LLAMA_CPP
+      artifact: UNRESOLVED
+    reproducibility:
+      required_reference_kinds:
+        - CONFIG
+        - ARTIFACT
+      references: []
+      unresolved_inputs:
+        - selected deployable artifact and digest
+        - pinned profiler/runtime configuration
+        - recorded ASUS environment
+    evidence:
+      - evidence_id: target_profile_summary
+        evidence_class: PROFILE
+        applicability: APPLICABLE
+        artifact_ref: null
+      - evidence_id: matched_clinical_quality
+        evidence_class: SCIENTIFIC
+        applicability: APPLICABLE
+        artifact_ref: null
+    run_ids: []
+  - experiment_id: selected-artifact-official-adtc-v1
+    definition_version: 1.0.0
+    experiment_type: EDGE_PROFILE
+    priority: CORE
+    status: PLANNED
+    hypothesis: The selected artifact can produce valid controlled ADTC submission evidence.
+    decision_question: What official participant/audit evidence supports the final selected artifact?
+    branch_id: official-adtc-final
+    prerequisites:
+      - Selected deployment artifact
+      - Pinned current official profiler and schema
+    branch_trigger: null
+    material_configuration:
+      profile_kind: OFFICIAL_ADTC
+      artifact: UNRESOLVED
+      profiler_revision: UNRESOLVED
+    reproducibility:
+      required_reference_kinds:
+        - CONFIG
+        - ARTIFACT
+      references: []
+      unresolved_inputs:
+        - selected artifact and digest
+        - official profiler revision
+        - official report schema revision
+        - submission metadata
+    evidence:
+      - evidence_id: official_participant_report
+        evidence_class: PROFILE
+        applicability: APPLICABLE
+        artifact_ref: null
+      - evidence_id: official_audit_comparison
+        evidence_class: PROFILE
+        applicability: CONDITIONAL
+        artifact_ref: null
+        condition: An official audit report is supplied by the challenge environment
+    run_ids: []
+  - experiment_id: qwen3-0.6b-lower-bound-v1
+    definition_version: 1.0.0
+    experiment_type: CLINICAL_EVAL
+    priority: OPTIONAL
+    status: PLANNED
+    hypothesis: Qwen3-0.6B can provide a useful lower-capacity bound if core evidence is already secure.
+    decision_question: What quality and deployability are sacrificed at the smaller capacity?
+    branch_id: qwen3-0.6b-lower-bound
+    prerequisites:
+      - Core evidence is secure and optional comparison time remains
+    branch_trigger: Optional capacity-bound evidence is useful
+    material_configuration:
+      model_family: Qwen3-0.6B
+      training_state: BASE
+      comparison_role: LOWER_CAPACITY_BOUND
+    reproducibility:
+      required_reference_kinds:
+        - CONFIG
+        - MODEL
+        - DATASET
+        - VALIDATOR
+      references: []
+      unresolved_inputs:
+        - exact model revision
+        - approved evaluation set
+        - evaluation config
+        - validator
+    evidence:
+      - evidence_id: optional_capacity_bound
+        evidence_class: SCIENTIFIC
+        applicability: CONDITIONAL
+        artifact_ref: null
+        condition: Optional branch is opened
+    run_ids: []

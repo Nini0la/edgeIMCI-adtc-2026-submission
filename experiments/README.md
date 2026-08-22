@@ -4,14 +4,14 @@ This directory is the home for EdgeIMCI model experiments and their evidence. Th
 
 The current expanded substrate is `imci-major-sick-child-v1`, paired with `imci-major-sick-child-holistic-completeness-v2` and the approved hackathon decision set `imci-major-sick-child-review-decisions-v1`. Its scope is children aged `2 <= age_months < 60` across general danger signs, cough/difficult breathing, diarrhoea, fever including measles, and ear problem. This is complete only relative to that supported initial-encounter scope, not every IMCI activity. The 13 blocking clinical/policy questions are resolved for this bounded hackathon representation; this is not production clinical approval. Product-level golden-slice work may proceed after verification, while bulk generation and training remain not started.
 
-Before the project begins running many SFT, RL, quantization, and edge-deployment variants, it should add two first-class pieces of infrastructure:
+Before the project begins running many SFT, RL, quantization, and edge-deployment variants, it now has two first-class pieces of infrastructure:
 
 1. an **experiment registry** that records every model/training configuration and links it to its evaluation results; and
 2. a **profiling registry** that stores the ASUS/ADTC edge evidence separately from model-quality results.
 
-The purpose is to make the state of the experimental program explicit and machine-readable. An experiment should be discoverable from committed artifacts rather than reconstructed from conversation, filenames, or memory. The matrix is a research map, not a commitment to run every possible branch.
+The purpose is to make the state of the experimental program explicit and machine-readable. An experiment is discoverable from committed artifacts rather than reconstructed from conversation, filenames, or memory. The matrix is a research map, not a commitment to run every possible branch. The initial rows remain `PLANNED`; this infrastructure implementation did not execute any scientific work or declare the proposed holistic golden set approved.
 
-## Planned layout
+## Implemented layout
 
 The existing experiment-category directories remain useful for their run artifacts:
 
@@ -20,7 +20,11 @@ experiments/
 ├── README.md
 ├── registry/
 │   ├── experiment_matrix.json      # canonical machine-readable registry
-│   └── experiment_matrix.yaml      # generated human-readable mirror
+│   ├── experiment_matrix.yaml      # generated human-readable mirror
+│   ├── campaign_branches.json      # strategy branches, gates, and triggers
+│   ├── run_index.json              # generated from validated common sidecars
+│   ├── schemas/                    # versioned JSON Schemas
+│   └── rate_cards/                 # verified production rate cards only
 ├── profiling/
 │   └── adtc/
 │       ├── runs/                   # immutable official reports plus sidecars
@@ -33,59 +37,70 @@ experiments/
 
 The registry is an index, not a replacement for the detailed artifacts in these directories.
 
+The provider-neutral implementation lives under `src/edge_imci/experiments/`. It includes registry validation, canonical hashing and provenance, typed environment telemetry, atomic run tracking, decimal accounting, ADTC preservation checks, profile summaries, and a CLI. It imports no Modal, Azure, hosted-model, MLX, or ADTC SDK.
+
 ## 1. Experiment registry
 
-`experiments/registry/experiment_matrix.json` should be the canonical experiment matrix. Its YAML counterpart should be generated from the JSON and should deserialize to the same data. Do not edit the JSON and YAML independently.
+`experiments/registry/experiment_matrix.json` is the canonical experiment matrix. Its YAML counterpart is generated from the JSON and deserializes to the same data. Do not edit the JSON and YAML independently.
 
-Each experiment is one row/object. At minimum, it identifies the model configuration, training stage, deployed precision, experimental priority and lifecycle, product-evaluation artifacts, and edge profile:
+Each experiment is one row/object. It records the scientific question and material factors separately from lifecycle, intended evidence, and immutable reproducibility references:
 
 ```json
 {
-  "experiment_id": "qwen3-1.7b-sft-v1-q8",
-  "base_model": "Qwen3-1.7B",
-  "training": "sft-v1",
-  "precision": "Q8",
-
+  "experiment_id": "qwen3-1.7b-sft-v1-modal",
+  "definition_version": "1.0.0",
+  "experiment_type": "TRAINING",
   "priority": "CORE",
   "status": "PLANNED",
-
-  "applicable_evaluations": [
-    "holistic_classification_eval",
-    "integrated_management_eval",
-    "completeness_eval",
-    "urgent_incomplete_eval",
-    "lundin_eval"
+  "hypothesis": "Whole-encounter supervised fine-tuning improves the 1.7B model.",
+  "decision_question": "Does SFT-v1 produce a viable first EdgeIMCI checkpoint?",
+  "branch_id": "qwen3-1.7b-sft-v1",
+  "prerequisites": ["Validated fast controlled corpus"],
+  "branch_trigger": null,
+  "material_configuration": {
+    "model_family": "Qwen3-1.7B",
+    "training_stage": "SFT_V1",
+    "preferred_environment": "MODAL"
+  },
+  "reproducibility": {
+    "required_reference_kinds": ["CONFIG", "MODEL", "DATASET"],
+    "references": [],
+    "unresolved_inputs": [
+      "base checkpoint revision",
+      "approved training dataset and mixture",
+      "training recipe",
+      "Modal image/config"
+    ]
+  },
+  "evidence": [
+    {
+      "evidence_id": "training_metrics",
+      "evidence_class": "SCIENTIFIC",
+      "applicability": "APPLICABLE",
+      "artifact_ref": null
+    }
   ],
-  "holistic_classification_eval": null,
-  "integrated_management_eval": null,
-  "completeness_eval": null,
-  "urgent_incomplete_eval": null,
-  "lundin_eval": null,
-  "edge_profiling_applicable": true,
-  "edge_profile": null
+  "run_ids": []
 }
 ```
 
-The evaluation fields should contain repository-relative paths or stable artifact IDs, according to the convention selected when the registry is implemented. Use one convention consistently throughout the matrix. For a declared applicable evaluation or profile, a `null` value means that it has not been run yet; it must not mean that a run failed or that its result is unknown. Applicability is declared separately so `null` never has to carry two meanings.
+Evidence uses repository-relative artifact paths after validated evidence exists. For declared applicable evidence, `artifact_ref: null` means applicable but not yet available. `applicability: NOT_APPLICABLE` is distinct, cannot carry an artifact reference, and is never inferred from `null`.
 
 ### Field meanings
 
 | Field | Meaning |
 | --- | --- |
-| `experiment_id` | Unique, stable identifier for this exact model/training/precision combination. |
-| `base_model` | Human-readable base model family and size. The exact checkpoint revision remains in the detailed run artifact. |
-| `training` | Training state, such as `base`, `sft-v1`, `sft-v2`, or a later RL variant. |
-| `precision` | The representation used for this experiment, such as `BF16`, `FP16`, `Q8`, `Q6`, or `Q4_K_M`. |
+| `experiment_id` | Unique, stable identifier for this exact scientific protocol and material configuration. |
+| `definition_version` | Schema-level revision of the definition; it does not authorize reuse for a material change. |
+| `experiment_type` | One of the fixed operations taxonomy values. |
 | `priority` | Research importance: `CORE`, `CONDITIONAL`, or `OPTIONAL`. This is independent of lifecycle state. |
 | `status` | Lifecycle: `PLANNED`, `READY`, `RUNNING`, `COMPLETE`, `SUPERSEDED`, or `FAILED`. |
-| `applicable_evaluations` | Fixed names of the model-quality evaluations this row is intended to run; absence means not applicable, not silently missing. |
-| `holistic_classification_eval` | Reference to evaluation of the complete set of supported whole-encounter classifications, including simultaneous classifications across pathways. |
-| `integrated_management_eval` | Reference to evaluation of the combined treatment, referral/pre-referral, follow-up, modification, and cross-pathway management plan. |
-| `completeness_eval` | Reference to evaluation of complete/incomplete behavior, grouped missing elements, unknown preservation, and false-completion or premature-synthesis errors. |
-| `urgent_incomplete_eval` | Reference to evaluation of immediate source-backed urgent action while encounter status remains incomplete and final synthesis remains withheld. |
-| `lundin_eval` | Reference to the pinned external Lundin evaluation artifact, including its named scoring policy. |
-| `edge_profiling_applicable` | Whether the row represents a deployable artifact that should receive edge profiling. |
-| `edge_profile` | Reference to an ASUS/ADTC profile summary; never an inline block of hardware metrics. |
+| `hypothesis` / `decision_question` | The claim being tested and decision the evidence must support. |
+| `branch_id` / `branch_trigger` | Link to campaign strategy without turning an unresolved branch into a pseudo-experiment. |
+| `material_configuration` | Known fixed scientific factors; unresolved values remain explicit while `PLANNED`. |
+| `reproducibility` | Required reference kinds, resolved immutable references, and unresolved inputs. |
+| `evidence` | Separate scientific, execution, profile, and external evidence with explicit applicability. |
+| `run_ids` | Zero or more immutable execution attempts associated with this definition. |
 
 Add fields when needed to identify an experiment unambiguously, but keep detailed per-case results, prompts, runtime metadata, and hardware measurements in their own artifacts. The matrix should remain compact enough to scan and automate against.
 
@@ -132,7 +147,7 @@ Changing lifecycle status must not mutate an experiment into a different model, 
 - Use a stable, unique `experiment_id`; do not reuse an ID for a materially different checkpoint, dataset mixture, training recipe, or precision.
 - Before a row becomes `READY`, its fields or linked versioned configuration must resolve the exact checkpoint revision, dataset version and mixture, training recipe, conversion settings, and deployed precision. A human-readable model name alone is not reproducible identity.
 - Fill evaluation references only after the referenced artifacts exist and have passed their relevant checks.
-- Keep applicable but unavailable evaluations as `null`. Declare non-applicability explicitly; never use placeholder paths or fabricated scores.
+- Keep applicable but unavailable evidence references as `null`. Declare non-applicability explicitly; never use placeholder paths or fabricated scores.
 - Keep holistic classification, integrated management, completeness, urgent-incomplete, Lundin, and any secondary/component results separate. Do not collapse incompatible benchmarks into one score.
 - Treat JSON as canonical. Regenerate YAML after every JSON change and verify semantic equality.
 - Prefer append-only history. If an experiment is superseded, record that state explicitly rather than silently turning its row into another experiment.
@@ -147,7 +162,6 @@ The matrix should show the research landscape without implying that every row wi
 - Qwen3-1.7B base holistic baseline;
 - the first Qwen3-1.7B SFT;
 - post-SFT holistic classification, integrated-management, completeness, and urgent-incomplete evaluation;
-- Lundin evaluation when appropriate; and
 - ADTC profiling of the exact deployment representation.
 
 Qwen3-4B may serve as a larger capacity anchor when that comparison is affordable and useful.
@@ -157,6 +171,8 @@ Qwen3-4B may serve as a larger capacity anchor when that comparison is affordabl
 - Qwen3-0.6B as a lower-capacity bound;
 - additional quantizations of Qwen3-1.7B for edge trade-offs; and
 - further SFT variants only when preceding evidence motivates them.
+
+Lundin is an optional external branch and remains off the critical path.
 
 **Conditional / optional branches**
 
@@ -169,7 +185,7 @@ Qwen3-4B may serve as a larger capacity anchor when that comparison is affordabl
 
 None of these conditional branches is required before the first hackathon submission. They should not consume critical-path time without evidence that they address a measured limitation.
 
-The following is a conceptual planning view, not an implemented registry and not a claim that these evaluations have run:
+The following remains a conceptual scan view. The implemented registry records the currently instantiated definitions as `PLANNED`; neither this view nor those rows claim that an evaluation has run:
 
 | Model | Training | Precision | Priority | Status | Holistic classification | Integrated management | Completeness | Urgent incomplete | Lundin | Edge profile |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -401,32 +417,84 @@ Keep the following boundaries intact:
 
 This structure lets humans review the program as a matrix while allowing scripts and agents to fill missing cells, validate provenance, compare variants, and compute edge Pareto trade-offs without depending on conversational context.
 
-## 5. Current infrastructure status and gate
+## 5. Implemented registry and tracker
 
-The registry infrastructure described above does **not** exist yet. The repository currently has baseline and rendering-bake-off artifacts, but it does not have:
+The versioned schemas are:
 
-- `experiments/registry/experiment_matrix.json`;
-- its generated YAML mirror;
-- a canonical experiment-matrix schema;
-- initial versioned registry rows;
-- JSON-to-YAML synchronization for the matrix;
-- priority/status enumeration validation;
-- experiment-ID uniqueness and artifact-reference validation; or
-- implemented profiling sidecar and summary schemas/generators.
+- `schemas/experiment.schema.json` for the canonical experiment matrix;
+- `schemas/campaign_branch.schema.json` for evidence-triggered strategy branches;
+- `schemas/run.schema.json` for common `edgeimci_run.json` sidecars;
+- `schemas/rate_card.schema.json` for verified, versioned unit rates; and
+- `schemas/profile_summary.schema.json` for declared comparable-run aggregates.
 
-The existing experiment artifacts remain valid historical evidence. Their existence must not be confused with implementation of the registry.
+Owned structural objects reject extra fields. Scientific metric maps, sanitized provider payloads, and similarly intentional extension points remain open. Runtime validation adds cross-record rules that JSON Schema alone cannot enforce: unique identities, explicit applicability, `READY` reproducibility closure, safe repository paths, immutable local hashes or remote revisions, branch links, environment-adapter matching, terminal-run immutability, and consistent experiment-definition digests across repeated runs.
 
-Before the experiment volume increases substantially, add and test:
+The common lifecycle is deliberately small:
 
-- the canonical experiment-matrix JSON schema and initial rows;
-- deterministic JSON-to-YAML synchronization;
-- an EdgeIMCI run-sidecar schema and profile-summary schema without modifying the official ADTC report schema;
-- experiment-ID uniqueness, priority/status, applicability, and reference-integrity validation;
-- validation of every `submission.json` against the schema bundled with its pinned profiler revision;
-- immutable run naming/storage; and
-- deterministic summary generation with documented aggregation rules.
+```python
+from edge_imci.experiments import ExperimentRegistry, RunTracker
 
-Until that infrastructure exists, new experiment output should still preserve exact configuration and provenance, but the project should avoid creating a large collection of loosely named runs that will later need to be reconstructed by hand.
+registry = ExperimentRegistry()
+tracker = RunTracker(registry)
+
+with tracker.start(
+    experiment_id="a-ready-experiment-id",
+    output_dir="experiments/sft/a-new-immutable-run",
+    config={"config_id": "recipe", "version": "1.0.0", "data": recipe},
+    execution=typed_execution_metadata,
+    models=model_references,
+    datasets=dataset_references,
+    prompts=prompt_references,
+) as run:
+    # Perform model/provider setup inside this boundary so failures are durable.
+    run.record_scientific_metrics(scientific_summary)
+    run.record_validation(validation_summary)
+    run.record_usage(
+        usage_id="provider-usage-1",
+        source="named-provider",
+        metrics=raw_usage,
+        raw_payload=provider_payload,
+    )
+    run.add_artifact(result_path, artifact_id="detailed-results", role="EVALUATION_RESULT")
+```
+
+`start()` validates that the experiment is execution-eligible (`READY`, already `RUNNING`, or `COMPLETE` when an exact repeat is required), snapshots and canonically hashes config, captures sanitized Git/runtime provenance, and atomically writes `RUNNING` before control enters the body. Normal exit finalizes `SUCCEEDED`; exceptions and interruptions finalize `FAILED` or `INTERRUPTED` and are re-raised. Every retry or exact repeat receives a new output directory and `run_id`. A terminal sidecar cannot be reused. Billing reconciliation is the sole explicit mutation channel: it appends a new accounting record and audit event without deleting the original estimate or raw usage.
+
+Environment telemetry is a discriminated contract. `LOCAL_DEV`, `TARGET_HARDWARE`, `MODAL`, `EXTERNAL_API`, `HYBRID`, `OFFICIAL_ADTC`, and `MANAGED_TRAINING` each permit only their matching extension. `execution_provider`, hosted `api_provider`, and model publisher/source identities remain separate. Non-applicable fields are absent, not `null`.
+
+### Commands
+
+Install the project, then use either the console command shown below or `python -m edge_imci.experiments.cli`:
+
+```bash
+edgeimci-experiments validate-registry
+edgeimci-experiments sync-yaml
+edgeimci-experiments validate-run experiments/path/to/run/edgeimci_run.json
+edgeimci-experiments build-index experiments --output experiments/registry/run_index.json
+edgeimci-experiments derive-cost raw_usage.json verified_rate_card.json \
+  --calculation-id calculation-v1 --output derived_cost.json
+edgeimci-experiments validate-adtc submission.json /path/to/pinned/adtc-profiler.schema.json
+edgeimci-experiments summarize-profiles run-a/edgeimci_run.json run-b/edgeimci_run.json \
+  --schema /path/to/pinned/adtc-profiler.schema.json \
+  --summary-id asus-selected-artifact-v1 \
+  --output experiments/profiling/adtc/summaries/asus-selected-artifact-v1.json
+```
+
+`run_index.json` is derived only from validated files named `edgeimci_run.json`. Historical `run.json` and `strict_run.json` artifacts are not rewritten or retroactively promoted to the common schema.
+
+Canonical configuration hashing uses UTF-8 JSON with sorted keys, compact separators, and one trailing newline. Local prompts, datasets, checkpoints, configs, validation artifacts, and output artifacts are hashed from bytes wherever applicable. A remote-only model uses its immutable provider revision/snapshot; the tracker does not fabricate a local file hash.
+
+### Accounting and profile summaries
+
+Raw usage remains in the run. Cost calculations refer to a named rate card and use decimal arithmetic; estimates, actual evidence, and reconciliations are separate records. API calculations can report cost per attempt and accepted example; training calculations can report cost per run and per 1,000 examples. Hybrid totals enumerate component calculation IDs and reject duplicate components.
+
+Official `submission.json` bytes remain outside the EdgeIMCI schema and are validated against a caller-supplied schema from the pinned profiler revision. The common sidecar stores EdgeIMCI provenance and hashes the official report plus exact deployed artifact. Profile summaries take explicit sidecar IDs, record every inclusion/exclusion, and aggregate only a single comparison fingerprint: exact model digest, profiler/schema revision, measurement designation, environment, runtime settings, workload, and accuracy configuration. Participant-laptop and audit-cloud measurements cannot share a fingerprint and are therefore never averaged together.
+
+## 6. Current gate
+
+All initial experiment definitions remain `PLANNED` because the proposed holistic product golden suite is still awaiting domain approval. The tracker refuses to start those rows. A contributor may move a definition to `READY` only after all declared material references resolve to immutable local hashes or remote revisions and `unresolved_inputs` is empty. This is an execution gate, not a clinical-approval mechanism.
+
+The empty committed run index and empty profiling directories are infrastructure placeholders, not evidence. No production rate card is committed; tests use fictional cards only. The existing baseline and rendering-bake-off artifacts remain unchanged historical evidence.
 
 ## Sources and change control
 
