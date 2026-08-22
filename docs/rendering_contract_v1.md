@@ -1,7 +1,7 @@
 # EdgeIMCI rendering contract v1
 
 **Status:** `PROPOSED_FOR_HUMAN_REVIEW`  
-**Scope:** Language realization of the fixed 14-case golden semantic conversion slice.  
+**Scope:** Historical language realization of the archived 14-case selected-v0 component semantic slice.
 **Not:** clinical logic, a model-performance benchmark, an SFT corpus, or approval for bulk generation.
 
 ## 1. Purpose and authority
@@ -221,10 +221,10 @@ These lexical checks are conservative guards, not unrestricted language understa
 
 All 14 cases have candidate reference renderings in:
 
-- `data/golden/golden_reference_renderings_v1.jsonl`
+- `data/archive/selected_v0/golden/golden_reference_renderings_v1.jsonl`
 
 Every record and turn is marked `PROPOSED_FOR_HUMAN_REVIEW`. These references are deterministic language proposals over the fixed semantics; they do not replace or modify `golden_conversion_slice_v1.jsonl`.
 
 ## 9. Bake-off interpretation
 
-The teacher experiment uses the same 14 cases and 16 assistant targets for every configuration. It is a **conversion acceptance / teacher bake-off**, not a model-performance benchmark. A high lexical semantic pass rate is necessary but not sufficient for approval. No teacher or prompt becomes approved until a human/domain expert reviews the side-by-side outputs.
+The historical experiment used the same 14 cases and 16 assistant targets for every configuration. It is preserved for historical reproduction only: it is not a model-performance benchmark, current teacher-selection source, or product evaluation. A high lexical semantic pass rate was necessary but not sufficient for approval; no result from this archive constitutes approval for the holistic product campaign.

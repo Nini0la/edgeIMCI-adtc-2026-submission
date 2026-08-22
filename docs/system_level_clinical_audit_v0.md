@@ -9,7 +9,9 @@
 
 Within its declared complete/static-case contract, the 15 rules behave coherently when executed together. Mechanical tests confirmed age and respiratory-rate boundaries, severity precedence, conservative unknown handling, simultaneous danger-sign firing, diazepam preservation, derived-finding consumption, cross-pathway dehydration action selection, and action aggregation. No selected-scope implementation bug was found. No frozen clinical rule, evaluator behavior, information-policy semantic, trajectory schema semantic, corpus logic, SFT artifact, model weight, or benchmark oracle output was changed.
 
-`imci-selected-v0` is safe to continue using as the clinical substrate for the upcoming information-policy implementation and very small golden conversion slice, subject to all of these boundaries:
+> **Historical status:** This audit describes the earlier selected-v0 development stage. Its 14-case slice is now archived under `data/archive/selected_v0/` and is not a product-level holistic golden source.
+
+`imci-selected-v0` was judged safe to continue using as the clinical substrate for that information-policy implementation and very small component conversion slice, subject to all of these boundaries:
 
 - inputs to the frozen evaluator are complete/static cases under its existing evidence-validity assumptions;
 - unknown remains distinct from known absent;

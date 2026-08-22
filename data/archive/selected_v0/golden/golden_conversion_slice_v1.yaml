@@ -750,12 +750,12 @@
       rule_set_id: imci-selected-v0
       information_policy_id: imci-selected-v0-information-policy-v1
       constraint_set_id: imci-selected-v0-valid-completions-v1
-      generator_version: golden-conversion-slice-v1
+      generator_version: legacy-selected-v0-component-regression-v1
       generation_seed: 20260820
       rule_family: respiratory
       logic_signature: '{"actions":["ADVISE_WHEN_TO_RETURN_IMMEDIATELY","FOLLOW_UP_3_DAYS","GIVE_ORAL_AMOXICILLIN_5_DAYS","SOOTHE_THROAT_AND_RELIEVE_COUGH"],"classifications":{"respiratory":"PNEUMONIA"},"detected_danger_signs":[],"fired_rule_ids":["IMCI-RESP-PNEUMONIA-CHEST-INDRAWING"],"missing_required_observations":[],"referral":"NONE"}'
       template_family: complete-respiratory
-      corpus_role: GOLDEN_CONVERSION_SLICE
+      corpus_role: LEGACY_SELECTED_V0_COMPONENT_REGRESSION
       counterfactual_group_id: null
       split_group_ids: []
   assistant_target_validations:
@@ -1313,12 +1313,12 @@
       rule_set_id: imci-selected-v0
       information_policy_id: imci-selected-v0-information-policy-v1
       constraint_set_id: imci-selected-v0-valid-completions-v1
-      generator_version: golden-conversion-slice-v1
+      generator_version: legacy-selected-v0-component-regression-v1
       generation_seed: 20260820
       rule_family: danger-assessment
       logic_signature: '{"actions":[],"classifications":{},"detected_danger_signs":[],"fired_rule_ids":[],"missing_required_observations":[],"referral":"NONE"}'
       template_family: minimal-presentation
-      corpus_role: GOLDEN_CONVERSION_SLICE
+      corpus_role: LEGACY_SELECTED_V0_COMPONENT_REGRESSION
       counterfactual_group_id: null
       split_group_ids: []
   assistant_target_validations:
@@ -2117,12 +2117,12 @@
       rule_set_id: imci-selected-v0
       information_policy_id: imci-selected-v0-information-policy-v1
       constraint_set_id: imci-selected-v0-valid-completions-v1
-      generator_version: golden-conversion-slice-v1
+      generator_version: legacy-selected-v0-component-regression-v1
       generation_seed: 20260820
       rule_family: respiratory
       logic_signature: '{"actions":["ADVISE_WHEN_TO_RETURN_IMMEDIATELY","FOLLOW_UP_3_DAYS","GIVE_ORAL_AMOXICILLIN_5_DAYS","SOOTHE_THROAT_AND_RELIEVE_COUGH"],"classifications":{"respiratory":"PNEUMONIA"},"detected_danger_signs":[],"fired_rule_ids":["IMCI-RESP-FAST-BREATHING-12-60M","IMCI-RESP-PNEUMONIA-FAST-BREATHING"],"missing_required_observations":[],"referral":"NONE"}'
       template_family: respiratory-measurement-request
-      corpus_role: GOLDEN_CONVERSION_SLICE
+      corpus_role: LEGACY_SELECTED_V0_COMPONENT_REGRESSION
       counterfactual_group_id: null
       split_group_ids: []
   assistant_target_validations:
@@ -3355,12 +3355,12 @@
       rule_set_id: imci-selected-v0
       information_policy_id: imci-selected-v0-information-policy-v1
       constraint_set_id: imci-selected-v0-valid-completions-v1
-      generator_version: golden-conversion-slice-v1
+      generator_version: legacy-selected-v0-component-regression-v1
       generation_seed: 20260820
       rule_family: respiratory
       logic_signature: '{"actions":["ADVISE_WHEN_TO_RETURN_IMMEDIATELY","FOLLOW_UP_3_DAYS","GIVE_ORAL_AMOXICILLIN_5_DAYS","SOOTHE_THROAT_AND_RELIEVE_COUGH"],"classifications":{"respiratory":"PNEUMONIA"},"detected_danger_signs":[],"fired_rule_ids":["IMCI-RESP-FAST-BREATHING-12-60M","IMCI-RESP-PNEUMONIA-FAST-BREATHING"],"missing_required_observations":[],"referral":"NONE"}'
       template_family: respiratory-measurement-multiturn
-      corpus_role: GOLDEN_CONVERSION_SLICE
+      corpus_role: LEGACY_SELECTED_V0_COMPONENT_REGRESSION
       counterfactual_group_id: null
       split_group_ids: []
   assistant_target_validations:
@@ -4182,12 +4182,12 @@
       rule_set_id: imci-selected-v0
       information_policy_id: imci-selected-v0-information-policy-v1
       constraint_set_id: imci-selected-v0-valid-completions-v1
-      generator_version: golden-conversion-slice-v1
+      generator_version: legacy-selected-v0-component-regression-v1
       generation_seed: 20260820
       rule_family: respiratory
       logic_signature: '{"actions":["ADVISE_WHEN_TO_RETURN_IMMEDIATELY","FOLLOW_UP_5_DAYS_IF_NOT_IMPROVING","SOOTHE_THROAT_AND_RELIEVE_COUGH"],"classifications":{"respiratory":"COUGH_OR_COLD"},"detected_danger_signs":[],"fired_rule_ids":["IMCI-RESP-COUGH-OR-COLD"],"missing_required_observations":[],"referral":"NONE"}'
       template_family: respiratory-boundary-complete
-      corpus_role: GOLDEN_CONVERSION_SLICE
+      corpus_role: LEGACY_SELECTED_V0_COMPONENT_REGRESSION
       counterfactual_group_id: null
       split_group_ids: []
   assistant_target_validations:
@@ -4981,12 +4981,12 @@
       rule_set_id: imci-selected-v0
       information_policy_id: imci-selected-v0-information-policy-v1
       constraint_set_id: imci-selected-v0-valid-completions-v1
-      generator_version: golden-conversion-slice-v1
+      generator_version: legacy-selected-v0-component-regression-v1
       generation_seed: 20260820
       rule_family: respiratory
       logic_signature: '{"actions":["ADVISE_WHEN_TO_RETURN_IMMEDIATELY","FOLLOW_UP_3_DAYS","GIVE_ORAL_AMOXICILLIN_5_DAYS","SOOTHE_THROAT_AND_RELIEVE_COUGH"],"classifications":{"respiratory":"PNEUMONIA"},"detected_danger_signs":[],"fired_rule_ids":["IMCI-RESP-FAST-BREATHING-2-12M","IMCI-RESP-PNEUMONIA-FAST-BREATHING"],"missing_required_observations":[],"referral":"NONE"}'
       template_family: respiratory-boundary-complete
-      corpus_role: GOLDEN_CONVERSION_SLICE
+      corpus_role: LEGACY_SELECTED_V0_COMPONENT_REGRESSION
       counterfactual_group_id: null
       split_group_ids: []
   assistant_target_validations:
@@ -5777,12 +5777,12 @@
       rule_set_id: imci-selected-v0
       information_policy_id: imci-selected-v0-information-policy-v1
       constraint_set_id: imci-selected-v0-valid-completions-v1
-      generator_version: golden-conversion-slice-v1
+      generator_version: legacy-selected-v0-component-regression-v1
       generation_seed: 20260820
       rule_family: respiratory
       logic_signature: '{"actions":["ADVISE_WHEN_TO_RETURN_IMMEDIATELY","FOLLOW_UP_5_DAYS_IF_NOT_IMPROVING","SOOTHE_THROAT_AND_RELIEVE_COUGH"],"classifications":{"respiratory":"COUGH_OR_COLD"},"detected_danger_signs":[],"fired_rule_ids":["IMCI-RESP-COUGH-OR-COLD"],"missing_required_observations":[],"referral":"NONE"}'
       template_family: respiratory-boundary-complete
-      corpus_role: GOLDEN_CONVERSION_SLICE
+      corpus_role: LEGACY_SELECTED_V0_COMPONENT_REGRESSION
       counterfactual_group_id: null
       split_group_ids: []
   assistant_target_validations:
@@ -6650,12 +6650,12 @@
       rule_set_id: imci-selected-v0
       information_policy_id: imci-selected-v0-information-policy-v1
       constraint_set_id: imci-selected-v0-valid-completions-v1
-      generator_version: golden-conversion-slice-v1
+      generator_version: legacy-selected-v0-component-regression-v1
       generation_seed: 20260820
       rule_family: general_danger_signs+respiratory
       logic_signature: '{"actions":["COMPLETE_ASSESSMENT_QUICKLY","GIVE_FIRST_DOSE_APPROPRIATE_ANTIBIOTIC","GIVE_PRE_REFERRAL_TREATMENT_IMMEDIATELY","KEEP_WARM","PREVENT_LOW_BLOOD_SUGAR","URGENT_REFERRAL"],"classifications":{"general_danger_signs":"VERY_SEVERE_DISEASE","respiratory":"SEVERE_PNEUMONIA_OR_VERY_SEVERE_DISEASE"},"detected_danger_signs":["VOMITS_EVERYTHING"],"fired_rule_ids":["IMCI-GDS-VOMITS-EVERYTHING","IMCI-RESP-SEVERE-DANGER-SIGN"],"missing_required_observations":[],"referral":"URGENT"}'
       template_family: urgent-partial
-      corpus_role: GOLDEN_CONVERSION_SLICE
+      corpus_role: LEGACY_SELECTED_V0_COMPONENT_REGRESSION
       counterfactual_group_id: null
       split_group_ids: []
   assistant_target_validations:
@@ -7384,12 +7384,12 @@
       rule_set_id: imci-selected-v0
       information_policy_id: imci-selected-v0-information-policy-v1
       constraint_set_id: imci-selected-v0-valid-completions-v1
-      generator_version: golden-conversion-slice-v1
+      generator_version: legacy-selected-v0-component-regression-v1
       generation_seed: 20260820
       rule_family: general_danger_signs
       logic_signature: '{"actions":["COMPLETE_ASSESSMENT_QUICKLY","GIVE_DIAZEPAM_IF_CONVULSING_NOW","GIVE_PRE_REFERRAL_TREATMENT_IMMEDIATELY","KEEP_WARM","PREVENT_LOW_BLOOD_SUGAR","URGENT_REFERRAL"],"classifications":{"general_danger_signs":"VERY_SEVERE_DISEASE"},"detected_danger_signs":["CONVULSING_NOW","UNABLE_TO_DRINK_OR_BREASTFEED"],"fired_rule_ids":["IMCI-GDS-UNABLE-TO-DRINK","IMCI-GDS-CONVULSING-NOW"],"missing_required_observations":[],"referral":"URGENT"}'
       template_family: complete-danger
-      corpus_role: GOLDEN_CONVERSION_SLICE
+      corpus_role: LEGACY_SELECTED_V0_COMPONENT_REGRESSION
       counterfactual_group_id: null
       split_group_ids: []
   assistant_target_validations:
@@ -8213,12 +8213,12 @@
       rule_set_id: imci-selected-v0
       information_policy_id: imci-selected-v0-information-policy-v1
       constraint_set_id: imci-selected-v0-valid-completions-v1
-      generator_version: golden-conversion-slice-v1
+      generator_version: legacy-selected-v0-component-regression-v1
       generation_seed: 20260820
       rule_family: dehydration
       logic_signature: '{"actions":["GIVE_FLUID_FOR_SEVERE_DEHYDRATION_PLAN_C"],"classifications":{"dehydration":"SEVERE_DEHYDRATION"},"detected_danger_signs":[],"fired_rule_ids":["IMCI-DIARRHOEA-SEVERE-DEHYDRATION"],"missing_required_observations":[],"referral":"NONE"}'
       template_family: complete-dehydration
-      corpus_role: GOLDEN_CONVERSION_SLICE
+      corpus_role: LEGACY_SELECTED_V0_COMPONENT_REGRESSION
       counterfactual_group_id: null
       split_group_ids: []
   assistant_target_validations:
@@ -9490,12 +9490,12 @@
       rule_set_id: imci-selected-v0
       information_policy_id: imci-selected-v0-information-policy-v1
       constraint_set_id: imci-selected-v0-valid-completions-v1
-      generator_version: golden-conversion-slice-v1
+      generator_version: legacy-selected-v0-component-regression-v1
       generation_seed: 20260820
       rule_family: dehydration
       logic_signature: '{"actions":["ADVISE_WHEN_TO_RETURN_IMMEDIATELY","FOLLOW_UP_5_DAYS_IF_NOT_IMPROVING","GIVE_FLUID_ZINC_AND_FOOD_PLAN_B"],"classifications":{"dehydration":"SOME_DEHYDRATION"},"detected_danger_signs":[],"fired_rule_ids":["IMCI-DIARRHOEA-SOME-DEHYDRATION"],"missing_required_observations":[],"referral":"NONE"}'
       template_family: dehydration-observation-multiturn
-      corpus_role: GOLDEN_CONVERSION_SLICE
+      corpus_role: LEGACY_SELECTED_V0_COMPONENT_REGRESSION
       counterfactual_group_id: null
       split_group_ids: []
   assistant_target_validations:
@@ -10359,12 +10359,12 @@
       rule_set_id: imci-selected-v0
       information_policy_id: imci-selected-v0-information-policy-v1
       constraint_set_id: imci-selected-v0-valid-completions-v1
-      generator_version: golden-conversion-slice-v1
+      generator_version: legacy-selected-v0-component-regression-v1
       generation_seed: 20260820
       rule_family: dehydration
       logic_signature: '{"actions":["ADVISE_WHEN_TO_RETURN_IMMEDIATELY","FOLLOW_UP_5_DAYS_IF_NOT_IMPROVING","GIVE_FLUID_ZINC_AND_FOOD_PLAN_A"],"classifications":{"dehydration":"NO_DEHYDRATION"},"detected_danger_signs":[],"fired_rule_ids":["IMCI-DIARRHOEA-NO-DEHYDRATION"],"missing_required_observations":[],"referral":"NONE"}'
       template_family: dehydration-invariant-partial
-      corpus_role: GOLDEN_CONVERSION_SLICE
+      corpus_role: LEGACY_SELECTED_V0_COMPONENT_REGRESSION
       counterfactual_group_id: null
       split_group_ids: []
   assistant_target_validations:
@@ -11308,12 +11308,12 @@
       rule_set_id: imci-selected-v0
       information_policy_id: imci-selected-v0-information-policy-v1
       constraint_set_id: imci-selected-v0-valid-completions-v1
-      generator_version: golden-conversion-slice-v1
+      generator_version: legacy-selected-v0-component-regression-v1
       generation_seed: 20260820
       rule_family: respiratory+dehydration
       logic_signature: '{"actions":["CONTINUE_BREASTFEEDING","FREQUENT_ORS_SIPS_DURING_REFERRAL","GIVE_FIRST_DOSE_APPROPRIATE_ANTIBIOTIC","URGENT_REFERRAL"],"classifications":{"dehydration":"SEVERE_DEHYDRATION","respiratory":"SEVERE_PNEUMONIA_OR_VERY_SEVERE_DISEASE"},"detected_danger_signs":[],"fired_rule_ids":["IMCI-RESP-SEVERE-STRIDOR","IMCI-DIARRHOEA-SEVERE-DEHYDRATION"],"missing_required_observations":[],"referral":"URGENT"}'
       template_family: complete-cross-pathway
-      corpus_role: GOLDEN_CONVERSION_SLICE
+      corpus_role: LEGACY_SELECTED_V0_COMPONENT_REGRESSION
       counterfactual_group_id: null
       split_group_ids: []
   assistant_target_validations:
@@ -12120,12 +12120,12 @@
       rule_set_id: imci-selected-v0
       information_policy_id: imci-selected-v0-information-policy-v1
       constraint_set_id: imci-selected-v0-valid-completions-v1
-      generator_version: golden-conversion-slice-v1
+      generator_version: legacy-selected-v0-component-regression-v1
       generation_seed: 20260820
       rule_family: respiratory
       logic_signature: '{"actions":["ADVISE_WHEN_TO_RETURN_IMMEDIATELY","FOLLOW_UP_3_DAYS","GIVE_ORAL_AMOXICILLIN_5_DAYS","SOOTHE_THROAT_AND_RELIEVE_COUGH"],"classifications":{"respiratory":"PNEUMONIA"},"detected_danger_signs":[],"fired_rule_ids":["IMCI-RESP-PNEUMONIA-CHEST-INDRAWING"],"missing_required_observations":[],"referral":"NONE"}'
       template_family: respiratory-rule-invariant-partial
-      corpus_role: GOLDEN_CONVERSION_SLICE
+      corpus_role: LEGACY_SELECTED_V0_COMPONENT_REGRESSION
       counterfactual_group_id: null
       split_group_ids: []
   assistant_target_validations:

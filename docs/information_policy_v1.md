@@ -60,7 +60,7 @@ After every newly acquired observation:
 4. derive `ExpectedAssistantSemantics` from that structured result;
 5. render natural language without exposing latent observations or policy labels.
 
-No policy result should be hand-authored for the golden conversion slice.
+No policy result should be hand-authored for the archived selected-v0 component regression slice.
 
 ## Valid completions
 
@@ -162,4 +162,4 @@ InformationPolicyResult
 ExpectedAssistantSemantics / trajectory schema
 ```
 
-The 14-record validation slice now implements this handoff in `data/golden/golden_conversion_slice_v1.jsonl`. Every state is recomputed with this evaluator, both artifact IDs are pinned in trajectory metadata, controlled-language round-trip results are recorded, and `docs/golden_slice_review_v1.md` provides the human/domain-expert review surface. This permits inspection and refinement of the tiny slice only; controlled bulk generation remains gated on human review.
+The archived 14-record selected-v0 component slice implements this historical handoff in `data/archive/selected_v0/golden/golden_conversion_slice_v1.jsonl`. Every state is recomputed with this evaluator, both artifact IDs are pinned in trajectory metadata, controlled-language round-trip results are recorded, and `docs/golden_slice_review_v1.md` preserves the historical human/domain-expert review surface. It is not eligible for holistic generation, product evaluation, teacher selection, or training.

@@ -1,6 +1,8 @@
 # EdgeIMCI rendering bake-off v1 — human review
 
-**Status:** `PROPOSED_FOR_HUMAN_REVIEW`
+**Status:** `ARCHIVED_HISTORICAL_EXPERIMENT`
+
+> This review preserves the original selected-v0 experiment. It is not a current teacher-selection exercise and must not be used as product-level holistic semantics, product evaluation, or training data.
 
 These are conversion-acceptance cases, not a model-performance benchmark or SFT corpus. Structured golden trajectories remain the semantic source of truth.
 
@@ -32,7 +34,7 @@ These are conversion-acceptance cases, not a model-performance benchmark or SFT 
 
 The shortlisted configuration had the highest deterministic semantic pass rate, but still failed insufficient-state content and urgent-first framing.
 
-**Next step:** Refine a single prompt combining strict semantic coverage with the PHC reference format, then rerun the same 14 cases before any controlled corpus generation.
+**Historical next step at the time of the run:** Refine a single prompt combining strict semantic coverage with the PHC reference format, then rerun the same 14 cases before any controlled corpus generation. This was superseded by the holistic product campaign and is not the repository's current plan.
 
 ## Side-by-side cases
 

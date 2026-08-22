@@ -59,7 +59,10 @@ def test_slice_is_tiny_explicit_and_not_training_data(golden_records) -> None:
     assert 12 <= len(golden_records) <= 16
     assert len(golden_records) < 20
     assert len({record.golden_case_id for record in golden_records}) == len(golden_records)
-    assert all(record.trajectory.metadata.corpus_role is CorpusRole.GOLDEN_CONVERSION_SLICE for record in golden_records)
+    assert all(
+        record.trajectory.metadata.corpus_role is CorpusRole.LEGACY_SELECTED_V0_COMPONENT_REGRESSION
+        for record in golden_records
+    )
     assert all("HUMAN_REVIEW_REQUIRED" in record.review_flags for record in golden_records)
     assert not (Path("data") / "train").exists()
     assert not (Path("data") / "validation").exists()

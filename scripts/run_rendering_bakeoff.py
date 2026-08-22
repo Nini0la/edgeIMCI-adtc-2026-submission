@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run the tiny local-teacher rendering bake-off over fixed golden semantics."""
+"""Reproduce the historical selected-v0 rendering experiment."""
 
 from __future__ import annotations
 
@@ -10,6 +10,7 @@ import time
 from pathlib import Path
 from typing import Any
 
+from edge_imci.corpus_policy import CorpusUse, assert_corpus_use_allowed
 from edge_imci.generation.golden import DEFAULT_GOLDEN_PATH, load_golden_slice
 from edge_imci.generation.rendering import (
     build_reference_rendering,
@@ -23,7 +24,7 @@ from edge_imci.validation.rendering import validate_natural_rendering
 
 ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_CONFIG_PATH = ROOT / "configs" / "rendering" / "rendering_bakeoff_v1.json"
-DEFAULT_REFERENCE_PATH = ROOT / "data" / "golden" / "golden_reference_renderings_v1.jsonl"
+DEFAULT_REFERENCE_PATH = ROOT / "data" / "archive" / "selected_v0" / "golden" / "golden_reference_renderings_v1.jsonl"
 DEFAULT_RUN_DIR = ROOT / "experiments" / "rendering_bakeoff_v1"
 DEFAULT_CANDIDATE_PATH = DEFAULT_RUN_DIR / "candidates.jsonl"
 DEFAULT_SUMMARY_PATH = DEFAULT_RUN_DIR / "summary.json"
@@ -46,7 +47,8 @@ def main() -> None:
     args = parser.parse_args()
 
     config = json.loads(Path(args.config).read_text(encoding="utf-8"))
-    golden = load_golden_slice(DEFAULT_GOLDEN_PATH)
+    assert_corpus_use_allowed(DEFAULT_GOLDEN_PATH, CorpusUse.HISTORICAL_REPRODUCTION)
+    golden = load_golden_slice(DEFAULT_GOLDEN_PATH, corpus_use=CorpusUse.HISTORICAL_REPRODUCTION)
     _validate_fixed_source(config, golden)
     references = _write_references(golden)
     if args.reference_only:

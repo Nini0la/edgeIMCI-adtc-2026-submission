@@ -352,10 +352,10 @@ This option is operationally heavier than using an API, so it should be selected
 
 Use golden semantics in two distinct roles:
 
-1. the existing 14-case component slice remains a conversion/regression suite for v1 information-policy and fallback interaction behavior;
+1. the archived 14-case selected-v0 component slice remains available only for historical reproduction and component regression of v1 information-policy and fallback interaction behavior;
 2. a new, clinically approved product-level holistic slice must be the decisive benchmark for the primary whole-encounter renderer.
 
-Do not mutate the historical 14 cases to simulate the new product objective. Do not run the decisive teacher bake-off until the expanded clinical oracle and holistic golden semantics are approved.
+Do not mutate or reuse the historical 14 cases to simulate the new product objective. They are quarantined under `data/archive/selected_v0/` and are ineligible for the decisive teacher bake-off, product evaluation, holistic generation, and training. Do not run the decisive teacher bake-off until the expanded clinical oracle and holistic golden semantics are approved.
 
 Hold the clinical semantics constant.
 

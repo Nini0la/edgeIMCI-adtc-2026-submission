@@ -16,7 +16,7 @@ from edge_imci.schemas.trajectory import ExpectedAssistantSemantics
 from edge_imci.validation.rendering import NATURAL_VALIDATOR_ID, validate_natural_rendering
 
 CONFIG_PATH = Path("configs/rendering/rendering_bakeoff_v1.json")
-REFERENCE_PATH = Path("data/golden/golden_reference_renderings_v1.jsonl")
+REFERENCE_PATH = Path("data/archive/selected_v0/golden/golden_reference_renderings_v1.jsonl")
 CANDIDATE_PATH = Path("experiments/rendering_bakeoff_v1/candidates.jsonl")
 SUMMARY_PATH = Path("experiments/rendering_bakeoff_v1/summary.json")
 REVIEW_PATH = Path("docs/rendering_bakeoff_review_v1.md")
@@ -30,7 +30,10 @@ def _jsonl(path: Path):
 def test_bakeoff_pins_the_fixed_golden_semantic_source() -> None:
     config = json.loads(CONFIG_PATH.read_text(encoding="utf-8"))
     golden = load_golden_slice(DEFAULT_GOLDEN_PATH)
+    assert config["status"] == "ARCHIVED_HISTORICAL_EXPERIMENT"
+    assert config["corpus_use"] == "HISTORICAL_REPRODUCTION"
     source = config["semantic_source"]
+    assert source["path"] == str(DEFAULT_GOLDEN_PATH.relative_to(Path.cwd()))
     assert source["case_count"] == len(golden) == 14
     assert source["assistant_target_count"] == 16
     assert source["sha256"] == hashlib.sha256(DEFAULT_GOLDEN_PATH.read_bytes()).hexdigest()

@@ -4,9 +4,9 @@
 
 ## Relationship to the existing golden slice
 
-The committed 14-case `GOLDEN_CONVERSION_SLICE` remains fixed as a component-level regression suite for v1 semantics, unknown preservation, acquisition modes, urgent behavior, guided/bundled fallback interactions, and deterministic semantic-to-language conversion.
+The archived 14-case `LEGACY_SELECTED_V0_COMPONENT_REGRESSION` remains fixed under `data/archive/selected_v0/` for selected-v0 component regression and historical reproduction only.
 
-It is not the product-level golden suite for holistic v2 behavior. Existing v1 cases that emit an early classification while assessment is incomplete must not be reused as affirmative v2 product targets.
+It is not the product-level golden suite for holistic v2 behavior. It is mechanically ineligible for holistic generation, product evaluation, teacher selection, and training. Existing v1 cases that emit an early classification while assessment is incomplete must not be reused as affirmative v2 product targets. The future suite must use `corpus_role=HOLISTIC_PRODUCT_GOLDEN` and pin the major-sick-child rule, policy, oracle, and review-decision identifiers.
 
 ## Pinned prerequisites
 

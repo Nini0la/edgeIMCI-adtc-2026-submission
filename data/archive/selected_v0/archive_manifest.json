@@ -1,0 +1,22 @@
+{
+  "archive_id": "selected-v0-component-regression-archive-v1",
+  "lifecycle_status": "ARCHIVED",
+  "corpus_role": "LEGACY_SELECTED_V0_COMPONENT_REGRESSION",
+  "description": "Historical 14-case selected-v0 component regression and semantic-to-language conversion evidence. This is not the EdgeIMCI holistic product golden suite.",
+  "rule_set_id": "imci-selected-v0",
+  "information_policy_id": "imci-selected-v0-information-policy-v1",
+  "constraint_set_id": "imci-selected-v0-valid-completions-v1",
+  "eligibility": {
+    "COMPONENT_REGRESSION": true,
+    "HISTORICAL_REPRODUCTION": true,
+    "HOLISTIC_GENERATION": false,
+    "PRODUCT_EVALUATION": false,
+    "TEACHER_BAKEOFF": false,
+    "TRAINING": false
+  },
+  "assets": [
+    "data/archive/selected_v0/golden/golden_conversion_slice_v1.jsonl",
+    "data/archive/selected_v0/golden/golden_conversion_slice_v1.yaml",
+    "data/archive/selected_v0/golden/golden_reference_renderings_v1.jsonl"
+  ]
+}

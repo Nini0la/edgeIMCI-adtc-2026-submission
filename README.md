@@ -29,7 +29,7 @@ The clinical-semantic foundation for the bounded hackathon scope is implemented 
 | Integrated classification/action oracle | Deterministic; approved for the bounded hackathon representation |
 | Clinical/policy review | All 13 recorded questions resolved and versioned |
 | Automated verification | 218 tests passing at the current checkpoint |
-| Historical 14-case component golden slice | Frozen regression artifact |
+| Archived selected-v0 14-case component slice | Frozen historical/component-regression artifact; product-ineligible |
 | Product-level holistic golden semantic set | Requirements approved; construction is next |
 | Golden language renderings | Not yet frozen |
 | Experiment/run registry infrastructure | Planned, not yet implemented |
@@ -178,7 +178,7 @@ python scripts/generate_benchmark.py \
   --seed 20240301
 ```
 
-The historical 14-case `GOLDEN_CONVERSION_SLICE` remains fixed as a component regression suite for selected-v0 semantics, information states, acquisition modes, and controlled semantic-to-language conversion. It is not the new product-level holistic golden set.
+The historical 14-case `LEGACY_SELECTED_V0_COMPONENT_REGRESSION` slice remains fixed as an archived component regression suite for selected-v0 semantics, information states, acquisition modes, and controlled semantic-to-language conversion. It is not the new product-level holistic golden set and is mechanically ineligible for training, holistic generation, product evaluation, and new teacher selection.
 
 The committed split demonstration proves group-aware leakage controls, but is not the eventual training, validation, or benchmark corpus:
 
@@ -229,7 +229,7 @@ External results must identify the pinned revision and one of the repository’s
 - [`docs/product_holistic_golden_suite_requirements_v1.md`](docs/product_holistic_golden_suite_requirements_v1.md): next product-level semantic-suite contract.
 - [`docs/interaction_design_retrieval_assessment_bundles.md`](docs/interaction_design_retrieval_assessment_bundles.md): current holistic interaction framing.
 - [`docs/synthetic_data_generation_experiment_notes.md`](docs/synthetic_data_generation_experiment_notes.md): structured-first language-generation hypotheses and experiments.
-- [`data/golden/`](data/golden): historical 14-case component semantics and proposed renderings; not bulk training data.
+- [`data/archive/selected_v0/`](data/archive/selected_v0): quarantined historical 14-case selected-v0 component semantics and proposed renderings; lifecycle restrictions are machine-readable in its archive manifest.
 - [`experiments/rendering_bakeoff_v1/`](experiments/rendering_bakeoff_v1): historical component rendering candidates and metrics.
 
 ### Infrastructure
@@ -245,7 +245,7 @@ External results must identify the pinned revision and one of the repository’s
 - Do not modify the frozen `imci-selected-v0` clinical semantics to make the expanded product model easier to implement.
 - Do not treat `UNKNOWN` as negative or manufacture missing observations.
 - Do not let language-generation code create or alter clinical truth.
-- Do not use the historical 82-case benchmark or 14-case golden slice as training data.
+- Do not use the historical 82-case benchmark or archived 14-case selected-v0 slice as training data or as product-level holistic semantics.
 - Do not silently convert generic source actions into invented drug names, doses, durations, or regimens.
 - Do not call the hackathon review decision set production clinical approval.
 - Preserve immutable raw run evidence; derive summaries and cost without overwriting it.

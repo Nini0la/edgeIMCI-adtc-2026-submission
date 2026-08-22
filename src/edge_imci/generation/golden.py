@@ -1,4 +1,4 @@
-"""Deterministic factory for the first tiny EdgeIMCI golden conversion slice."""
+"""Deterministic factory for the archived selected-v0 component regression slice."""
 
 from __future__ import annotations
 
@@ -9,6 +9,7 @@ from typing import Any
 
 import yaml
 
+from edge_imci.corpus_policy import CorpusUse, assert_corpus_use_allowed
 from edge_imci.evaluation.reference import evaluate_case
 from edge_imci.information_policy import (
     CONSTRAINT_SET_ID,
@@ -63,10 +64,10 @@ from edge_imci.schemas.trajectory import (
 )
 from edge_imci.validation.golden import RoundTripValidation, validate_target_round_trip
 
-GOLDEN_GENERATOR_VERSION = "golden-conversion-slice-v1"
+GOLDEN_GENERATOR_VERSION = "legacy-selected-v0-component-regression-v1"
 GOLDEN_SEED = 20260820
-DEFAULT_GOLDEN_PATH = Path(__file__).resolve().parents[3] / "data" / "golden" / "golden_conversion_slice_v1.jsonl"
-DEFAULT_GOLDEN_YAML_PATH = Path(__file__).resolve().parents[3] / "data" / "golden" / "golden_conversion_slice_v1.yaml"
+DEFAULT_GOLDEN_PATH = Path(__file__).resolve().parents[3] / "data" / "archive" / "selected_v0" / "golden" / "golden_conversion_slice_v1.jsonl"
+DEFAULT_GOLDEN_YAML_PATH = Path(__file__).resolve().parents[3] / "data" / "archive" / "selected_v0" / "golden" / "golden_conversion_slice_v1.yaml"
 DEFAULT_REVIEW_PATH = Path(__file__).resolve().parents[3] / "docs" / "golden_slice_review_v1.md"
 
 _DANGER_IDS = (
@@ -259,16 +260,21 @@ def write_golden_slice(
     return records
 
 
-def load_golden_slice(path: str | Path = DEFAULT_GOLDEN_PATH) -> list[dict[str, Any]]:
+def load_golden_slice(
+    path: str | Path = DEFAULT_GOLDEN_PATH,
+    *,
+    corpus_use: CorpusUse = CorpusUse.COMPONENT_REGRESSION,
+) -> list[dict[str, Any]]:
+    assert_corpus_use_allowed(path, corpus_use)
     with Path(path).open(encoding="utf-8") as handle:
         return [json.loads(line) for line in handle if line.strip()]
 
 
 def render_golden_review(records: list[GoldenRecord]) -> str:
     lines = [
-        "# EdgeIMCI golden conversion slice v1 — human/domain-expert review",
+        "# Archived selected-v0 component regression slice v1 — human/domain-expert review",
         "",
-        "**Status:** Validation artifacts only. Not training data, not a benchmark, and not a bulk corpus.",
+        "**Status:** `ARCHIVED`. Historical/component-regression use only; not training data and ineligible for product evaluation, holistic generation, and teacher selection.",
         "",
         f"**Pinned IDs:** `imci-selected-v0` / `{POLICY_ID}` / `{CONSTRAINT_SET_ID}`",
         "",
@@ -405,7 +411,7 @@ def _build_record(
             rule_family=_rule_family(latent.oracle_result.classifications),
             logic_signature=logic_signature,
             template_family=spec.template_family,
-            corpus_role=CorpusRole.GOLDEN_CONVERSION_SLICE,
+            corpus_role=CorpusRole.LEGACY_SELECTED_V0_COMPONENT_REGRESSION,
         ),
     )
     unresolved = sorted(

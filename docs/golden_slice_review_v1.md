@@ -1,6 +1,6 @@
-# EdgeIMCI golden conversion slice v1 — human/domain-expert review
+# Archived selected-v0 component regression slice v1 — human/domain-expert review
 
-**Status:** Validation artifacts only. Not training data, not a benchmark, and not a bulk corpus.
+**Status:** `ARCHIVED`. Historical/component-regression use only; not training data and ineligible for product evaluation, holistic generation, and teacher selection.
 
 **Pinned IDs:** `imci-selected-v0` / `imci-selected-v0-information-policy-v1` / `imci-selected-v0-valid-completions-v1`
 

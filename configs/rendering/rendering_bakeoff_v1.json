@@ -1,10 +1,11 @@
 {
   "experiment_id": "edge-imci-rendering-bakeoff-v1",
-  "status": "ACCEPTANCE_EXPERIMENT",
-  "description": "Three pinned local Qwen3 teacher checkpoints crossed with two controlled PHC rendering prompts over the fixed 14-case golden semantic conversion slice.",
+  "status": "ARCHIVED_HISTORICAL_EXPERIMENT",
+  "corpus_use": "HISTORICAL_REPRODUCTION",
+  "description": "Historical selected-v0 experiment: three pinned local Qwen3 teacher checkpoints crossed with two controlled PHC rendering prompts over the archived 14-case component semantic slice. Not a current teacher-selection bake-off.",
   "semantic_source": {
-    "path": "data/golden/golden_conversion_slice_v1.jsonl",
-    "sha256": "97a09ebda86018885c68cf8b95cccbdc2d962a52e0de80bfce90f67a06d8405a",
+    "path": "data/archive/selected_v0/golden/golden_conversion_slice_v1.jsonl",
+    "sha256": "5883e2e07d84c005231d0dd5356879c7374333047a2592e28dc577db8197dabb",
     "case_count": 14,
     "assistant_target_count": 16,
     "rule_set_id": "imci-selected-v0",
