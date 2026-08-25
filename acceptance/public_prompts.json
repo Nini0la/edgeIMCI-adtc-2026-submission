@@ -1,0 +1,64 @@
+[
+  {
+    "prompt_id": "edgeimci_public_001",
+    "prompt": "Convulsing now. No history of convulsions. Not lethargic or unconscious. Able to drink or breastfeed.",
+    "expected_state": "URGENT_INCOMPLETE",
+    "expected_target": {
+      "patient_facts": {
+        "age_months": null,
+        "has_cough_or_difficult_breathing": null,
+        "has_diarrhoea": null,
+        "has_fever": null,
+        "has_ear_problem": null
+      },
+      "danger_signs": {
+        "unable_to_drink_or_breastfeed": false,
+        "vomits_everything": null,
+        "had_convulsions": false,
+        "lethargic_or_unconscious": false,
+        "convulsing_now": true
+      },
+      "respiratory": null,
+      "diarrhoea": null,
+      "fever": null,
+      "ear": null
+    }
+  },
+  {
+    "prompt_id": "edgeimci_public_002",
+    "prompt": "The child is not convulsing now. There has been no history of convulsions. The child is not lethargic or unconscious. The child is able to drink or breastfeed. The child does not vomit everything. There is no blood in the stool. The child is drinking normally. The child is not restless or irritable. The skin pinch goes back to normal. The child does not have sunken eyes. The diarrhoea has lasted for 3 days. The child is 18 months old. The child does not have cough or difficult breathing. The child has diarrhoea. There is no ear problem. The child does not have fever.",
+    "expected_state": "COMPLETE",
+    "expected_target": {
+      "patient_facts": {
+        "age_months": 18,
+        "has_cough_or_difficult_breathing": false,
+        "has_diarrhoea": true,
+        "has_fever": false,
+        "has_ear_problem": false
+      },
+      "danger_signs": {
+        "unable_to_drink_or_breastfeed": false,
+        "vomits_everything": false,
+        "had_convulsions": false,
+        "lethargic_or_unconscious": false,
+        "convulsing_now": false
+      },
+      "respiratory": null,
+      "diarrhoea": {
+        "duration_days": 3,
+        "blood_in_stool": false,
+        "dehydration": {
+          "restless_or_irritable": false,
+          "sunken_eyes": false,
+          "drinking_status": "NORMAL",
+          "skin_pinch": "NORMAL"
+        },
+        "cholera_in_area": null,
+        "rehydration_stage": null,
+        "post_rehydration": null
+      },
+      "fever": null,
+      "ear": null
+    }
+  }
+]

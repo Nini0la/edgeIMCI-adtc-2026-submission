@@ -10,6 +10,11 @@ model/*.safetensors
 __pycache__/
 *.pyc
 .venv/
+.venv-integration/
+
+# Frontend dependencies and generated build
+web/node_modules/
+web/dist/
 
 # Local profiler output
 submission.json
