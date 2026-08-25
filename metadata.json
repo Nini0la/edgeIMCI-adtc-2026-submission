@@ -17,11 +17,11 @@
   "test_prompts": [
     {
       "prompt_id": "edgeimci_public_001",
-      "prompt": "Convert the PHC worker's findings into one JSON object matching the EdgeIMCI model-facing encounter schema. Preserve explicitly stated positives, negatives, measurements, durations, and qualifiers. Use null for UNKNOWN; never infer an unmentioned finding as negative. Output JSON only.\n\nThe child is 18 months old and is not convulsing now. There is no history of convulsions. The child is not lethargic or unconscious, can drink or breastfeed, and does not vomit everything. The child has had cough or difficult breathing for 3 days. There is no diarrhoea, ear problem, or fever. Breaths were counted for one full minute while the child was calm. The respiratory rate is 35 breaths per minute. There is no chest indrawing, stridor when calm, wheezing, or recurrent wheeze. A pulse oximeter is available, but no reading was stated."
+      "prompt": "Convulsing now. No history of convulsions. Not lethargic or unconscious. Able to drink or breastfeed."
     },
     {
       "prompt_id": "edgeimci_public_002",
-      "prompt": "Convert the PHC worker's findings into one JSON object matching the EdgeIMCI model-facing encounter schema. Preserve explicitly stated positives, negatives, measurements, durations, and qualifiers. Use null for UNKNOWN; never infer an unmentioned finding as negative. Output JSON only.\n\nThe child is 24 months old. The child is not convulsing now, has no history of convulsions, is not lethargic or unconscious, can drink or breastfeed, and does not vomit everything. There is no cough or difficult breathing. The child has had diarrhoea for 2 days with no blood in the stool. The child is restless or irritable, has sunken eyes, drinks eagerly, and the skin pinch goes back slowly. Rehydration has not started. Cholera risk in the area was not stated. The child has no fever and no ear problem."
+      "prompt": "The child is not convulsing now. There has been no history of convulsions. The child is not lethargic or unconscious. The child is able to drink or breastfeed. The child does not vomit everything. There is no blood in the stool. The child is drinking normally. The child is not restless or irritable. The skin pinch goes back to normal. The child does not have sunken eyes. The diarrhoea has lasted for 3 days. The child is 18 months old. The child does not have cough or difficult breathing. The child has diarrhoea. There is no ear problem. The child does not have fever."
     }
   ],
   "model": {
