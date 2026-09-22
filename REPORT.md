@@ -73,7 +73,23 @@ Q4_K_M provides a smaller candidate for laptop profiling (2,497,280,288 bytes ve
 
 ## Target Profiling
 
-The target is an 8 GB-class laptop using CPU `llama.cpp`. Actual 4B-alpha-second Ubuntu laptop profiling is **pending**, including latency, throughput, RSS, thermals, accuracy and a complete scoreable ADTC report. Disk size alone does not establish runtime memory headroom. Use [`docs/PROFILING_RUNBOOK.md`](docs/PROFILING_RUNBOOK.md) and verify the exact GGUF separately with `python3 scripts/verify_model_artifact.py`. The official downloader retains its template logic; only `MODEL_FILE` and `MODEL_URL` changed.
+The target is an 8 GB-class laptop using CPU `llama.cpp`. A **preliminary direct CPU microbenchmark** of 4B-alpha-second completed on 2026-09-22. Its evidence is the operator's pasted console output, transcribed in the [profiling evidence packet](provenance/4B-alpha-second/profiling/2026-09-22-cpu/README.md); the original flash-drive files have not yet been imported or independently inspected.
+
+| Preliminary 4B-alpha-second metric | Reported result |
+|---|---|
+| Machine | Intel Core i5-4210U, Ubuntu live USB; earlier session preflight reported 11 GiB RAM and no swap |
+| Artifact identity | Reported SHA-256 matches the selected Q4_K_M GGUF above |
+| Runtime | `llama-bench` build `aedb2a5`; requested full pin `aedb2a5e9ca3d4064148bbb919e0ddc0c1b70ab3` |
+| Configuration | CPU-only, 2 threads, zero GPU layers, one repetition per test; requested native build with BLAS disabled |
+| Prompt processing | **12.150088 tokens/s**, 128 tokens in 10.534903420 s |
+| Generation | **5.418514 tokens/s**, 32 tokens in 5.905677684 s |
+| GNU time maximum RSS | **4,259,852 KiB (4.063 GiB)** |
+| Whole-command elapsed time | 148.10 seconds, including loading, warmup and both tests |
+| Exit status | 0 |
+
+The two rows are separate synthetic tests, not a complete clinical interaction. One repetition does not establish variability; zero reported standard deviation is not evidence of stability. GNU time RSS is not total system memory or the official profiler's sampled memory metric. The 11 GiB machine and short workload do not establish an 8 GB deployment pass. No controlled comparison against the historical 0.6B workloads is claimed.
+
+**Full profiling remains pending:** original evidence import, repeatability, time to first token, sustained thermals, accuracy and a complete scoreable ADTC report. Use [`docs/PROFILING_RUNBOOK.md`](docs/PROFILING_RUNBOOK.md) for that workflow and verify the exact GGUF separately with `python3 scripts/verify_model_artifact.py`. The official downloader retains its template logic; only `MODEL_FILE` and `MODEL_URL` changed. This microbenchmark does not complete Gate 2 or clinical qualification.
 
 ## Historical Benchmarks: Different Artifact
 

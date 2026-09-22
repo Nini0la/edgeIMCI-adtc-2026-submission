@@ -39,7 +39,9 @@ Original configuration, training/loss logs, source receipt, artifact hashes, and
 
 These are terminal fine-tuned checkpoint results, not a full Q4 validation run. F16 and Q4 each passed 2/2 public extraction prompts with exact parsed JSON and matching deterministic states under the extraction-v2 wrapper, thinking disabled, temperature 0, seed 0, context 3072, and maximum generation 1200 tokens. That small smoke does not establish quantization equivalence beyond those prompts.
 
-A matched pinned-base-versus-fine-tuned comparison and actual Ubuntu target-laptop performance measurements remain **pending**. No 4B throughput, memory, thermal, ARC-Easy, or ADTC score is claimed. Gate 2 remains incomplete; see [`REPORT.md`](REPORT.md) and [`provenance/README.md`](provenance/README.md).
+A [preliminary Ubuntu CPU microbenchmark](provenance/4B-alpha-second/profiling/2026-09-22-cpu/README.md) on 2026-09-22 reported 12.15 tokens/s for 128-token prompt processing, 5.42 tokens/s for 32-token generation, and GNU time maximum RSS of 4.063 GiB on an Intel Core i5-4210U with two threads and no GPU offload. It used one repetition per test and is recorded from the operator's pasted console output; original raw-file import is pending. This is not an accuracy evaluation, full ADTC profile, or official 8 GB qualification.
+
+A matched pinned-base-versus-fine-tuned comparison, repeatability measurements, sustained thermals, ARC-Easy and a complete scoreable ADTC report remain **pending**. Gate 2 remains incomplete; see [`REPORT.md`](REPORT.md) and [`provenance/README.md`](provenance/README.md).
 
 ## Intended Use and Limits
 

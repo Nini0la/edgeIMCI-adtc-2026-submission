@@ -236,8 +236,11 @@ Make the binary available in the current shell:
 ```bash
 export PATH="$ADTC_HOME/repos/llama.cpp-4b-profile/build/bin:$PATH"
 command -v llama-bench
-llama-bench --version
+git -C "$ADTC_HOME/repos/llama.cpp-4b-profile" rev-parse HEAD
+sha256sum "$(command -v llama-bench)"
 ```
+
+This pinned `llama-bench` does not support `--version`. Record its source commit and executable hash instead; benchmark JSON also reports the short build commit.
 
 Run a short direct smoke test:
 
@@ -253,6 +256,8 @@ llama-bench \
 ```
 
 The ADTC throughput profiler also forces zero GPU layers. `GGML_NATIVE=ON` targets this laptop's CPU; do not copy this binary to a different CPU and assume it is compatible. If this build directory already exists, verify its clean source checkout and exact pin instead of cloning or rebuilding over historical evidence.
+
+The [2026-09-22 preliminary laptop result](../provenance/4B-alpha-second/profiling/2026-09-22-cpu/README.md) used a time-limited alternative: a native CPU build with `GGML_BLAS=OFF`, `-p 128 -n 32 -t 2 -ngl 0 -r 1`, and GNU time. Its source/build lived in disposable live-session storage; the model and results remained on the external flash drive. It is console-derived evidence, not a run of this OpenBLAS-enabled full workflow or a completed ADTC profile.
 
 ## 6. Install the Pinned ADTC Profiler
 
@@ -304,7 +309,6 @@ python3 scripts/verify_model_artifact.py > "$RUN_DIR/model-verification.txt" 2>&
 sha256sum model/EdgeIMCI-4B-alpha-second-Q4_K_M.gguf > "$RUN_DIR/model.sha256"
 stat --printf='%s bytes\n' model/EdgeIMCI-4B-alpha-second-Q4_K_M.gguf > "$RUN_DIR/model-size.txt"
 cp metadata.json download_model.sh "$RUN_DIR/"
-llama-bench --version > "$RUN_DIR/llama-bench-version.txt" 2>&1
 sha256sum "$(command -v llama-bench)" > "$RUN_DIR/llama-bench.sha256"
 git -C "$ADTC_HOME/repos/llama.cpp-4b-profile" rev-parse HEAD > "$RUN_DIR/llama-cpp-commit.txt"
 cp "$ADTC_HOME/repos/llama.cpp-4b-profile/build/CMakeCache.txt" "$RUN_DIR/"

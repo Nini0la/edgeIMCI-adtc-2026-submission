@@ -35,7 +35,7 @@ The expected destination is `model/EdgeIMCI-4B-alpha-second-Q4_K_M.gguf`, matchi
 
 `download_model.sh` is the official template: **only `MODEL_FILE` and `MODEL_URL` may change**. Its existing-file skip is not an integrity check. Byte-count and SHA-256 verification belongs in the separate `python3 scripts/verify_model_artifact.py` step, not in modifications to the downloader's logic.
 
-Actual target-laptop 4B profiling is **pending**. No 4B speed, memory, thermal, ARC-Easy, or ADTC score is claimed here. [`REPORT.md`](REPORT.md) retains the older 0.6B figures explicitly as historical measurements of a different artifact.
+A [preliminary 4B-alpha-second CPU microbenchmark](provenance/4B-alpha-second/profiling/2026-09-22-cpu/README.md) on 2026-09-22 reported **12.15 tokens/s prompt processing (128 tokens)**, **5.42 tokens/s generation (32 tokens)** and **4.063 GiB peak process RSS** on an Intel Core i5-4210U with two threads. This is one repetition, transcribed from operator-supplied console output; original flash-drive evidence import and a complete scoreable ADTC profile remain **pending**. No thermal, ARC-Easy, ADTC score or official 8 GB qualification is claimed. [`REPORT.md`](REPORT.md) separates this preliminary result from historical 0.6B measurements.
 
 ## Legacy GUI Boundary
 

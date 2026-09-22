@@ -26,6 +26,7 @@
 - [`merge_quantization.md`](4B-alpha-second/merge_quantization.md) and [`conversion_manifest.json`](4B-alpha-second/conversion_manifest.json): recorded merge policy, verified source files, F16/Q4 conversion commands and hashes; historical merge implementation is not recovered here.
 - [`smoke_results.json`](4B-alpha-second/smoke_results.json): F16 and Q4 each pass 2/2 public prompts for exact parsed JSON and deterministic state under the recorded wrapper.
 - [`before_after.md`](4B-alpha-second/before_after.md): terminal fine-tuned results with an explicitly missing matched-base comparison.
+- [Preliminary Ubuntu CPU microbenchmark](4B-alpha-second/profiling/2026-09-22-cpu/README.md): successful one-repetition pp128/tg32 benchmark and GNU time memory measurement, transcribed from the operator's 2026-09-22 console output; original files not yet imported, not an official ADTC report.
 
 The original adapter is public in the HF repository's `adapter/` directory at the same immutable revision. [`artifact.json`](4B-alpha-second/artifact.json) binds its exact hashes and sizes; `python3 provenance/4B-alpha-second/download_adapter.py` fetches and verifies the weights/config into an ignored local directory. Git retains provenance and hosted references, not vendored weights. Do not equate an inventory of original files with independently downloadable training inputs or a completed Gate 2 packet.
 
@@ -34,7 +35,7 @@ The original adapter is public in the HF repository's `adapter/` directory at th
 - Confirm organizer acceptance of public immutable adapter hosting plus the fetch helper rather than large weight blobs in Git.
 - Complete consolidated dataset/source-license review. The public message-normalized release is pinned at [Hugging Face revision `da8daa8efbd583d92000920366085f6dd00c3fb2`](https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1/tree/da8daa8efbd583d92000920366085f6dd00c3fb2), but its `license: other` declaration does not establish redistribution rights.
 - Complete matched pinned-base-versus-fine-tuned evaluation with identical authorized held-out inputs and evaluation settings; do not use the sealed TEST set.
-- Run actual target-laptop Ubuntu profiling on the exact selected GGUF and retain the complete scoreable ADTC evidence. No old performance figures transfer to 4B.
+- Import the original preliminary microbenchmark evidence from the flash drive, and complete target-laptop Ubuntu profiling on the exact selected GGUF with retained scoreable ADTC evidence. The preliminary CPU result does not establish accuracy, sustained thermals or an official 8 GB pass. No old performance figures transfer to 4B.
 - Complete independent clinical/source-governance review before any clinical-use claim. Hosting/profiling selection is not that approval.
 
 The GUI backend, checksum, and prompt remain pinned to 0.6B. Runtime migration is not part of this selection: legacy `setup.sh`, `run.sh`, and integration verification are not compatible with 4B. Official artifact profiling is independent of the Node GUI.

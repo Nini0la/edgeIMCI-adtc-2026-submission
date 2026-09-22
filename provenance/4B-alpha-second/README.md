@@ -20,3 +20,12 @@ review remains pending.
 The source training authorization was research-only. The owner subsequently
 selected this candidate for quantization, public hosting, and submission profiling;
 that does not authorize clinical use or establish that clinical review is complete.
+
+## Preliminary Laptop Profiling
+
+The [2026-09-22 Ubuntu CPU microbenchmark](profiling/2026-09-22-cpu/README.md)
+records the operator's successful one-repetition pp128/tg32 run and GNU time
+memory result for the selected Q4_K_M GGUF. Console transcriptions are retained
+separately from the unchanged training/conversion evidence. Original flash-drive
+files have not yet been imported; the complete official ADTC profile, accuracy,
+sustained thermals and 8 GB qualification remain pending.
