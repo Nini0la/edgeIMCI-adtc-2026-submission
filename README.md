@@ -2,9 +2,9 @@
 
 EdgeIMCI is an offline research model for primary-healthcare sick-child encounters. Its structured-extraction mode converts worker findings into bounded JSON for validation and downstream deterministic IMCI logic. This is team `edge-imci`'s Laptop LLM submission package in `healthcare_medical`.
 
-**The submitted artifact is the standalone 4B-alpha-second Q4_K_M GGUF. The
-included GUI is a legacy 0.6B research interface, not a demonstration or evaluation
-frontend for the submitted 4B model.**
+**The submitted artifact is the standalone 4B-alpha-second Q4_K_M GGUF.**
+
+**Legacy Experimental GUI:** Retained for historical context. It uses an earlier model integration and is not the interface evaluated in this submission. Extraction reliability and error handling remain under development.
 
 ## Selected Artifact
 
@@ -44,7 +44,7 @@ The expected destination is `model/EdgeIMCI-4B-alpha-second-Q4_K_M.gguf`, matchi
 
 A [preliminary 4B-alpha-second CPU microbenchmark](provenance/4B-alpha-second/profiling/2026-09-22-cpu/README.md) on 2026-09-22 reported **12.15 tokens/s prompt processing (128 tokens)**, **5.42 tokens/s generation (32 tokens)** and **4.063 GiB peak process RSS** on an Intel Core i5-4210U with two threads. This is one repetition, transcribed from operator-supplied console output; original flash-drive evidence import and a complete scoreable ADTC profile remain **pending**. No thermal, ARC-Easy, ADTC score or official 8 GB qualification is claimed. [`REPORT.md`](REPORT.md) separates this preliminary result from historical 0.6B measurements.
 
-## Legacy GUI Boundary
+## Legacy Experimental GUI
 
 The application backend, model checksum, and frozen extraction prompt remain pinned to the **old 0.6B integration**. They have not been migrated or qualified for 4B-alpha-second.
 

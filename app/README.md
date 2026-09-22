@@ -1,4 +1,6 @@
-# Legacy EdgeIMCI 0.6B GUI
+# Legacy Experimental GUI
+
+**Legacy Experimental GUI:** Retained for historical context. It uses an earlier model integration and is not the interface evaluated in this submission. Extraction reliability and error handling remain under development.
 
 **Legacy 0.6B GUI only, not a working 4B-alpha-second demo.** `setup.sh` now
 downloads the selected 4B artifact, but the backend remains checksum/prompt-pinned
