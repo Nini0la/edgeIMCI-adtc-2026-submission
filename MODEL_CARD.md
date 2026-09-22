@@ -1,39 +1,50 @@
-# EdgeIMCI-Qwen3-0.6B-SFT-Q8_0
+# EdgeIMCI-4B-alpha-second-Q4_K_M
 
 ## Summary
 
-EdgeIMCI-Qwen3-0.6B-SFT-Q8_0 is a fine-tuned `Qwen/Qwen3-0.6B` model used only
-to convert free-form primary-healthcare sick-child findings into the bounded
-EdgeIMCI encounter JSON schema. Deterministic code performs all downstream
-completeness checks, classifications, management selection, and rendering.
+4B-alpha-second is the enriched 2,258-row LoRA fine-tune of `Qwen/Qwen3-4B`, run `multitask2258-20260922-v1--qwen4-e2-lr3-s20260824`, exported at terminal epoch 2 and quantized to GGUF Q4_K_M. The owner selected it for public hosting, submission-template updates, and Ubuntu profiling, not clinical deployment.
 
-## Artifact
+Its structured mode extracts bounded sick-child encounter JSON for schema validation and downstream deterministic IMCI logic. Training also targets bounded free-form behavior; the retained validation and public smoke do not establish comprehensive free-form safety or effectiveness.
 
-- File: `qwen3-0.6b-sft-selected-seed-20260824-q8_0.gguf`
-- Quantization: GGUF Q8_0
-- Size: 639,446,752 bytes
-- SHA-256: `26d11ee99801455fcef011a3e5ff124b2ff1cce943ed06cbe611c8fbcc42aca2`
-- Hosted artifact revision: `6af69949d91fbe2628d88a6ed7df62a944cd71a3`
-- Base model: `Qwen/Qwen3-0.6B`
-- Base model commit: `c1899de289a04d12100db370d81485cdf75e47ca`
-- Fine-tuning method: LoRA structured-extraction SFT, merged after training
-- Training evidence: incomplete; see [`provenance/README.md`](provenance/README.md)
-- License: Apache License 2.0
+## Artifact and Training
 
-## Intended Use
+| Field | Value |
+|---|---|
+| File | `EdgeIMCI-4B-alpha-second-Q4_K_M.gguf` |
+| Size | 2,497,280,288 bytes |
+| SHA-256 | `a4a8c5bb2d9f3401defa1cb8ea007812d5916c0242d8306a1c7ed6322d550919` |
+| Hosting destination | [Nini0la/edgeimci-4b-alpha-second-gguf](https://huggingface.co/Nini0la/edgeimci-4b-alpha-second-gguf) |
+| Hosted pin | `1aeace1a2eb6e46e5e93d6536cbd1c19db982e53`; see [`artifact.json`](provenance/4B-alpha-second/artifact.json) |
+| Base source | [Qwen/Qwen3-4B](https://huggingface.co/Qwen/Qwen3-4B/tree/1cfa9a7208912126459214e8b04321603b3df60c) |
+| Base/tokenizer revision | `1cfa9a7208912126459214e8b04321603b3df60c` |
+| Model source license | Apache-2.0 |
+| Fine-tuning | BF16 LoRA, not QLoRA; adapter merged after training |
+| Recipe | 2 epochs, LR 0.0003, seed 20260824; rank 16, alpha 32, dropout 0.05 |
+| Data | [`beta0_1k_multitask_enriched_2258_v1`](https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1/tree/da8daa8efbd583d92000920366085f6dd00c3fb2) at `da8daa8efbd583d92000920366085f6dd00c3fb2`: TRAIN 2,258; VALIDATION 139; no TEST use recorded |
+| Conversion | `llama.cpp` commit `aedb2a5e9ca3d4064148bbb919e0ddc0c1b70ab3`; F16 then Q4_K_M |
 
-The model is an offline research and competition artifact for structured
-extraction within the included GUI. It is not intended to diagnose, classify,
-or recommend treatment without the deterministic EdgeIMCI pipeline and human
-review.
+Original configuration, training/loss logs, source receipt, artifact hashes, and conversion/smoke records are in [`provenance/4B-alpha-second/`](provenance/4B-alpha-second/README.md). The original adapter is public under HF `adapter/` at the hosted pin; its checksums are recorded in `artifact.json` and the fetch helper verifies both files. Weights are not vendored in Git; organizer acceptance of hosted adapter delivery should be confirmed. The public dataset provides the preserved partitions in a message-normalized JSONL/Parquet publication view. Its card uses `license: other` and asserts no general redistribution license while source-rights review remains incomplete. The base model's Apache-2.0 license does not settle dataset rights; this submission repository is GPL v3.
 
-## Limitations
+## Evaluation
 
-The retained project evaluation recorded six preregistered clinical-threshold
-failures despite strong JSON and schema validity. The model may omit findings,
-misread negation, or produce schema-invalid output. The adapter therefore fails
-closed, preserves unknown values, and requires worker review before evaluation.
+| Terminal checkpoint VALIDATION metric | Result |
+|---|---:|
+| JSON valid | 139/139 |
+| Strict schema valid | 135/139 |
+| Whole-prediction exact | 131/139 |
+| Routing correct | 132/139 |
+| False rejects | 2/119 |
+| Unsafe engine admissions | 1/20 |
+| Urgent misses | 2/4 |
 
-This artifact is not a medical device and is not authorized for autonomous or
-production clinical use. See [`REPORT.md`](REPORT.md) for evaluation details and
-[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for provenance.
+These are terminal fine-tuned checkpoint results, not a full Q4 validation run. F16 and Q4 each passed 2/2 public extraction prompts with exact parsed JSON and matching deterministic states under the extraction-v2 wrapper, thinking disabled, temperature 0, seed 0, context 3072, and maximum generation 1200 tokens. That small smoke does not establish quantization equivalence beyond those prompts.
+
+A matched pinned-base-versus-fine-tuned comparison and actual Ubuntu target-laptop performance measurements remain **pending**. No 4B throughput, memory, thermal, ARC-Easy, or ADTC score is claimed. Gate 2 remains incomplete; see [`REPORT.md`](REPORT.md) and [`provenance/README.md`](provenance/README.md).
+
+## Intended Use and Limits
+
+Use is limited to research and competition evaluation with human review. The supported submission path is standalone artifact profiling, which does not require Node.js or a GUI. **The bundled GUI backend and integration verification scripts remain pinned to the old 0.6B checksum/prompt and are not compatible with this 4B model.** `setup.sh` / `run.sh` are not a working 4B demonstration.
+
+The model may omit findings, misread negation, emit invalid schemas, misroute inputs, or miss urgent conditions, as the retained results demonstrate. Independent clinical/manual fact-fidelity review is pending; the validation set is small and not clinical effectiveness evidence. Owner selection for hosting/profiling is not clinical approval. Autonomous or production clinical use is not authorized.
+
+Historical 0.6B benchmark results and its six clinical-threshold failures describe a different artifact and must not be attributed to this model.

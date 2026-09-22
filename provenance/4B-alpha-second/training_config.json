@@ -1,0 +1,116 @@
+{
+  "authorization_path": "configs/review/beta0_1k_enriched_2258_matrix_authorization_20260922_v1.json",
+  "authorization_sha256": "4346fea115d30a9fe9ff60a32435f31d9bf28c6ae05a35cdd62c3275be035c67",
+  "base_model": {
+    "license": "Apache-2.0",
+    "model_id": "Qwen/Qwen3-4B",
+    "model_provider": "Qwen",
+    "revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+    "tokenizer_revision": "1cfa9a7208912126459214e8b04321603b3df60c"
+  },
+  "checkpoint_policy": {
+    "automatic_retry": false,
+    "early_stopping": false,
+    "recovery_save_steps": 50,
+    "retain_all_epoch_checkpoints": true,
+    "terminal_evaluation": true
+  },
+  "config_id": "edge-imci-beta0-1k-enriched-2258-qwen4-e2-lr3-s20260824",
+  "dataset": {
+    "manifest_path": "data/training_sources/beta0_1k_multitask_enriched_2258_v1/manifest.json",
+    "manifest_sha256": "0820f092ed585a46182e075477f9246917629061b03a3f57d92cb1087e303706",
+    "train_partition": "TRAIN",
+    "validation_partition": "VALIDATION"
+  },
+  "execution_blockers": [],
+  "execution_readiness_scope": "OFFLINE_CONFIGURATION_READY_REMOTE_TOKENIZATION_AND_RUNTIME_REQUIRED",
+  "execution_ready": true,
+  "experiment_design": {
+    "clinical_use_authorized": false,
+    "effective_batch_size": 16,
+    "initialization": "FRESH_FROM_PINNED_BASE",
+    "oversampling_allowed": false,
+    "role": "BETA0_1K_ENRICHED_2258_RESEARCH_MATRIX",
+    "sampler": "ONE_PASS_PER_MANIFEST_TRAIN_ROW_WITH_SHUFFLE",
+    "task_family_reweighting_allowed": false
+  },
+  "lane": "QWEN3_4B",
+  "metadata_audit_path": "configs/training/gate2_experimental/model_metadata_audit_v1.json",
+  "method": {
+    "alpha": 32,
+    "bias": "none",
+    "dropout": 0.05,
+    "merge_adapter_after_training": true,
+    "name": "LORA",
+    "rank": 16,
+    "target_modules": [
+      "q_proj",
+      "k_proj",
+      "v_proj",
+      "o_proj",
+      "gate_proj",
+      "up_proj",
+      "down_proj"
+    ]
+  },
+  "modal": {
+    "app_name": "edge-imci-beta0-1k-enriched-2258-matrix-v1",
+    "artifact_root": "/outputs",
+    "artifact_volume": "edge-imci-beta0-1k-enriched-2258-matrix-v1-artifacts",
+    "function_name": "train",
+    "gpu_count": 1,
+    "gpu_type": "A10G",
+    "max_containers": 2,
+    "model_cache_volume": "edge-imci-hf-cache",
+    "region": "AUTO",
+    "timeout_seconds": 21600
+  },
+  "optimization": {
+    "bf16": true,
+    "epochs": 2,
+    "gradient_accumulation_steps": 16,
+    "gradient_checkpointing": true,
+    "learning_rate": 0.0003,
+    "logging_steps": 10,
+    "lr_scheduler_type": "cosine",
+    "max_grad_norm": 1.0,
+    "optimizer": "adamw_torch_fused",
+    "per_device_eval_batch_size": 1,
+    "per_device_train_batch_size": 1,
+    "save_total_limit": 2,
+    "seed": 20260824,
+    "tf32": true,
+    "warmup_ratio": 0.05,
+    "weight_decay": 0.01
+  },
+  "plan_path": "configs/training/beta0_1k_enriched_2258_matrix_v1/plan.json",
+  "review_tag": "AI_CURATED_CLINICAL_REVIEW_PENDING",
+  "software": {
+    "accelerate": "1.9.0",
+    "datasets": "3.6.0",
+    "huggingface_hub": "0.34.2",
+    "peft": "0.16.0",
+    "python": "3.11",
+    "torch": "2.7.1",
+    "transformers": "4.57.1"
+  },
+  "tokenization": {
+    "assistant_only_loss": true,
+    "enable_thinking": false,
+    "max_sequence_length": 3072,
+    "truncation_allowed": false
+  },
+  "tracking": {
+    "experiment_id": "qwen4-e2-lr3-s20260824",
+    "image_identity": "edge-imci-beta0-1k-enriched-2258-matrix-v1",
+    "run_name_prefix": "qwen4-e2-lr3-s20260824"
+  },
+  "training_stage": "BETA0_1K_ENRICHED_2258_MATRIX_V1",
+  "validation_generation": {
+    "batch_size": 1,
+    "do_sample": false,
+    "example_count": 139,
+    "max_new_tokens": 1200
+  },
+  "version": "1.0.0"
+}

@@ -1,157 +1,62 @@
 # EdgeIMCI ADTC 2026 Submission
 
-EdgeIMCI is an offline structured-extraction model for primary-healthcare sick-child encounters. It converts free-form PHC worker findings into a bounded JSON encounter record for schema validation and downstream deterministic IMCI logic.
+EdgeIMCI is an offline research model for primary-healthcare sick-child encounters. Its structured-extraction mode converts worker findings into bounded JSON for validation and downstream deterministic IMCI logic. This is team `edge-imci`'s Laptop LLM submission package in `healthcare_medical`.
 
-This repository is the ADTC 2026 Laptop LLM submission package for team `edge-imci` in the `healthcare_medical` domain.
+## Selected Artifact
 
-## Submission Artifact
+The owner selected **4B-alpha-second**, the enriched 2,258-row fine-tune, for public hosting, submission-template updates, and Ubuntu profiling. This selection is not clinical approval or a declaration that Gate 2 is complete.
 
 | Field | Value |
-| --- | --- |
-| Model | EdgeIMCI-Qwen3-0.6B-SFT-Q8_0 |
-| Base model | `Qwen/Qwen3-0.6B` |
-| Runtime | `llama.cpp` |
-| Quantization | GGUF Q8_0 |
-| Parameters | 596,049,920 |
-| File | `qwen3-0.6b-sft-selected-seed-20260824-q8_0.gguf` |
-| Size | 639,446,752 bytes |
-| SHA-256 | `26d11ee99801455fcef011a3e5ff124b2ff1cce943ed06cbe611c8fbcc42aca2` |
-| Hosting | [Hugging Face](https://huggingface.co/Nini0la/edgeimci-qwen3-0.6b-sft-gguf) |
+|---|---|
+| Model | EdgeIMCI-4B-alpha-second-Q4_K_M |
+| Base | `Qwen/Qwen3-4B` |
+| Base revision | `1cfa9a7208912126459214e8b04321603b3df60c` |
+| Training run | `multitask2258-20260922-v1--qwen4-e2-lr3-s20260824` |
+| Runtime / format | `llama.cpp` / GGUF Q4_K_M |
+| File | `EdgeIMCI-4B-alpha-second-Q4_K_M.gguf` |
+| Size | 2,497,280,288 bytes |
+| SHA-256 | `a4a8c5bb2d9f3401defa1cb8ea007812d5916c0242d8306a1c7ed6322d550919` |
+| Hosting destination | [Nini0la/edgeimci-4b-alpha-second-gguf](https://huggingface.co/Nini0la/edgeimci-4b-alpha-second-gguf) |
 
-The download script pins immutable Hugging Face model commit `6af69949d91fbe2628d88a6ed7df62a944cd71a3`.
-See [`MODEL_CARD.md`](MODEL_CARD.md) for intended use, provenance, and limitations.
+The public GGUF and original adapter are pinned to Hugging Face revision `1aeace1a2eb6e46e5e93d6536cbd1c19db982e53`. Anonymous hosting metadata matches the expected sizes and weight hashes. See [`artifact.json`](provenance/4B-alpha-second/artifact.json) and the static `download_model.sh`; do not substitute `main` or confuse this pin with the base-model revision.
 
-## Download
+## Download and Profile
 
-No credentials are required:
+**The supported 4B path is artifact verification and standalone official profiling, not the bundled GUI.** Official profiling does not require Node.js, npm, or the GUI. Follow [`docs/PROFILING_RUNBOOK.md`](docs/PROFILING_RUNBOOK.md) for the Ubuntu CPU runtime and ADTC profiler environment.
+
+From the repository root:
 
 ```bash
 bash download_model.sh
+python3 scripts/verify_model_artifact.py
 ```
 
-The script is idempotent and writes the model to the path declared in `metadata.json`:
+The expected destination is `model/EdgeIMCI-4B-alpha-second-Q4_K_M.gguf`, matching `metadata.json`. Public download must require no credentials. Inference can run offline after the required model/runtime downloads.
 
-```text
-model/qwen3-0.6b-sft-selected-seed-20260824-q8_0.gguf
-```
+`download_model.sh` is the official template: **only `MODEL_FILE` and `MODEL_URL` may change**. Its existing-file skip is not an integrity check. Byte-count and SHA-256 verification belongs in the separate `python3 scripts/verify_model_artifact.py` step, not in modifications to the downloader's logic.
 
-After download, inference runs locally without network access.
+Actual target-laptop 4B profiling is **pending**. No 4B speed, memory, thermal, ARC-Easy, or ADTC score is claimed here. [`REPORT.md`](REPORT.md) retains the older 0.6B figures explicitly as historical measurements of a different artifact.
 
-## Model Provenance (Gate 2)
+## Legacy GUI Boundary
 
-The structured provenance in [`metadata.json`](metadata.json) records the facts already established for this submission:
+The application backend, model checksum, and frozen extraction prompt remain pinned to the **old 0.6B integration**. They have not been migrated or qualified for 4B-alpha-second.
 
-- Base model: `huggingface:Qwen/Qwen3-0.6B`
-- Base model commit: `c1899de289a04d12100db370d81485cdf75e47ca`
-- Fine-tuning method: `lora`
+- `setup.sh` and `run.sh` are legacy GUI entry points, **not a working 4B demo**. Updating the submission downloader does not update that backend.
+- `scripts/verify_llama_cpp_integration.sh` and [`docs/LLAMA_CPP_INTEGRATION.md`](docs/LLAMA_CPP_INTEGRATION.md) are **legacy-only and not compatible with 4B**; they do not verify the new artifact.
+- The retained `app/`, `web/`, and application tests are not evidence of 4B GUI integration. Do not bypass their old checksum guards to load the new model.
 
-The base-model commit identifies the checkpoint used to start training. The separate commit embedded in `download_model.sh` pins the hosted final GGUF. The profiler generates the submission repository commit in its output; do not add a `reproducibility.git_commit_sha` field to `metadata.json`.
+## Provenance and Evidence
 
-The Gate 2 provenance packet is intentionally marked incomplete until the original training materials are supplied:
+The new packet is [`provenance/4B-alpha-second/`](provenance/4B-alpha-second/README.md). It retains original configuration, loss logs, source receipt and hashes, conversion commands, and public-prompt smoke outputs. LoRA used 2 epochs, learning rate `0.0003`, seed `20260824`, rank 16, alpha 32, and dropout **0.05**.
 
-- [x] Base model source and immutable base-model commit recorded
-- [x] Fine-tuning method recorded
-- [ ] Training dataset names, source URLs, licenses, split policy, and checksums supplied
-- [ ] LoRA adapter or reproducible training scripts and configuration supplied
-- [ ] Training and loss logs supplied
-- [ ] Merge and quantization procedure supplied
-- [ ] Base-versus-fine-tuned comparison supplied
+The terminal fine-tuned checkpoint scored 139/139 JSON valid, 135/139 strict-schema valid, 131/139 exact, and 132/139 routing correct on VALIDATION. Failures include 2/119 false rejects, 1/20 unsafe engine admissions, and 2/4 urgent misses. These are not full Q4 validation results. The F16 and Q4 GGUFs each passed 2/2 public prompts for exact JSON targets and deterministic state, under the recorded extraction-v2 wrapper.
 
-See [`provenance/README.md`](provenance/README.md) for the evidence handoff checklist. Do not mark the Gate 2 packet complete until every pending item is backed by the original artifact or a reproducible record.
+The selected training release is public at [Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1](https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1/tree/da8daa8efbd583d92000920366085f6dd00c3fb2), pinned to revision `da8daa8efbd583d92000920366085f6dd00c3fb2`. It exposes the preserved 2,258-row TRAIN and 139-row VALIDATION partitions as JSONL and Parquet. Anonymous Hugging Face `datasets` loading was verified. The card marks the release `license: other`, clinical review pending, and not authorized for clinical use.
 
-Two newer Beta0-1K research candidates now have dataset, recipe, receipt, and terminal-validation records under [`provenance/`](provenance/README.md): `qwen17-e3-lr1-s3407` and `qwen4-e2-lr3-s20260824`. They are not the 0.6B GGUF currently declared by this repository, and no runtime, downloader, model-card, or profiler claim has been transferred to them.
+The original adapter is publicly downloadable with `python3 provenance/4B-alpha-second/download_adapter.py`; it is checksum-verified into an ignored local directory, not vendored as a large Git blob. **Gate 2 remains incomplete:** consolidated dataset/source-license review, matched pinned-base-versus-fine-tuned evaluation, and independent clinical review are missing. Confirm organizer acceptance of the hosted adapter arrangement. See [`provenance/README.md`](provenance/README.md), [`REPORT.md`](REPORT.md), and [`MODEL_CARD.md`](MODEL_CARD.md) for evidence boundaries and remaining work.
 
+## Safety and License
 
-## Run The GUI
+This is a provisional research/competition artifact, not a diagnostic system or production medical device. Independent clinical review remains pending; autonomous or production clinical use is not authorized. The old model's six clinical-threshold failures must not be attributed to this different fine-tune.
 
-Requirements:
-
-- Python 3.10 or newer
-- Node.js and npm
-- The exact qualified `llama-completion` build described below
-
-Install dependencies, build the frontend, and download the pinned model:
-
-```bash
-bash setup.sh
-```
-
-This is a source-checkout application bundle, not a standalone Python wheel.
-Run `setup.sh` and `run.sh` from the repository root so the versioned schemas
-and frontend assets remain bound to the application.
-
-Point the application at the qualified runtime and start the local GUI:
-
-```bash
-export LLAMA_CPP_BIN=/path/to/llama-completion
-bash run.sh
-```
-
-Open <http://127.0.0.1:8000>. The worker enters findings only; the application
-adds the frozen extraction instruction internally, validates the model JSON,
-allows review, and runs deterministic IMCI logic.
-
-The adapter fails closed unless the runtime is the qualified `llama.cpp` b9637
-executable at commit `aedb2a5e9ca3d4064148bbb919e0ddc0c1b70ab3` with SHA-256
-`a41d3d5fec1173afc89323a026a8f3612a9de2692a8c825223852627e8277641`.
-
-To exercise the interface without loading the model:
-
-```bash
-EDGEIMCI_SKIP_MODEL_DOWNLOAD=1 bash setup.sh
-EDGEIMCI_EXTRACTOR=stub bash run.sh
-```
-
-## Verification
-
-Run the complete local and exact-model verification after the model and
-qualified runtime are available:
-
-```bash
-export LLAMA_CPP_BIN=/path/to/llama-completion
-bash scripts/verify_llama_cpp_integration.sh
-```
-
-## Profile
-
-The selected GGUF was measured on an ASUS laptop running Ubuntu 22.04.5 with an Intel Core i5-4210U and CPU-only `llama.cpp` inference.
-
-| Metric | Result |
-| --- | ---: |
-| ADTC quick-profile generation | 18.94 tokens/s |
-| First-token latency | 8,851.28 ms |
-| Peak RSS | 774.59 MB |
-| Steady-state RSS | 729.21 MB |
-| Peak CPU temperature | 75.0 C |
-| Thermal throttling | No |
-| Self-reported performance score | 100.00 |
-| Self-reported efficiency score | 89.19 |
-| ARC-Easy accuracy smoke | 0.64 `acc_norm`, 50 samples |
-
-The ADTC quick participant profile used `--skip-accuracy`; the accuracy smoke was run separately with the same pinned profiler and exact GGUF bytes. These are participant measurements, not organizer audit results. See [`REPORT.md`](REPORT.md) for conversion comparisons, provenance, constraints, and limitations.
-Follow [`docs/PROFILING_RUNBOOK.md`](docs/PROFILING_RUNBOOK.md) to prepare the persistent Ubuntu 22.04 environment, build the pinned CPU `llama-bench`, install the ADTC profiler, verify the GGUF, and retain a complete scoreable `submission.json`.
-
-## Repository Files
-
-- [`metadata.json`](metadata.json): team, domain, structured provenance, prompts, and runtime metadata.
-- [`download_model.sh`](download_model.sh): anonymous, immutable-revision-pinned model download.
-- [`REPORT.md`](REPORT.md): technical report, provenance disclosure, and ASUS benchmark evidence.
-- [`MODEL_CARD.md`](MODEL_CARD.md): model provenance, intended use, and limitations.
-- [`provenance/`](provenance/): Gate 2 evidence handoff checklist and, when supplied, original training artifacts.
-- [`app/`](app/): local API, extraction adapters, and deterministic service flow.
-- [`src/edge_imci/`](src/edge_imci/): bounded schemas and deterministic IMCI logic.
-- [`web/`](web/): worker-facing React interface.
-- [`acceptance/public_prompts.json`](acceptance/public_prompts.json): expected structured outputs for the two submitted prompts.
-- [`docs/LLAMA_CPP_INTEGRATION.md`](docs/LLAMA_CPP_INTEGRATION.md): qualified runtime details and limitations.
-- [`docs/PROFILING_RUNBOOK.md`](docs/PROFILING_RUNBOOK.md): end-to-end Ubuntu setup, smoke-profile, full-profile, and evidence-retention procedure.
-
-## Safety and Scope
-
-EdgeIMCI is a provisional research and competition artifact. It is not a diagnostic system, a production medical device, or authorized for autonomous clinical use. The retained project evaluation recorded six preregistered clinical-threshold failures despite strong JSON and schema validity. Human oversight and further clinical qualification remain necessary.
-
-## License
-
-The submission repository is provided under the [GNU GPL v3](LICENSE). The
-promoted EdgeIMCI application subset and model have Apache-2.0 provenance; see
-[`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) and
-[`licenses/Apache-2.0.txt`](licenses/Apache-2.0.txt).
+The submission repository is [GNU GPL v3](LICENSE). The base model [Qwen/Qwen3-4B](https://huggingface.co/Qwen/Qwen3-4B/tree/1cfa9a7208912126459214e8b04321603b3df60c) is Apache-2.0; this is not a blanket license determination for the training dataset. See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) and [`licenses/Apache-2.0.txt`](licenses/Apache-2.0.txt).

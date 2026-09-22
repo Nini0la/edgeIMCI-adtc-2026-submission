@@ -1,0 +1,236 @@
+{
+  "display_name": "4B-alpha-second",
+  "model_version": "qwen4-e2-lr3-s20260824-multitask2258-7f53d7a0eac4",
+  "status": "COMPLETED",
+  "llama_cpp_commit": "aedb2a5e9ca3d4064148bbb919e0ddc0c1b70ab3",
+  "output_volume": "edge-imci-4b-alpha-second-gguf-20260922",
+  "output_directory": "4B-alpha-second-7f53d7a0eac4-llama-aedb2a5e-q4km-v1",
+  "started_at_unix": 1790090158.8002124,
+  "commands": [
+    [
+      "python",
+      "/opt/llama.cpp/convert_hf_to_gguf.py",
+      "/source/multitask2258-20260922-v1--qwen4-e2-lr3-s20260824/merged_model",
+      "--outfile",
+      "/outputs/4B-alpha-second-7f53d7a0eac4-llama-aedb2a5e-q4km-v1/EdgeIMCI-4B-alpha-second-F16.gguf",
+      "--outtype",
+      "f16"
+    ],
+    [
+      "/opt/llama.cpp/build/bin/llama-quantize",
+      "/outputs/4B-alpha-second-7f53d7a0eac4-llama-aedb2a5e-q4km-v1/EdgeIMCI-4B-alpha-second-F16.gguf",
+      "/outputs/4B-alpha-second-7f53d7a0eac4-llama-aedb2a5e-q4km-v1/EdgeIMCI-4B-alpha-second-Q4_K_M.gguf",
+      "Q4_K_M",
+      "16"
+    ],
+    [
+      "/opt/llama.cpp/build/bin/llama-completion",
+      "-m",
+      "/outputs/4B-alpha-second-7f53d7a0eac4-llama-aedb2a5e-q4km-v1/EdgeIMCI-4B-alpha-second-F16.gguf",
+      "-f",
+      "/outputs/4B-alpha-second-7f53d7a0eac4-llama-aedb2a5e-q4km-v1/evidence/edgeimci_public_001.prompt.txt",
+      "-n",
+      "1200",
+      "--temp",
+      "0",
+      "--seed",
+      "0",
+      "--no-display-prompt",
+      "-no-cnv",
+      "--simple-io",
+      "--color",
+      "off",
+      "--offline",
+      "--no-warmup",
+      "-c",
+      "3072",
+      "-t",
+      "16",
+      "-tb",
+      "16",
+      "-ngl",
+      "0"
+    ],
+    [
+      "/opt/llama.cpp/build/bin/llama-completion",
+      "-m",
+      "/outputs/4B-alpha-second-7f53d7a0eac4-llama-aedb2a5e-q4km-v1/EdgeIMCI-4B-alpha-second-F16.gguf",
+      "-f",
+      "/outputs/4B-alpha-second-7f53d7a0eac4-llama-aedb2a5e-q4km-v1/evidence/edgeimci_public_002.prompt.txt",
+      "-n",
+      "1200",
+      "--temp",
+      "0",
+      "--seed",
+      "0",
+      "--no-display-prompt",
+      "-no-cnv",
+      "--simple-io",
+      "--color",
+      "off",
+      "--offline",
+      "--no-warmup",
+      "-c",
+      "3072",
+      "-t",
+      "16",
+      "-tb",
+      "16",
+      "-ngl",
+      "0"
+    ],
+    [
+      "/opt/llama.cpp/build/bin/llama-completion",
+      "-m",
+      "/outputs/4B-alpha-second-7f53d7a0eac4-llama-aedb2a5e-q4km-v1/EdgeIMCI-4B-alpha-second-Q4_K_M.gguf",
+      "-f",
+      "/outputs/4B-alpha-second-7f53d7a0eac4-llama-aedb2a5e-q4km-v1/evidence/edgeimci_public_001.prompt.txt",
+      "-n",
+      "1200",
+      "--temp",
+      "0",
+      "--seed",
+      "0",
+      "--no-display-prompt",
+      "-no-cnv",
+      "--simple-io",
+      "--color",
+      "off",
+      "--offline",
+      "--no-warmup",
+      "-c",
+      "3072",
+      "-t",
+      "16",
+      "-tb",
+      "16",
+      "-ngl",
+      "0"
+    ],
+    [
+      "/opt/llama.cpp/build/bin/llama-completion",
+      "-m",
+      "/outputs/4B-alpha-second-7f53d7a0eac4-llama-aedb2a5e-q4km-v1/EdgeIMCI-4B-alpha-second-Q4_K_M.gguf",
+      "-f",
+      "/outputs/4B-alpha-second-7f53d7a0eac4-llama-aedb2a5e-q4km-v1/evidence/edgeimci_public_002.prompt.txt",
+      "-n",
+      "1200",
+      "--temp",
+      "0",
+      "--seed",
+      "0",
+      "--no-display-prompt",
+      "-no-cnv",
+      "--simple-io",
+      "--color",
+      "off",
+      "--offline",
+      "--no-warmup",
+      "-c",
+      "3072",
+      "-t",
+      "16",
+      "-tb",
+      "16",
+      "-ngl",
+      "0"
+    ]
+  ],
+  "clinical_use_authorized": false,
+  "submission_promotion_authorized": false,
+  "scope": "conversion and public-prompt smoke only; no sealed TEST or clinical qualification",
+  "source_record": {
+    "run_id": "multitask2258-20260922-v1--qwen4-e2-lr3-s20260824",
+    "status": "SUCCEEDED",
+    "artifact_manifest_sha256": "7f53d7a0eac4938194fdbc977f64bd0b17bbb8fc6131f3573fcc790edfbca1a0",
+    "dataset_manifest_sha256": "0820f092ed585a46182e075477f9246917629061b03a3f57d92cb1087e303706",
+    "config_sha256": "d62d618a31d1477ce4c0386fdbe59d605f1925a2fc5975bd97541d034568cc4f",
+    "plan_sha256": "fe74580759b40ad959730de65645e565911c02941ab2144789697a2dc52244e8",
+    "authorization_sha256": "4346fea115d30a9fe9ff60a32435f31d9bf28c6ae05a35cdd62c3275be035c67",
+    "function_call_id": "fc-01M348VP5F6NVAG1QXT9V4PQ3Q"
+  },
+  "source_volume": "edge-imci-beta0-1k-enriched-2258-matrix-v1-artifacts",
+  "remote_run_manifest_file_sha256": "af7b78a326588397001c12e6efd540d765c2a7851dbce6ec61066bb70540bca5",
+  "artifact_hashes_file_sha256": "7f53d7a0eac4938194fdbc977f64bd0b17bbb8fc6131f3573fcc790edfbca1a0",
+  "verification_authority": "Original Modal training manifest and artifact inventory, cross-checked against retained training provenance",
+  "verified_source_files": {
+    "merged_model/added_tokens.json": {
+      "bytes": 707,
+      "sha256": "c0284b582e14987fbd3d5a2cb2bd139084371ed9acbae488829a1c900833c680"
+    },
+    "merged_model/chat_template.jinja": {
+      "bytes": 4168,
+      "sha256": "a55ee1b1660128b7098723e0abcd92caa0788061051c62d51cbe87d9cf1974d8"
+    },
+    "merged_model/config.json": {
+      "bytes": 1536,
+      "sha256": "1b0e321cba58fca847ce2b3cd7c65b045244aeda72e627b38967a2606e4cf0d5"
+    },
+    "merged_model/generation_config.json": {
+      "bytes": 188,
+      "sha256": "fed1d129ad8fcdc380ef0275351d187f18dd61277a816c248569cabf02cbfc30"
+    },
+    "merged_model/merges.txt": {
+      "bytes": 1671853,
+      "sha256": "8831e4f1a044471340f7c0a83d7bd71306a5b867e95fd870f74d0c5308a904d5"
+    },
+    "merged_model/model-00001-of-00003.safetensors": {
+      "bytes": 3957900840,
+      "sha256": "34ffc37ed99c81a913b1eea8e95600ac0179c4b913a4fd6baa22076b5a15bf55"
+    },
+    "merged_model/model-00002-of-00003.safetensors": {
+      "bytes": 3987450520,
+      "sha256": "9b5e093fa8bfd606743a0e31d00dfb098bc6a429ea87f250e6a89e5cdd4ae6a5"
+    },
+    "merged_model/model-00003-of-00003.safetensors": {
+      "bytes": 99630640,
+      "sha256": "e12bcffc01b6150727824343c323e57703ffb14df432f0f0610e2fe00e2a183f"
+    },
+    "merged_model/model.safetensors.index.json": {
+      "bytes": 32855,
+      "sha256": "5b36dbd79cdd00f76600e471c61157c10090952160d49c5a3d7e05840bda029a"
+    },
+    "merged_model/research_receipt.json": {
+      "bytes": 1039,
+      "sha256": "4c5a6ac2a56d0b0b0947a5eecd71c503b6ed685f126b4fb8d2ca98a39b2edd72"
+    },
+    "merged_model/special_tokens_map.json": {
+      "bytes": 613,
+      "sha256": "76862e765266b85aa9459767e33cbaf13970f327a0e88d1c65846c2ddd3a1ecd"
+    },
+    "merged_model/tokenizer.json": {
+      "bytes": 11422654,
+      "sha256": "aeb13307a71acd8fe81861d94ad54ab689df773318809eed3cbe794b4492dae4"
+    },
+    "merged_model/tokenizer_config.json": {
+      "bytes": 5404,
+      "sha256": "443bfa629eb16387a12edbf92a76f6a6f10b2af3b53d87ba1550adfcf45f7fa0"
+    },
+    "merged_model/vocab.json": {
+      "bytes": 2776833,
+      "sha256": "ca10d7e9fb3ed18575dd1e277a2579c16d108e32f27439684afa0e10b1440910"
+    }
+  },
+  "system_instruction_sha256": "7476b8a1e3f8af35c2abe40fe85c07b6e647f9d9188289e879426eb9c67d7834",
+  "script_sha256": "777ce75e3ef3f4186cb16d8c82e8ed373493a0f132ab690bcba61130f08cd79d",
+  "public_prompts_sha256": "7f6359bbe8b386a089a435e599ee34ab6eb4d3a031430341d280ab6ddc08449a",
+  "binary_sha256": {
+    "llama-quantize": "c78f04c68612a91d99974e2740a282b6ad2b2a80b60f1c6156d77b9b87345864",
+    "llama-completion": "c887ebdc62c8db815d00e6c4ed1012c51192b91841e743fe16e03748f523db8e"
+  },
+  "artifacts": {
+    "f16_control": {
+      "filename": "EdgeIMCI-4B-alpha-second-F16.gguf",
+      "bytes": 8051284768,
+      "sha256": "2ffd882dc415f8c1356b2cde1b010a2218a52dfdc1b6ae8b026f23fbc9f74f0e"
+    },
+    "q4_k_m": {
+      "filename": "EdgeIMCI-4B-alpha-second-Q4_K_M.gguf",
+      "bytes": 2497280288,
+      "sha256": "a4a8c5bb2d9f3401defa1cb8ea007812d5916c0242d8306a1c7ed6322d550919"
+    }
+  },
+  "smoke_passed": true,
+  "smoke_comparison": "F16 GGUF versus Q4_K_M; not a Transformers equivalence or full validation run",
+  "finished_at_unix": 1790090699.0164104
+}

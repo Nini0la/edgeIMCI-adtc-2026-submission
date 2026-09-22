@@ -1,0 +1,146 @@
+[
+  {
+    "artifact": "f16_control",
+    "prompt_id": "edgeimci_public_001",
+    "raw_response": "{\"danger_signs\":{\"convulsing_now\":true,\"had_convulsions\":false,\"lethargic_or_unconscious\":false,\"unable_to_drink_or_breastfeed\":false,\"vomits_everything\":null},\"diarrhoea\":null,\"ear\":null,\"fever\":null,\"patient_facts\":{\"age_months\":null,\"has_cough_or_difficult_breathing\":null,\"has_diarrhoea\":null,\"has_ear_problem\":null,\"has_fever\":null},\"respiratory\":null} [end of text]\n\n\n",
+    "exact_target": true,
+    "state_match": true,
+    "parsed_target": {
+      "danger_signs": {
+        "convulsing_now": true,
+        "had_convulsions": false,
+        "lethargic_or_unconscious": false,
+        "unable_to_drink_or_breastfeed": false,
+        "vomits_everything": null
+      },
+      "diarrhoea": null,
+      "ear": null,
+      "fever": null,
+      "patient_facts": {
+        "age_months": null,
+        "has_cough_or_difficult_breathing": null,
+        "has_diarrhoea": null,
+        "has_ear_problem": null,
+        "has_fever": null
+      },
+      "respiratory": null
+    },
+    "schema_valid": true,
+    "state": "URGENT_INCOMPLETE",
+    "error": null
+  },
+  {
+    "artifact": "f16_control",
+    "prompt_id": "edgeimci_public_002",
+    "raw_response": "{\"danger_signs\":{\"convulsing_now\":false,\"had_convulsions\":false,\"lethargic_or_unconscious\":false,\"unable_to_drink_or_breastfeed\":false,\"vomits_everything\":false},\"diarrhoea\":{\"blood_in_stool\":false,\"cholera_in_area\":null,\"dehydration\":{\"drinking_status\":\"NORMAL\",\"restless_or_irritable\":false,\"skin_pinch\":\"NORMAL\",\"sunken_eyes\":false},\"duration_days\":3,\"post_rehydration\":null,\"rehydration_stage\":null},\"ear\":null,\"fever\":null,\"patient_facts\":{\"age_months\":18,\"has_cough_or_difficult_breathing\":false,\"has_diarrhoea\":true,\"has_ear_problem\":false,\"has_fever\":false},\"respiratory\":null} [end of text]\n\n\n",
+    "exact_target": true,
+    "state_match": true,
+    "parsed_target": {
+      "danger_signs": {
+        "convulsing_now": false,
+        "had_convulsions": false,
+        "lethargic_or_unconscious": false,
+        "unable_to_drink_or_breastfeed": false,
+        "vomits_everything": false
+      },
+      "diarrhoea": {
+        "blood_in_stool": false,
+        "cholera_in_area": null,
+        "dehydration": {
+          "drinking_status": "NORMAL",
+          "restless_or_irritable": false,
+          "skin_pinch": "NORMAL",
+          "sunken_eyes": false
+        },
+        "duration_days": 3,
+        "post_rehydration": null,
+        "rehydration_stage": null
+      },
+      "ear": null,
+      "fever": null,
+      "patient_facts": {
+        "age_months": 18,
+        "has_cough_or_difficult_breathing": false,
+        "has_diarrhoea": true,
+        "has_ear_problem": false,
+        "has_fever": false
+      },
+      "respiratory": null
+    },
+    "schema_valid": true,
+    "state": "COMPLETE",
+    "error": null
+  },
+  {
+    "artifact": "q4_k_m",
+    "prompt_id": "edgeimci_public_001",
+    "raw_response": "{\"danger_signs\":{\"convulsing_now\":true,\"had_convulsions\":false,\"lethargic_or_unconscious\":false,\"unable_to_drink_or_breastfeed\":false,\"vomits_everything\":null},\"diarrhoea\":null,\"ear\":null,\"fever\":null,\"patient_facts\":{\"age_months\":null,\"has_cough_or_difficult_breathing\":null,\"has_diarrhoea\":null,\"has_ear_problem\":null,\"has_fever\":null},\"respiratory\":null} [end of text]\n\n\n",
+    "exact_target": true,
+    "state_match": true,
+    "parsed_target": {
+      "danger_signs": {
+        "convulsing_now": true,
+        "had_convulsions": false,
+        "lethargic_or_unconscious": false,
+        "unable_to_drink_or_breastfeed": false,
+        "vomits_everything": null
+      },
+      "diarrhoea": null,
+      "ear": null,
+      "fever": null,
+      "patient_facts": {
+        "age_months": null,
+        "has_cough_or_difficult_breathing": null,
+        "has_diarrhoea": null,
+        "has_ear_problem": null,
+        "has_fever": null
+      },
+      "respiratory": null
+    },
+    "schema_valid": true,
+    "state": "URGENT_INCOMPLETE",
+    "error": null
+  },
+  {
+    "artifact": "q4_k_m",
+    "prompt_id": "edgeimci_public_002",
+    "raw_response": "{\"danger_signs\":{\"convulsing_now\":false,\"had_convulsions\":false,\"lethargic_or_unconscious\":false,\"unable_to_drink_or_breastfeed\":false,\"vomits_everything\":false},\"diarrhoea\":{\"blood_in_stool\":false,\"cholera_in_area\":null,\"dehydration\":{\"drinking_status\":\"NORMAL\",\"restless_or_irritable\":false,\"skin_pinch\":\"NORMAL\",\"sunken_eyes\":false},\"duration_days\":3,\"post_rehydration\":null,\"rehydration_stage\":null},\"ear\":null,\"fever\":null,\"patient_facts\":{\"age_months\":18,\"has_cough_or_difficult_breathing\":false,\"has_diarrhoea\":true,\"has_ear_problem\":false,\"has_fever\":false},\"respiratory\":null} [end of text]\n\n\n",
+    "exact_target": true,
+    "state_match": true,
+    "parsed_target": {
+      "danger_signs": {
+        "convulsing_now": false,
+        "had_convulsions": false,
+        "lethargic_or_unconscious": false,
+        "unable_to_drink_or_breastfeed": false,
+        "vomits_everything": false
+      },
+      "diarrhoea": {
+        "blood_in_stool": false,
+        "cholera_in_area": null,
+        "dehydration": {
+          "drinking_status": "NORMAL",
+          "restless_or_irritable": false,
+          "skin_pinch": "NORMAL",
+          "sunken_eyes": false
+        },
+        "duration_days": 3,
+        "post_rehydration": null,
+        "rehydration_stage": null
+      },
+      "ear": null,
+      "fever": null,
+      "patient_facts": {
+        "age_months": 18,
+        "has_cough_or_difficult_breathing": false,
+        "has_diarrhoea": true,
+        "has_ear_problem": false,
+        "has_fever": false
+      },
+      "respiratory": null
+    },
+    "schema_valid": true,
+    "state": "COMPLETE",
+    "error": null
+  }
+]

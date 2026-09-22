@@ -3,6 +3,9 @@ model/*.gguf
 model/*.bin
 model/*.safetensors
 
+# Original adapter is publicly hosted at an immutable revision; fetch on demand.
+provenance/4B-alpha-second/adapter/
+
 # macOS
 .DS_Store
 

@@ -15,9 +15,13 @@
     "description": "Offline structured extraction of primary-healthcare sick-child findings for constrained-connectivity African settings."
   },
   "provenance": {
-    "base_model_source": "huggingface:Qwen/Qwen3-0.6B",
-    "base_model_commit_sha": "c1899de289a04d12100db370d81485cdf75e47ca",
-    "fine_tuning_method": "lora"
+    "base_model_source": "huggingface:Qwen/Qwen3-4B",
+    "base_model_commit_sha": "1cfa9a7208912126459214e8b04321603b3df60c",
+    "fine_tuning_method": "lora",
+    "training_datasets": ["EdgeIMCI beta0_1k_multitask_enriched_2258_v1 (project-authored synthetic multitask TRAIN release; public dataset Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1 at da8daa8efbd583d92000920366085f6dd00c3fb2)"],
+    "dataset_repository": "https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1",
+    "dataset_commit_sha": "da8daa8efbd583d92000920366085f6dd00c3fb2",
+    "dataset_manifest_sha256": "0820f092ed585a46182e075477f9246917629061b03a3f57d92cb1087e303706"
   },
   "test_prompts": [
     {
@@ -30,13 +34,13 @@
     }
   ],
   "model": {
-    "name": "EdgeIMCI-Qwen3-0.6B-SFT-Q8_0",
+    "name": "EdgeIMCI-4B-alpha-second-Q4_K_M",
     "runtime": "llama.cpp",
-    "quantization": "GGUF Q8_0",
-    "parameters_estimate": "0.6B",
+    "quantization": "GGUF Q4_K_M",
+    "parameters_estimate": "4B",
     "packaging": "binary_bundle"
   },
   "_runtime": {
-    "model_path": "model/qwen3-0.6b-sft-selected-seed-20260824-q8_0.gguf"
+    "model_path": "model/EdgeIMCI-4B-alpha-second-Q4_K_M.gguf"
   }
 }

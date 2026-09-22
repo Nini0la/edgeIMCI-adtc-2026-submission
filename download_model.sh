@@ -18,8 +18,8 @@ MODEL_DIR="$HERE/model"
 # ⚠️ Edit ONLY the two values below (MODEL_FILE, MODEL_URL). Do not change
 # anything else in this file — see "download_model.sh" in README.md for what
 # the evaluator requires.
-MODEL_FILE="$MODEL_DIR/qwen3-0.6b-sft-selected-seed-20260824-q8_0.gguf"
-MODEL_URL="https://huggingface.co/Nini0la/edgeimci-qwen3-0.6b-sft-gguf/resolve/6af69949d91fbe2628d88a6ed7df62a944cd71a3/qwen3-0.6b-sft-selected-seed-20260824-q8_0.gguf"
+MODEL_FILE="$MODEL_DIR/EdgeIMCI-4B-alpha-second-Q4_K_M.gguf"
+MODEL_URL="https://huggingface.co/Nini0la/edgeimci-4b-alpha-second-gguf/resolve/1aeace1a2eb6e46e5e93d6536cbd1c19db982e53/EdgeIMCI-4B-alpha-second-Q4_K_M.gguf"
 
 mkdir -p "$MODEL_DIR"
 

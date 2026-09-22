@@ -1,0 +1,48 @@
+{
+  "schema_version": "1.0.0",
+  "release_id": "beta0_1k_multitask_enriched_2258_v1",
+  "selected_model": "4B-alpha-second",
+  "repository": {
+    "repo_id": "Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1",
+    "url": "https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1",
+    "revision": "da8daa8efbd583d92000920366085f6dd00c3fb2",
+    "data_revision": "fac66e746466130604ea3eaa37c6e38fc1dd0b13",
+    "public": true,
+    "anonymous_load_verified": true,
+    "verified_at": "2026-09-22"
+  },
+  "review": {
+    "license": "other",
+    "general_redistribution_license_asserted": false,
+    "source_license_review": "PENDING",
+    "clinical_review": "AI_CURATED_CLINICAL_REVIEW_PENDING",
+    "clinical_use_authorized": false,
+    "promotion_authorized": false
+  },
+  "frozen_training_release": {
+    "manifest_sha256": "0820f092ed585a46182e075477f9246917629061b03a3f57d92cb1087e303706",
+    "train_rows": 2258,
+    "train_sha256": "95945aa2e451f67348f4600e57c17e4a4acd278f285f2f1fbea9df4b633805f7",
+    "validation_rows": 139,
+    "validation_sha256": "76dc64d51f52a8ffbb7a10c5fd10a3fff770a7ee6847cf7fb62c9a00568a58c5",
+    "test_partition_used": false
+  },
+  "publication_view": {
+    "train": {
+      "rows": 2258,
+      "jsonl_sha256": "475934f7def41d3825f4544f7bc911588c58715a7df8946d4337607eb2cf8c78",
+      "parquet_sha256": "f9334b24e9f440cfd21e85d7b3dcb50a404fe22390708e8ddf3ccb0320aaf670"
+    },
+    "validation": {
+      "rows": 139,
+      "jsonl_sha256": "76dc64d51f52a8ffbb7a10c5fd10a3fff770a7ee6847cf7fb62c9a00568a58c5",
+      "parquet_sha256": "e66f04506b46ac09483c80adda95f557b8862ed69db567b46d57ca9f79327ff2",
+      "byte_identical_to_frozen_training_release": true
+    },
+    "card_sha256": "89df8c378283e8e7a66772841f947150ceaf45f7016469b74aff0072a287ceff"
+  },
+  "normalization": {
+    "content_change": "NONE_TO_USER_OR_ASSISTANT_MESSAGE_TEXT",
+    "description": "The public TRAIN serialization is reconstructed from the hash-verified 1,831-row baseline and 427-record enrichment source. It does not claim byte identity to the unavailable final internal TRAIN serialization."
+  }
+}

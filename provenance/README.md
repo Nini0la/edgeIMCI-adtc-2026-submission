@@ -1,50 +1,56 @@
 # Gate 2 Model Provenance Handoff
 
-**Status:** Incomplete. The two Beta0-1K candidate runs below now have documented dataset, recipe, run, and validation records. Neither candidate is the GGUF currently declared in `metadata.json`, and neither is authorized for promotion, deployment, or clinical use.
+**Status: incomplete.** The selected submission/profiling candidate is **4B-alpha-second**, the enriched 2,258-row run. The owner authorized public hosting, submission-template updates, and Ubuntu profiling. This is distinct from clinical approval; original research-only receipts remain unchanged, and clinical use is not authorized.
 
-## Current Submission Artifact
-
-The currently packaged artifact is still the 0.6B GGUF. Its original training dataset, complete training logs, adapter, and merge path have not yet been linked to this repository.
+## Selected Candidate
 
 | Field | Value |
 |---|---|
-| Base model source | `huggingface:Qwen/Qwen3-0.6B` |
-| Base model commit | `c1899de289a04d12100db370d81485cdf75e47ca` |
-| Fine-tuning method | LoRA structured-extraction SFT, merged after training |
-| Training summary | 3 epochs, learning rate 0.0002, seed 20260824 |
-| Final GGUF | `qwen3-0.6b-sft-selected-seed-20260824-q8_0.gguf` |
-| Final GGUF SHA-256 | `26d11ee99801455fcef011a3e5ff124b2ff1cce943ed06cbe611c8fbcc42aca2` |
-| Hosted artifact revision | `6af69949d91fbe2628d88a6ed7df62a944cd71a3` |
-| `llama.cpp` conversion revision | `aedb2a5e9ca3d4064148bbb919e0ddc0c1b70ab3` |
-| Quantization | GGUF Q8_0 |
+| Evidence packet | [`4B-alpha-second/`](4B-alpha-second/README.md) |
+| Run | `multitask2258-20260922-v1--qwen4-e2-lr3-s20260824` |
+| Base model | `Qwen/Qwen3-4B`, Apache-2.0 |
+| Base/tokenizer revision | `1cfa9a7208912126459214e8b04321603b3df60c` |
+| Recipe | BF16 LoRA; 2 epochs, LR 0.0003, seed 20260824, rank 16, alpha 32, dropout 0.05 |
+| Final GGUF | `EdgeIMCI-4B-alpha-second-Q4_K_M.gguf`, 2,497,280,288 bytes |
+| Final SHA-256 | `a4a8c5bb2d9f3401defa1cb8ea007812d5916c0242d8306a1c7ed6322d550919` |
+| Public hosting destination | `Nini0la/edgeimci-4b-alpha-second-gguf` |
+| Hosted pin | `1aeace1a2eb6e46e5e93d6536cbd1c19db982e53`; see [`artifact.json`](4B-alpha-second/artifact.json) |
 
-Do not use the Beta0-1K candidate records to fill the current artifact's `metadata.json` provenance. That would incorrectly attribute the 0.6B GGUF to a different base model and training campaign.
+## Evidence Inventory
 
-## Shortlisted Candidate Runs
+- [`training_config.json`](4B-alpha-second/training_config.json): original LoRA/optimization/tokenization settings and software pins.
+- [`remote_run_manifest.json`](4B-alpha-second/remote_run_manifest.json): original successful source receipt, checkpoint history, dataset hashes, and terminal evaluation.
+- [`trainer_log_history.json`](4B-alpha-second/trainer_log_history.json): retained training and loss logs.
+- [`artifact_hashes.json`](4B-alpha-second/artifact_hashes.json): original adapter and merged-checkpoint inventory, not the weight files themselves.
+- [`dataset_info.md`](4B-alpha-second/dataset_info.md): exact enriched release identity, 2,258 TRAIN / 139 VALIDATION records, hashes, split policy, sources and disclosure gaps.
+- [`merge_quantization.md`](4B-alpha-second/merge_quantization.md) and [`conversion_manifest.json`](4B-alpha-second/conversion_manifest.json): recorded merge policy, verified source files, F16/Q4 conversion commands and hashes; historical merge implementation is not recovered here.
+- [`smoke_results.json`](4B-alpha-second/smoke_results.json): F16 and Q4 each pass 2/2 public prompts for exact parsed JSON and deterministic state under the recorded wrapper.
+- [`before_after.md`](4B-alpha-second/before_after.md): terminal fine-tuned results with an explicitly missing matched-base comparison.
 
-These runs were explicitly shortlisted for provenance review. Both completed successfully in campaign `multitask1831-20260922-v1`.
+The original adapter is public in the HF repository's `adapter/` directory at the same immutable revision. [`artifact.json`](4B-alpha-second/artifact.json) binds its exact hashes and sizes; `python3 provenance/4B-alpha-second/download_adapter.py` fetches and verifies the weights/config into an ignored local directory. Git retains provenance and hosted references, not vendored weights. Do not equate an inventory of original files with independently downloadable training inputs or a completed Gate 2 packet.
 
-| Candidate | Base model | Epochs | Learning rate | Seed | Status |
-|---|---|---:|---:|---:|---|
-| [`qwen17-e3-lr1-s3407`](qwen17-e3-lr1-s3407.json) | `Qwen/Qwen3-1.7B` | 3 | 0.0001 | 3407 | Research candidate only |
-| [`qwen4-e2-lr3-s20260824`](qwen4-e2-lr3-s20260824.json) | `Qwen/Qwen3-4B` | 2 | 0.0003 | 20260824 | Research candidate only |
+## Remaining Work
 
-Shared evidence:
+- Confirm organizer acceptance of public immutable adapter hosting plus the fetch helper rather than large weight blobs in Git.
+- Complete consolidated dataset/source-license review. The public message-normalized release is pinned at [Hugging Face revision `da8daa8efbd583d92000920366085f6dd00c3fb2`](https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1/tree/da8daa8efbd583d92000920366085f6dd00c3fb2), but its `license: other` declaration does not establish redistribution rights.
+- Complete matched pinned-base-versus-fine-tuned evaluation with identical authorized held-out inputs and evaluation settings; do not use the sealed TEST set.
+- Run actual target-laptop Ubuntu profiling on the exact selected GGUF and retain the complete scoreable ADTC evidence. No old performance figures transfer to 4B.
+- Complete independent clinical/source-governance review before any clinical-use claim. Hosting/profiling selection is not that approval.
 
-- [`dataset_info.md`](dataset_info.md): exact dataset identity, counts, hashes, split policy, and authorization boundary.
-- [`training_recipe.md`](training_recipe.md): shared LoRA recipe and the parameters that differ between candidates.
-- [`evaluation.md`](evaluation.md): terminal validation comparison and limitations.
+The GUI backend, checksum, and prompt remain pinned to 0.6B. Runtime migration is not part of this selection: legacy `setup.sh`, `run.sh`, and integration verification are not compatible with 4B. Official artifact profiling is independent of the Node GUI.
 
-The candidate records deliberately omit laptop inference profiling, GGUF conversion, quantization, and runtime measurements. Those facts must be produced for the exact final bytes after a candidate is selected and packaged.
 
-## Remaining Submission Work
+## Historical 0.6B Artifact
 
-- Decide which candidate, if either, replaces the current 0.6B submission artifact.
-- Record an explicit promotion decision after the pending independent clinical and source-governance review.
-- Export and preserve the chosen merged checkpoint or adapter from the recorded artifact manifest.
-- Produce reproducible merge, GGUF conversion, and quantization commands for the chosen candidate.
-- Host the exact GGUF at an immutable public revision and record its byte count and SHA-256.
-- Update `metadata.json`, `MODEL_CARD.md`, `download_model.sh`, runtime constants, and tests together.
-- Run public-prompt validation and laptop profiling against those exact final bytes.
+This is the old submission model and the still-pinned GUI integration, **not the selected 4B profiling artifact**. Its original training dataset, complete logs, adapter, and merge path have not been linked here. Do not fill those gaps with either later campaign's evidence.
 
-The current `metadata.json` still lacks `provenance.training_datasets`. It should remain unresolved rather than being populated with the Beta0-1K release until the submitted GGUF is actually derived from one of these candidate runs.
+| Field | Historical value |
+|---|---|
+| Base | `Qwen/Qwen3-0.6B` at `c1899de289a04d12100db370d81485cdf75e47ca` |
+| Recipe | LoRA SFT, merged; 3 epochs, LR 0.0002, seed 20260824 |
+| GGUF | `qwen3-0.6b-sft-selected-seed-20260824-q8_0.gguf`, Q8_0 |
+| SHA-256 | `26d11ee99801455fcef011a3e5ff124b2ff1cce943ed06cbe611c8fbcc42aca2` |
+| Hosting | `Nini0la/edgeimci-qwen3-0.6b-sft-gguf` at `6af69949d91fbe2628d88a6ed7df62a944cd71a3` |
+| Conversion revision | `aedb2a5e9ca3d4064148bbb919e0ddc0c1b70ab3` |
+
+Its benchmark figures and six clinical-threshold failures remain historical, as labeled in [`REPORT.md`](../REPORT.md), and are not claims about the new 4B model.

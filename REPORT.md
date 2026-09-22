@@ -1,68 +1,91 @@
 # Technical Report - EdgeIMCI Offline Structured Extraction
 
 **Team ID:** edge-imci
+
 **Domain:** healthcare_medical
-**Model:** EdgeIMCI-Qwen3-0.6B-SFT-Q8_0
 
----
+**Selected model:** EdgeIMCI-4B-alpha-second-Q4_K_M
 
-## Problem
+## Problem and Scope
 
-EdgeIMCI converts primary-healthcare worker descriptions of sick-child findings into a bounded JSON encounter record. The target setting is frontline care where connectivity, cloud budgets, and access to high-end computing are limited. Local inference keeps the extraction path available offline and avoids sending encounter text to an external inference service.
+EdgeIMCI converts primary-healthcare worker descriptions of sick-child findings into bounded encounter JSON for validation and deterministic IMCI logic. Local inference targets settings with limited connectivity and computing resources without sending encounter text to an external inference service. The enriched training also targets bounded free-form behavior, which is not established by the extraction-only evidence below.
 
-This model is not a diagnostic system and is not authorized for production clinical use. Its output is recoverable encounter state for a constrained downstream workflow. The selected research checkpoint passed JSON/schema validity but retained documented clinical-threshold failures in the project evaluation.
+The owner selected 4B-alpha-second for public hosting, submission-template updates, and Ubuntu profiling. That decision is distinct from independent clinical approval. This is not a diagnostic system, production medical device, or authorization for autonomous clinical use. The existing GUI backend remains checksum/prompt-pinned to 0.6B and is not compatible with the selected 4B artifact; official standalone profiling does not require the Node GUI.
 
----
+## Model Provenance (Gate 2)
 
-## Design Decisions
-
-- **Runtime:** CPU-only `llama.cpp`, converted and quantized at commit `aedb2a5e9ca3d4064148bbb919e0ddc0c1b70ab3`.
-- **Quantization:** Q8_0 was selected because it preserved the tested JSON output exactly and scored 0.64 on the profiler's 50-sample ARC-Easy check, compared with 0.50 for Q4_K_M.
-- **Alternatives:** BF16, Q8_0, and Q4_K_M all passed the retained JSON parse, schema, and exact-output smoke check. Q4_K_M was faster and smaller, but its observed accuracy reduction outweighed those gains because accuracy is half of the ADTC score.
-
----
-## Model Provenance
-
-- **Base model source:** `huggingface:Qwen/Qwen3-0.6B`
-- **Base model commit SHA:** `c1899de289a04d12100db370d81485cdf75e47ca`
-- **Fine-tuning method:** LoRA structured-extraction SFT, merged after training; 3 epochs, learning rate 0.0002, seed 20260824.
-- **Training datasets:** Pending source records. Dataset names, source URLs, licenses, split policy, and checksums must be added before Gate 2 submission.
-- **Final artifact:** `qwen3-0.6b-sft-selected-seed-20260824-q8_0.gguf`, 639,446,752 bytes (609.82 MiB), SHA-256 `26d11ee99801455fcef011a3e5ff124b2ff1cce943ed06cbe611c8fbcc42aca2`.
-- **Artifact hosting:** Hugging Face repository `Nini0la/edgeimci-qwen3-0.6b-sft-gguf`, model commit `6af69949d91fbe2628d88a6ed7df62a944cd71a3`.
-
-The base-model commit identifies the upstream checkpoint used to start training. The artifact-hosting commit identifies the immutable repository revision from which evaluators download the final GGUF. The profiler records the submission repository commit separately; that value does not belong in `metadata.json`.
-
-The current [`provenance/`](provenance/) directory is an explicit handoff checklist, not a completed Gate 2 evidence bundle. Before Gate 2 submission it must be populated with the LoRA adapter or reproducible training scripts, training and loss logs, dataset information and checksums, merge and quantization instructions, and a base-versus-fine-tuned comparison.
-
-### Before/After Fine-Tuning Evidence
-
-Pending source evidence. Add a reproducible comparison of the pinned base checkpoint and the final fine-tuned checkpoint on a held-out structured-extraction set. Report the dataset split, prompts, decoding settings, schema-validity rate, exact-match result, and representative outputs.
-
-### New Candidate Evidence
-
-Two later research runs, `qwen17-e3-lr1-s3407` and `qwen4-e2-lr3-s20260824`, are documented under [`provenance/`](provenance/README.md). They share the same 1,831-row multitask TRAIN release, 139-row VALIDATION release, LoRA structure, optimizer schedule, tokenization policy, and software pins. They differ in base model, epochs, learning rate, seed, checkpoint history, and output artifacts.
-
-These records do not replace the currently packaged 0.6B GGUF and are not a before/after evaluation of that artifact. Both candidate receipts remain research-only, pending independent clinical and source-governance review, with no promotion or deployment authorization. Laptop profiling and GGUF packaging are intentionally deferred until one candidate is selected.
-
----
-
-## Constraints
-
-- Target profile: an 8 GB-class laptop with integrated graphics and CPU inference.
-- Development device: ASUS laptop, Ubuntu 22.04.5 LTS, Intel Core i5-4210U (2 cores/4 threads), 11 GiB installed RAM, and no swap.
-- No GPU offload was used for the retained `llama-bench` comparison.
-- The model and runtime operate offline after the one-time model download.
-- The GGUF is approximately 610 MB, leaving substantial headroom under the challenge memory limit.
-
----
-
-## Benchmarks
-
-| Metric | Value |
+| Item | Recorded evidence |
 |---|---|
-| Machine | ASUS / Intel Core i5-4210U / Ubuntu 22.04.5 |
+| Base model source | [Qwen/Qwen3-4B](https://huggingface.co/Qwen/Qwen3-4B/tree/1cfa9a7208912126459214e8b04321603b3df60c), Apache-2.0 |
+| Base and tokenizer revision | `1cfa9a7208912126459214e8b04321603b3df60c` |
+| Run | `multitask2258-20260922-v1--qwen4-e2-lr3-s20260824` |
+| Method | BF16 LoRA SFT, not QLoRA; terminal epoch-2 export, adapter merged |
+| Recipe | 2 epochs; LR 0.0003; seed 20260824; rank 16; alpha 32; dropout 0.05 |
+| Optimization | Effective batch 16; cosine schedule; warmup 0.05; weight decay 0.01; assistant-only loss |
+| Tokenization | Thinking disabled; maximum length 3072; no truncation |
+| Final file | `EdgeIMCI-4B-alpha-second-Q4_K_M.gguf`, 2,497,280,288 bytes |
+| Final SHA-256 | `a4a8c5bb2d9f3401defa1cb8ea007812d5916c0242d8306a1c7ed6322d550919` |
+| Hosting | `Nini0la/edgeimci-4b-alpha-second-gguf` at `1aeace1a2eb6e46e5e93d6536cbd1c19db982e53`; see [`artifact.json`](provenance/4B-alpha-second/artifact.json) |
+
+The original [`training_config.json`](provenance/4B-alpha-second/training_config.json), [`trainer_log_history.json`](provenance/4B-alpha-second/trainer_log_history.json), [`remote_run_manifest.json`](provenance/4B-alpha-second/remote_run_manifest.json), and [`artifact_hashes.json`](provenance/4B-alpha-second/artifact_hashes.json) bind the recipe, run, and source outputs. Epoch validation loss was 0.02655767 then 0.01106639; lower loss alone does not establish behavioral improvement. Original receipts retain their research-only authorization flags; subsequent owner selection does not rewrite them or grant clinical approval.
+
+The original LoRA adapter is public in the HF repository's `adapter/` directory at the same immutable pin. Anonymous hosting metadata verifies the weight hash and size; the adapter configuration's bytes also match its original checksum. `python3 provenance/4B-alpha-second/download_adapter.py` retrieves and verifies both files. Adapter weights are not vendored in Git, and organizer acceptance of this hosted arrangement should be confirmed. The base revision, final hosted artifact revision, and submission-repository revision are different identities. The profiler records the latter; do not add `reproducibility.git_commit_sha` to `metadata.json`.
+
+### Dataset
+
+`beta0_1k_multitask_enriched_2258_v1` is project-authored synthetic multitask data from the EdgeIMCI research workspace, extending the 1,831-row baseline by 427 examples. It covers extraction, free-form assessment language, project self-knowledge, scope/safety, and proposition/negation. The clinical source background is WHO's *IMCI Chart Booklet* (March 2014); the examples are not WHO-authored and the booklet is not redistributed.
+
+The public package is [Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1](https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1/tree/da8daa8efbd583d92000920366085f6dd00c3fb2), pinned to immutable revision `da8daa8efbd583d92000920366085f6dd00c3fb2`. Anonymous `datasets` loading returned exactly 2,258 TRAIN and 139 VALIDATION rows. The release preserves the frozen partitions without reshuffling, resplitting, or TEST data.
+
+| Partition/artifact | Rows | Frozen training SHA-256 | Public package SHA-256 |
+|---|---:|---|---|
+| TRAIN JSONL | 2,258 | `95945aa2e451f67348f4600e57c17e4a4acd278f285f2f1fbea9df4b633805f7` | `475934f7def41d3825f4544f7bc911588c58715a7df8946d4337607eb2cf8c78` |
+| TRAIN Parquet | 2,258 | Not applicable | `f9334b24e9f440cfd21e85d7b3dcb50a404fe22390708e8ddf3ccb0320aaf670` |
+| VALIDATION JSONL | 139 | `76dc64d51f52a8ffbb7a10c5fd10a3fff770a7ee6847cf7fb62c9a00568a58c5` | `76dc64d51f52a8ffbb7a10c5fd10a3fff770a7ee6847cf7fb62c9a00568a58c5` |
+| VALIDATION Parquet | 139 | Not applicable | `e66f04506b46ac09483c80adda95f557b8862ed69db567b46d57ca9f79327ff2` |
+| Source manifest | Not applicable | `0820f092ed585a46182e075477f9246917629061b03a3f57d92cb1087e303706` | Included as frozen identity |
+
+The final internal TRAIN file was not retained in reachable repository state, so the public JSONL is a deterministic message-normalized reconstruction from the hash-verified 1,831-row baseline and 427-record enrichment source; it does not claim byte identity to the frozen TRAIN serialization. VALIDATION is byte-identical. The public repository uses `license: other` and asserts no general redistribution license while source-rights review remains incomplete. Independent clinical review is also pending. See [`dataset_info.md`](provenance/4B-alpha-second/dataset_info.md) and [`publication.json`](provenance/dataset/publication.json).
+
+### Before/After Fine-Tuning
+
+This table reports the retained terminal checkpoint evaluation, not a full evaluation of the quantized GGUF. A matched untouched-base run is missing; no improvement claim can be calculated.
+
+| VALIDATION metric | Pinned base before SFT | Fine-tuned terminal checkpoint |
+|---|---|---:|
+| JSON valid | Pending matched evaluation | 139/139 |
+| Strict schema valid | Pending matched evaluation | 135/139 |
+| Whole-prediction exact | Pending matched evaluation | 131/139 |
+| Routing correct | Pending matched evaluation | 132/139 |
+| False rejects | Pending matched evaluation | 2/119 |
+| Unsafe engine admissions | Pending matched evaluation | 1/20 |
+| Urgent misses | Pending matched evaluation | 2/4 |
+
+The small routing denominators and pending clinical gold review limit interpretation. Completing [`before_after.md`](provenance/4B-alpha-second/before_after.md) requires identical authorized held-out inputs, prompts, chat-template policy, decoding and scoring for the pinned base and fine-tuned checkpoint, with retained raw outputs. The F16-versus-Q4 smoke does not replace this study. Do not use the sealed TEST set for this work.
+
+### Merge and Quantization
+
+The recipe records post-training adapter merging and the original source inventory binds the exported merged checkpoint. The historical merge implementation is not recovered in this packet. Conversion verified all 14 merged-model files against that inventory, then used `llama.cpp` commit `aedb2a5e9ca3d4064148bbb919e0ddc0c1b70ab3` to create an F16 control and Q4_K_M, as recorded in [`merge_quantization.md`](provenance/4B-alpha-second/merge_quantization.md) and [`conversion_manifest.json`](provenance/4B-alpha-second/conversion_manifest.json).
+
+Q4_K_M provides a smaller candidate for laptop profiling (2,497,280,288 bytes versus 8,051,284,768 for F16). Both passed **2/2 public prompts**, with exact parsed JSON targets and matching `URGENT_INCOMPLETE` / `COMPLETE` states. The smoke used the extraction-v2 wrapper, thinking disabled, temperature 0, seed 0, context 3072, and at most 1200 generated tokens on Modal CPU. [`smoke_results.json`](provenance/4B-alpha-second/smoke_results.json) retains outputs. This is not full quantization-drift validation, Transformers equivalence, raw free-form testing, or target-laptop profiling.
+
+**Gate 2 is incomplete:** organizer acceptance of hosted adapter delivery, consolidated dataset/source-license review, matched base-before/after evidence, and independent clinical review remain unresolved.
+
+## Target Profiling
+
+The target is an 8 GB-class laptop using CPU `llama.cpp`. Actual 4B-alpha-second Ubuntu laptop profiling is **pending**, including latency, throughput, RSS, thermals, accuracy and a complete scoreable ADTC report. Disk size alone does not establish runtime memory headroom. Use [`docs/PROFILING_RUNBOOK.md`](docs/PROFILING_RUNBOOK.md) and verify the exact GGUF separately with `python3 scripts/verify_model_artifact.py`. The official downloader retains its template logic; only `MODEL_FILE` and `MODEL_URL` changed.
+
+## Historical Benchmarks: Different Artifact
+
+**HISTORICAL DIFFERENT ARTIFACT: every figure in this section belongs to the old 0.6B model, not 4B-alpha-second.** These participant measurements are retained for traceability, not carried forward as current scores.
+
+The old Q8_0 choice preserved the tested JSON output and scored 0.64 on a 50-sample ARC-Easy smoke, versus 0.50 for the old Q4_K_M. BF16, Q8_0 and Q4_K_M all passed the retained JSON/schema/exact-output smoke. The old Q4 was faster and smaller, but the observed accuracy difference favored Q8_0. None of that establishes the new 4B quantization tradeoff.
+
+| Historical 0.6B metric | Value |
+|---|---|
+| Machine | ASUS / Intel Core i5-4210U (2 cores/4 threads) / Ubuntu 22.04.5; 11 GiB RAM, no swap |
 | GGUF | Q8_0, 639,446,752 bytes, SHA-256 `26d11ee99801455fcef011a3e5ff124b2ff1cce943ed06cbe611c8fbcc42aca2` |
-| `llama.cpp` | `aedb2a5e9ca3d4064148bbb919e0ddc0c1b70ab3` (`b9637`) |
+| `llama.cpp` | `aedb2a5e9ca3d4064148bbb919e0ddc0c1b70ab3` (`b9637`); CPU-only, no GPU offload |
 | Prompt processing | 65.59 tokens/s (`llama-bench`, 512 tokens) |
 | Generation speed | 21.72 tokens/s (`llama-bench`, 128 tokens) |
 | ADTC quick-profile generation | 18.94 tokens/s |
@@ -76,4 +99,4 @@ These records do not replace the currently packaged 0.6B GGUF and are not a befo
 | Accuracy smoke | ARC-Easy acc_norm 0.64, 50 samples |
 | Structured extraction smoke | JSON parse PASS; schema PASS; exact match PASS |
 
-The ADTC quick participant profile used `--skip-accuracy`; accuracy was measured separately with the same pinned profiler and exact Q8_0 bytes. These are participant development measurements from the target ASUS, not organizer audit results. A complete participant report without `--skip-accuracy` remains a separate finalization step, and organizer audit measurements may differ.
+The old ADTC quick profile used `--skip-accuracy`; accuracy was measured separately with the same pinned profiler and exact old Q8_0 bytes. These are not organizer audit results or a complete final profile. The six previously documented clinical-threshold failures also belong to that old project evaluation, not the newly selected 4B fine-tune. The new checkpoint's observed errors are disclosed in its own validation table above.

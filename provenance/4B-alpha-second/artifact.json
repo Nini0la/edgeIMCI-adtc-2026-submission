@@ -1,0 +1,62 @@
+{
+  "schema_version": "1.0.0",
+  "display_name": "4B-alpha-second",
+  "status": "OWNER_SELECTED_FOR_PUBLIC_HOSTING_AND_SUBMISSION_PROFILING",
+  "training_run_id": "multitask2258-20260922-v1--qwen4-e2-lr3-s20260824",
+  "base_model_revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+  "source_artifact_inventory_sha256": "7f53d7a0eac4938194fdbc977f64bd0b17bbb8fc6131f3573fcc790edfbca1a0",
+  "gguf": {
+    "filename": "EdgeIMCI-4B-alpha-second-Q4_K_M.gguf",
+    "quantization": "Q4_K_M",
+    "parameters": 4022468096,
+    "bytes": 2497280288,
+    "sha256": "a4a8c5bb2d9f3401defa1cb8ea007812d5916c0242d8306a1c7ed6322d550919"
+  },
+  "hosting": {
+    "repo_id": "Nini0la/edgeimci-4b-alpha-second-gguf",
+    "revision": "1aeace1a2eb6e46e5e93d6536cbd1c19db982e53",
+    "url": "https://huggingface.co/Nini0la/edgeimci-4b-alpha-second-gguf/resolve/1aeace1a2eb6e46e5e93d6536cbd1c19db982e53/EdgeIMCI-4B-alpha-second-Q4_K_M.gguf",
+    "public": true,
+    "anonymous_lfs_identity_verified": true
+  },
+  "adapter": {
+    "revision": "1aeace1a2eb6e46e5e93d6536cbd1c19db982e53",
+    "files": {
+      "adapter_config.json": {
+        "bytes": 896,
+        "sha256": "653fc41cd2f68cb173e36f2507efe5fba97ed7d7017a91b217f64a3d87df1449",
+        "url": "https://huggingface.co/Nini0la/edgeimci-4b-alpha-second-gguf/resolve/1aeace1a2eb6e46e5e93d6536cbd1c19db982e53/adapter/adapter_config.json"
+      },
+      "adapter_model.safetensors": {
+        "bytes": 132187888,
+        "sha256": "2579a12f4731bc3749d1a56aaf4aaa67c7b9e69e2c244340add1fea4588e3655",
+        "url": "https://huggingface.co/Nini0la/edgeimci-4b-alpha-second-gguf/resolve/1aeace1a2eb6e46e5e93d6536cbd1c19db982e53/adapter/adapter_model.safetensors"
+      }
+    }
+  },
+  "dataset": {
+    "repo_id": "Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1",
+    "revision": "da8daa8efbd583d92000920366085f6dd00c3fb2",
+    "url": "https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1/tree/da8daa8efbd583d92000920366085f6dd00c3fb2",
+    "release_id": "beta0_1k_multitask_enriched_2258_v1",
+    "train_rows": 2258,
+    "validation_rows": 139,
+    "manifest_sha256": "0820f092ed585a46182e075477f9246917629061b03a3f57d92cb1087e303706",
+    "public": true,
+    "anonymous_load_verified": true,
+    "license": "other",
+    "source_license_review": "PENDING"
+  },
+  "verification": {
+    "source_merged_files_verified": 14,
+    "local_gguf_sha256_verified": true,
+    "f16_public_prompts_exact": "2/2",
+    "q4_public_prompts_exact": "2/2",
+    "target_laptop_profile": "PENDING",
+    "matched_base_before_after": "PENDING",
+    "dataset_public_release": "COMPLETE",
+    "dataset_source_license_review": "PENDING",
+    "clinical_review": "PENDING",
+    "clinical_use_authorized": false
+  }
+}
