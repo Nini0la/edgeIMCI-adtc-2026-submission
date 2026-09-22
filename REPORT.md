@@ -35,7 +35,7 @@ The original LoRA adapter is public in the HF repository's `adapter/` directory 
 
 `beta0_1k_multitask_enriched_2258_v1` is project-authored synthetic multitask data from the EdgeIMCI research workspace, extending the 1,831-row baseline by 427 examples. It covers extraction, free-form assessment language, project self-knowledge, scope/safety, and proposition/negation. The clinical source background is WHO's *IMCI Chart Booklet* (March 2014); the examples are not WHO-authored and the booklet is not redistributed.
 
-The public package is [Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1](https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1/tree/da8daa8efbd583d92000920366085f6dd00c3fb2), pinned to immutable revision `da8daa8efbd583d92000920366085f6dd00c3fb2`. Anonymous `datasets` loading returned exactly 2,258 TRAIN and 139 VALIDATION rows. The release preserves the frozen partitions without reshuffling, resplitting, or TEST data.
+The public package is [Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1](https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1/tree/da8daa8efbd583d92000920366085f6dd00c3fb2), pinned to immutable revision `da8daa8efbd583d92000920366085f6dd00c3fb2`. Anonymous `datasets` loading returned exactly 2,258 TRAIN and 139 VALIDATION rows, matching the source partition counts. TRAIN is a reconstruction, not the original training file; VALIDATION JSONL is byte-identical, and no TEST data is included.
 
 | Partition/artifact | Rows | Frozen training SHA-256 | Public package SHA-256 |
 |---|---:|---|---|

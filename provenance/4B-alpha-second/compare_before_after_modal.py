@@ -32,6 +32,8 @@ image = (
     modal.Image.from_registry("nvidia/cuda:12.8.1-cudnn-runtime-ubuntu22.04", add_python="3.11")
     .pip_install("torch==2.7.1", "transformers==4.57.1", "accelerate==1.9.0", "huggingface_hub==0.34.2")
     .add_local_file(ROOT / "acceptance/public_prompts.json", "/inputs/public_prompts.json", copy=True)
+    .add_local_file(ROOT / "provenance/4B-alpha-second/artifact_hashes.json", "/inputs/artifact_hashes.json", copy=True)
+    .add_local_file(ROOT / "scripts/verify_model_artifact.py", "/root/verify_model_artifact.py", copy=True)
 )
 app = modal.App("edge-imci-alpha-second-before-after-demo")
 
@@ -44,6 +46,7 @@ def compare():
     import torch
     import transformers
     from transformers import AutoModelForCausalLM, AutoTokenizer, GenerationConfig
+    from verify_model_artifact import verify_training_files
 
     manifest = json.loads((Path("/source") / RUN / "remote_run_manifest.json").read_text())
     if manifest["run_id"] != RUN or manifest["base_model"]["revision"] != REVISION or manifest["status"] != "SUCCEEDED":
@@ -53,6 +56,11 @@ def compare():
     remote_output = Path("/evidence/before-after-public-demo-v1.json")
     if remote_output.exists():
         raise FileExistsError("Preserve the existing remote comparison")
+    verified_files = verify_training_files(
+        Path("/source") / RUN,
+        Path("/inputs/artifact_hashes.json"),
+        "7f53d7a0eac4938194fdbc977f64bd0b17bbb8fc6131f3573fcc790edfbca1a0",
+    )
     cases = []
     for item in json.loads(Path("/inputs/public_prompts.json").read_text()):
         cases.append({
@@ -72,6 +80,7 @@ def compare():
         "environment": {"python": platform.python_version(), "torch": str(torch.__version__), "transformers": str(transformers.__version__), "gpu": torch.cuda.get_device_name()},
         "started_at_unix": time.time(), "cases": cases, "outputs": [],
         "quantized_artifact_tested": False,
+        "verified_merged_model_files": verified_files,
     }
     expected_inputs = {}
     for label, path, options in (

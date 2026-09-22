@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build the public dataset package used by the selected EdgeIMCI 4B model."""
+"""Reconstruct the public dataset view from surviving training-source records."""
 
 from __future__ import annotations
 
@@ -143,6 +143,10 @@ def main() -> None:
     args = parse_args()
     source_root = args.source_root.resolve()
     output = args.output.resolve()
+    if output.is_relative_to(source_root) or source_root.is_relative_to(output):
+        raise ValueError("output must not overlap the source tree")
+    if args.output.is_symlink() or output.exists():
+        raise FileExistsError("output must be a new directory; existing paths are never removed")
     baseline_dir = source_root / "beta0_1k_multitask_v1"
     expansion_dir = source_root / "expansion_20260922"
 
@@ -154,6 +158,16 @@ def main() -> None:
         validation: EXPECTED_VALIDATION_SHA256,
         additions: EXPECTED_ADDITIONS_SHA256,
     }
+    for path in (*expected_hashes, baseline_dir / "manifest.json", expansion_dir / "manifest.json"):
+        if not path.is_file():
+            raise FileNotFoundError(f"missing required source file: {path}")
+    try:
+        importlib.import_module("pyarrow")
+        importlib.import_module("pyarrow.parquet")
+    except ImportError as exc:
+        raise RuntimeError(
+            "Parquet publication requires pyarrow; run with `uv run --with pyarrow`."
+        ) from exc
     for path, expected in expected_hashes.items():
         actual = sha256(path)
         if actual != expected:
@@ -185,11 +199,10 @@ def main() -> None:
     if overlap:
         raise ValueError(f"TRAIN/VALIDATION leakage-group overlap: {overlap[:5]}")
 
-    if output.exists():
-        shutil.rmtree(output)
+    output.mkdir(parents=True, exist_ok=False)
     data_dir = output / "data"
     provenance_dir = output / "provenance"
-    data_dir.mkdir(parents=True)
+    data_dir.mkdir()
     provenance_dir.mkdir()
 
     packaged_train = data_dir / "train.jsonl"

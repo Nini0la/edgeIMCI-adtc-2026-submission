@@ -4,6 +4,9 @@ EdgeIMCI is an offline research model for primary-healthcare sick-child encounte
 
 ## Selected Artifact
 
+`main` is the final submission branch. See the [integration review](docs/SUBMISSION_INTEGRATION.md)
+for branch disposition, retained historical evidence, and published-snapshot errata.
+
 The owner selected **4B-alpha-second**, the enriched 2,258-row fine-tune, for public hosting, submission-template updates, and Ubuntu profiling. This selection is not clinical approval or a declaration that Gate 2 is complete.
 
 | Field | Value |
@@ -51,7 +54,9 @@ The new packet is [`provenance/4B-alpha-second/`](provenance/4B-alpha-second/REA
 
 The terminal fine-tuned checkpoint scored 139/139 JSON valid, 135/139 strict-schema valid, 131/139 exact, and 132/139 routing correct on VALIDATION. Failures include 2/119 false rejects, 1/20 unsafe engine admissions, and 2/4 urgent misses. These are not full Q4 validation results. The F16 and Q4 GGUFs each passed 2/2 public prompts for exact JSON targets and deterministic state, under the recorded extraction-v2 wrapper.
 
-The selected training release is public at [Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1](https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1/tree/da8daa8efbd583d92000920366085f6dd00c3fb2), pinned to revision `da8daa8efbd583d92000920366085f6dd00c3fb2`. It exposes the preserved 2,258-row TRAIN and 139-row VALIDATION partitions as JSONL and Parquet. Anonymous Hugging Face `datasets` loading was verified. The card marks the release `license: other`, clinical review pending, and not authorized for clinical use.
+`metadata.json` contains unwrapped inputs; the 2/2 JSON smoke result applies only to the recorded extraction-v2 wrapped protocol, not judge free-form inference.
+
+A public reconstruction from the selected training release's sources is available at [Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1](https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1/tree/da8daa8efbd583d92000920366085f6dd00c3fb2), pinned to revision `da8daa8efbd583d92000920366085f6dd00c3fb2`. It provides 2,258 TRAIN and 139 VALIDATION rows as JSONL and Parquet; TRAIN is not byte-identical to the original training file, while VALIDATION JSONL is byte-identical. Anonymous Hugging Face `datasets` loading was verified. The card marks the release `license: other`, clinical review pending, and not authorized for clinical use.
 
 The original adapter is publicly downloadable with `python3 provenance/4B-alpha-second/download_adapter.py`; it is checksum-verified into an ignored local directory, not vendored as a large Git blob. A [three-prompt base-versus-fine-tuned demonstration](provenance/4B-alpha-second/before_after.md) now retains actual paired outputs; it is not a held-out benchmark. Confirm organizer acceptance of the hosted adapter arrangement. Consolidated dataset/source-license review, broader matched validation, complete ADTC profiling, and independent clinical review remain separate outstanding work. See [`provenance/README.md`](provenance/README.md), [`REPORT.md`](REPORT.md), and [`MODEL_CARD.md`](MODEL_CARD.md) for evidence boundaries.
 

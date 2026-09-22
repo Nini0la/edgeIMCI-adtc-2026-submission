@@ -1,5 +1,9 @@
 # Shortlisted Candidate Validation Evidence
 
+**Historical 1,831-row candidate evidence, not the selected 2,258-row
+4B-alpha-second run.** The metrics below are retained unchanged; see the
+[selected artifact packet](4B-alpha-second/README.md) for its evidence.
+
 ## Evaluation Boundary
 
 These are terminal-epoch results from the same 139-row unsealed VALIDATION partition used during research selection. The partition contains 115 structured-extraction cases and 24 routing cases. No TEST data was accessed. The newer 68-case free-form DEV reviewer slice was not run against these candidates because independent clinical and source-governance review is still pending.

@@ -1,5 +1,9 @@
 # Shortlisted Candidate Training Recipe
 
+**Historical 1,831-row candidate recipe, not the selected 2,258-row
+4B-alpha-second run.** See the [selected artifact packet](4B-alpha-second/README.md)
+for the selected run's configuration and evidence.
+
 ## Shared Recipe
 
 Both candidates were initialized fresh from their pinned Qwen base revisions and trained with the same implementation and dataset.

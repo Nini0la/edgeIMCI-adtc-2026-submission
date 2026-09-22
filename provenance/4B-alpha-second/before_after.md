@@ -43,6 +43,10 @@ deserialization failure occurred after the remote file was saved; inference was
 not repeated or selected for a favorable response. The runner now serializes
 the PyTorch version as a plain string to avoid that client dependency.
 
+The runner was subsequently hardened to verify merged-model bytes against the
+retained inventory before a future run. That new guard was not part of the
+retained demonstration and has not been retroactively inserted into its results.
+
 **Interpretation:** on these two extraction examples, exact-target agreement was
 0/2 for the base and 2/2 for the fine-tune. This illustrates acquisition of the
 project-specific extraction/routing format, not improved general medical knowledge.

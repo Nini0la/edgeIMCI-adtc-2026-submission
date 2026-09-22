@@ -1,6 +1,11 @@
 # Local Q8_0 Integration
 
-This submission promotes the ASUS-verified V2 `llama-cpp` integration into the
+**Legacy 0.6B integration only, not compatible with 4B-alpha-second.** `setup.sh`
+now downloads 4B, while the backend and verification script remain pinned to the
+old 0.6B model; the commands below are not a working 4B setup/run path. For the
+selected model, use the [standalone profiling runbook](PROFILING_RUNBOOK.md).
+
+The historical submission promoted the ASUS-verified V2 `llama-cpp` integration into the
 bounded GUI subset. It does not use the later schema-constrained generation
 experiment. Model output is parsed strictly and validated after generation.
 
@@ -13,7 +18,7 @@ experiment. Model output is parsed strictly and validated after generation.
 - Allowed schema-valid `rehydration_stage: "NOT_STARTED"` to enter the existing
   initial-assessment evaluator while retaining rejection of active/reassessment stages.
 
-The selected artifact is pinned to 639,446,752 bytes and SHA-256
+The legacy 0.6B artifact is pinned to 639,446,752 bytes and SHA-256
 `26d11ee99801455fcef011a3e5ff124b2ff1cce943ed06cbe611c8fbcc42aca2`.
 The adapter invokes the pinned b9637 `llama-completion` in raw one-shot mode,
 with a 2,048-token context, two CPU threads, and serialized requests. The
@@ -27,7 +32,8 @@ pipeline.
 
 ## ASUS Acceptance
 
-Run from the submission repository root after `bash setup.sh`:
+Historical acceptance command from the repository root, requiring the old 0.6B
+artifact and runtime (the current `setup.sh` does not download that artifact):
 
 ```bash
 bash scripts/verify_llama_cpp_integration.sh
@@ -38,12 +44,12 @@ The script defaults to the model under `model/` and `llama-completion` on
 It reruns backend and frontend tests, builds and serves the GUI, then runs both
 submitted prompts through the real Q8_0.
 
-After automated acceptance, start the interactive GUI:
+Historical interactive GUI command after 0.6B automated acceptance:
 
 ```bash
 export LLAMA_CPP_BIN=/path/to/qualified/llama-completion
 bash run.sh
 ```
 
-The original V2 path was accepted on the target ASUS. Re-run this command when
-the model, runtime, inference parameters, or adapter bytes change.
+The original V2 path was accepted on the target ASUS. That acceptance applies only
+to the recorded legacy model, runtime, inference parameters, and adapter bytes.

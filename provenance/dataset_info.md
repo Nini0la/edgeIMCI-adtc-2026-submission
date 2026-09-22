@@ -1,5 +1,9 @@
 # Beta0-1K Multitask Dataset Provenance
 
+**Historical 1,831-row dataset, not the selected 2,258-row 4B-alpha-second
+release.** See the [selected artifact packet](4B-alpha-second/README.md) and its
+[dataset provenance](4B-alpha-second/dataset_info.md) for the selected release.
+
 ## Identity
 
 | Field | Value |
@@ -58,4 +62,4 @@ data/training_sources/beta0_1k_multitask_v1/validation.jsonl
 configs/review/beta0_1k_matrix_authorization_20260922_v1.json
 ```
 
-A public immutable dataset URL and a consolidated dataset-license record have not yet been added to this submission repository. They remain provenance blockers for a final submission artifact derived from these candidates.
+At the time of this historical candidate packet, a public immutable dataset URL and a consolidated dataset-license record had not yet been added to this submission repository. The selected release's later public reconstruction is documented in the linked selected packet; consolidated dataset-license review remains pending.

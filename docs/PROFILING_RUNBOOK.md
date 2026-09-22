@@ -145,30 +145,37 @@ Verify that `command -v uv`, `uv python dir`, and `uv cache dir` resolve under `
 
 ## 3. Clone the Submission
 
-Clone the published integration branch (no submission commit is assumed here):
+Clone the final submission branch, `main`, and record the exact commit below.
+If a profile is already running on another checkout, let it finish first. Do not
+switch branches or pull while that process is running; preserve its original
+report and commit identity.
 
 ```bash
 cd "$ADTC_HOME/repos"
 git clone \
-  --branch chore/sync-upstream-provenance \
+  --branch main \
   --single-branch \
   https://github.com/Nini0la/edgeIMCI-adtc-2026-submission.git
 cd edgeIMCI-adtc-2026-submission
 ```
 
-For an existing clone **under the persistent workspace**, use this alternative instead of cloning over it. A clone on `main` may not yet have the integration branch locally, so fetch it before switching. If the only existing clone is on the ephemeral home, leave it untouched and make a fresh clone above rather than downloading the model there. Stop if the worktree is dirty; do not discard local changes:
+For an existing clone **under the persistent workspace**, use this alternative after any active profiling has finished. An integration-only clone may not have `main` locally, so fetch it before switching. If the only existing clone is on the ephemeral home, leave it untouched and make a fresh clone above rather than downloading the model there. Stop if the worktree is dirty; do not discard local changes:
 
 ```bash
 cd "$ADTC_HOME/repos/edgeIMCI-adtc-2026-submission"
 test -z "$(git status --porcelain)"
-git fetch origin refs/heads/chore/sync-upstream-provenance:refs/remotes/origin/chore/sync-upstream-provenance
-if git show-ref --verify --quiet refs/heads/chore/sync-upstream-provenance; then
-  git switch chore/sync-upstream-provenance
+git fetch origin refs/heads/main:refs/remotes/origin/main
+if git show-ref --verify --quiet refs/heads/main; then
+  git switch main
 else
-  git switch --create chore/sync-upstream-provenance --no-track origin/chore/sync-upstream-provenance
+  git switch --create main --no-track origin/main
 fi
-git pull --ff-only origin chore/sync-upstream-provenance
+git pull --ff-only origin main
 ```
+
+The explicit remote/branch also works when the original single-branch clone's
+fetch configuration covers only the integration branch. Keep using
+`git pull --ff-only origin main` rather than assuming upstream tracking is set.
 
 Record and inspect the exact commit and model path:
 
@@ -180,7 +187,7 @@ jq -e '._runtime.model_path == "model/EdgeIMCI-4B-alpha-second-Q4_K_M.gguf"' met
 test -f scripts/verify_model_artifact.py
 ```
 
-The status command must print nothing before a retained profile. Record the actual checked-out SHA, not a guessed future commit. A development profile may use this branch, but rerun from the final submission commit after integration because the profiler records the checked-out commit in `submission.json`. Do not pull or edit the checkout during a run.
+The status command must print nothing before a retained profile. Record the actual checked-out SHA, not a guessed future commit. A development profile from an earlier branch remains evidence for that recorded commit, but the final submission profile must identify the final submitted commit because the profiler records it in `submission.json`. Never relabel an earlier report. Do not pull or edit the checkout during a run.
 
 ## 4. Download and Verify the GGUF
 
