@@ -65,6 +65,29 @@ def test_original_receipts_and_smokes_match():
     assert all(row["exact_target"] and row["schema_valid"] and row["state_match"] and row["error"] is None for row in smoke)
 
 
+def test_paired_demonstration_retains_all_outputs_and_boundaries():
+    result = json.loads((ROOT / "provenance/4B-alpha-second/before_after_results.json").read_text())
+    assert result["base"]["revision"] == "1cfa9a7208912126459214e8b04321603b3df60c"
+    assert result["fine_tuned"]["run"] == "multitask2258-20260922-v1--qwen4-e2-lr3-s20260824"
+    assert result["identical_rendered_prompts_and_input_ids"] is True
+    assert result["identical_effective_generation_settings"] is True
+    assert result["quantized_artifact_tested"] is False
+    assert "no unseen-data claim" in result["training_overlap"]
+    assert len(result["cases"]) == 3
+    assert len(result["outputs"]) == 6
+    outputs = {(row["model"], row["case_id"]): row for row in result["outputs"]}
+    assert len(outputs) == 6
+    for case in result["cases"]:
+        for model in ("base", "fine_tuned"):
+            row = outputs[model, case["id"]]
+            assert row["text"]
+            assert row["reached_token_limit"] is False
+            if case["mode"] == "EXTRACTION":
+                exact = json.dumps(json.loads(row["text"]), sort_keys=True) == json.dumps(case["expected_target"], sort_keys=True)
+                assert row["exact_target"] is exact
+                assert exact is (model == "fine_tuned")
+
+
 @pytest.mark.parametrize("failure", [None, "size", "hash", "header", "missing"])
 def test_streaming_verification_fails_closed(tmp_path, failure):
     payload = b"GGUF" + b"test bytes"

@@ -1,0 +1,261 @@
+{
+  "purpose": "Three fixed public illustrative prompts; not held-out evaluation or clinical qualification",
+  "selection": "Two existing public extraction prompts plus one architecture question, fixed before inference; no response-based selection",
+  "training_overlap": "Not ruled out; no unseen-data claim",
+  "base": {
+    "model": "Qwen/Qwen3-4B",
+    "revision": "1cfa9a7208912126459214e8b04321603b3df60c"
+  },
+  "fine_tuned": {
+    "name": "4B-alpha-second",
+    "run": "multitask2258-20260922-v1--qwen4-e2-lr3-s20260824",
+    "artifact_manifest_sha256": "7f53d7a0eac4938194fdbc977f64bd0b17bbb8fc6131f3573fcc790edfbca1a0"
+  },
+  "configuration": {
+    "dtype": "bfloat16",
+    "do_sample": false,
+    "max_new_tokens": 1200,
+    "seed": 0,
+    "enable_thinking": false
+  },
+  "environment": {
+    "python": "3.11.5",
+    "torch": "2.7.1+cu126",
+    "transformers": "4.57.1",
+    "gpu": "NVIDIA L4"
+  },
+  "started_at_unix": 1790097244.9570348,
+  "cases": [
+    {
+      "id": "edgeimci_public_001",
+      "mode": "EXTRACTION",
+      "expected_target": {
+        "patient_facts": {
+          "age_months": null,
+          "has_cough_or_difficult_breathing": null,
+          "has_diarrhoea": null,
+          "has_fever": null,
+          "has_ear_problem": null
+        },
+        "danger_signs": {
+          "unable_to_drink_or_breastfeed": false,
+          "vomits_everything": null,
+          "had_convulsions": false,
+          "lethargic_or_unconscious": false,
+          "convulsing_now": true
+        },
+        "respiratory": null,
+        "diarrhoea": null,
+        "fever": null,
+        "ear": null
+      },
+      "messages": [
+        {
+          "role": "system",
+          "content": "When and only when the exact EdgeIMCI extraction-v2 wrapper is present, return one JSON object matching the pinned extraction-routing schema. Return the existing model-facing encounter object for recoverable encounter findings. Return only {\"route\":\"INFORMATIONAL_NON_ENCOUNTER\"} for general EdgeIMCI or project questions, {\"route\":\"OUT_OF_SCOPE\"} for unsupported requests, {\"route\":\"OUT_OF_SCOPE_URGENT\"} for explicit urgent unsupported findings, or {\"route\":\"UNCERTAIN\"} when the input cannot be interpreted safely. Never invent encounter observations to avoid a route, and never emit classifications, referrals, treatments, rule IDs, markdown, or prose."
+        },
+        {
+          "role": "user",
+          "content": "<EDGEIMCI_EXTRACT_V2>\nConvulsing now. No history of convulsions. Not lethargic or unconscious. Able to drink or breastfeed.\n</EDGEIMCI_EXTRACT_V2>"
+        }
+      ],
+      "rendered_prompt": "<|im_start|>system\nWhen and only when the exact EdgeIMCI extraction-v2 wrapper is present, return one JSON object matching the pinned extraction-routing schema. Return the existing model-facing encounter object for recoverable encounter findings. Return only {\"route\":\"INFORMATIONAL_NON_ENCOUNTER\"} for general EdgeIMCI or project questions, {\"route\":\"OUT_OF_SCOPE\"} for unsupported requests, {\"route\":\"OUT_OF_SCOPE_URGENT\"} for explicit urgent unsupported findings, or {\"route\":\"UNCERTAIN\"} when the input cannot be interpreted safely. Never invent encounter observations to avoid a route, and never emit classifications, referrals, treatments, rule IDs, markdown, or prose.<|im_end|>\n<|im_start|>user\n<EDGEIMCI_EXTRACT_V2>\nConvulsing now. No history of convulsions. Not lethargic or unconscious. Able to drink or breastfeed.\n</EDGEIMCI_EXTRACT_V2><|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "input_tokens": 192
+    },
+    {
+      "id": "edgeimci_public_002",
+      "mode": "EXTRACTION",
+      "expected_target": {
+        "patient_facts": {
+          "age_months": 18,
+          "has_cough_or_difficult_breathing": false,
+          "has_diarrhoea": true,
+          "has_fever": false,
+          "has_ear_problem": false
+        },
+        "danger_signs": {
+          "unable_to_drink_or_breastfeed": false,
+          "vomits_everything": false,
+          "had_convulsions": false,
+          "lethargic_or_unconscious": false,
+          "convulsing_now": false
+        },
+        "respiratory": null,
+        "diarrhoea": {
+          "duration_days": 3,
+          "blood_in_stool": false,
+          "dehydration": {
+            "restless_or_irritable": false,
+            "sunken_eyes": false,
+            "drinking_status": "NORMAL",
+            "skin_pinch": "NORMAL"
+          },
+          "cholera_in_area": null,
+          "rehydration_stage": null,
+          "post_rehydration": null
+        },
+        "fever": null,
+        "ear": null
+      },
+      "messages": [
+        {
+          "role": "system",
+          "content": "When and only when the exact EdgeIMCI extraction-v2 wrapper is present, return one JSON object matching the pinned extraction-routing schema. Return the existing model-facing encounter object for recoverable encounter findings. Return only {\"route\":\"INFORMATIONAL_NON_ENCOUNTER\"} for general EdgeIMCI or project questions, {\"route\":\"OUT_OF_SCOPE\"} for unsupported requests, {\"route\":\"OUT_OF_SCOPE_URGENT\"} for explicit urgent unsupported findings, or {\"route\":\"UNCERTAIN\"} when the input cannot be interpreted safely. Never invent encounter observations to avoid a route, and never emit classifications, referrals, treatments, rule IDs, markdown, or prose."
+        },
+        {
+          "role": "user",
+          "content": "<EDGEIMCI_EXTRACT_V2>\nThe child is not convulsing now. There has been no history of convulsions. The child is not lethargic or unconscious. The child is able to drink or breastfeed. The child does not vomit everything. There is no blood in the stool. The child is drinking normally. The child is not restless or irritable. The skin pinch goes back to normal. The child does not have sunken eyes. The diarrhoea has lasted for 3 days. The child is 18 months old. The child does not have cough or difficult breathing. The child has diarrhoea. There is no ear problem. The child does not have fever.\n</EDGEIMCI_EXTRACT_V2>"
+        }
+      ],
+      "rendered_prompt": "<|im_start|>system\nWhen and only when the exact EdgeIMCI extraction-v2 wrapper is present, return one JSON object matching the pinned extraction-routing schema. Return the existing model-facing encounter object for recoverable encounter findings. Return only {\"route\":\"INFORMATIONAL_NON_ENCOUNTER\"} for general EdgeIMCI or project questions, {\"route\":\"OUT_OF_SCOPE\"} for unsupported requests, {\"route\":\"OUT_OF_SCOPE_URGENT\"} for explicit urgent unsupported findings, or {\"route\":\"UNCERTAIN\"} when the input cannot be interpreted safely. Never invent encounter observations to avoid a route, and never emit classifications, referrals, treatments, rule IDs, markdown, or prose.<|im_end|>\n<|im_start|>user\n<EDGEIMCI_EXTRACT_V2>\nThe child is not convulsing now. There has been no history of convulsions. The child is not lethargic or unconscious. The child is able to drink or breastfeed. The child does not vomit everything. There is no blood in the stool. The child is drinking normally. The child is not restless or irritable. The skin pinch goes back to normal. The child does not have sunken eyes. The diarrhoea has lasted for 3 days. The child is 18 months old. The child does not have cough or difficult breathing. The child has diarrhoea. There is no ear problem. The child does not have fever.\n</EDGEIMCI_EXTRACT_V2><|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "input_tokens": 303
+    },
+    {
+      "id": "freeform_architecture_demo",
+      "mode": "FREE_FORM",
+      "messages": [
+        {
+          "role": "system",
+          "content": "Respond in clear natural language. Be accurate about EdgeIMCI, preserve uncertainty and negation, stay within supported scope, and never claim autonomous clinical authority."
+        },
+        {
+          "role": "user",
+          "content": "What is EdgeIMCI, and how does its language model relate to the deterministic rules engine?"
+        }
+      ],
+      "rendered_prompt": "<|im_start|>system\nRespond in clear natural language. Be accurate about EdgeIMCI, preserve uncertainty and negation, stay within supported scope, and never claim autonomous clinical authority.<|im_end|>\n<|im_start|>user\nWhat is EdgeIMCI, and how does its language model relate to the deterministic rules engine?<|im_end|>\n<|im_start|>assistant\n<think>\n\n</think>\n\n",
+      "input_tokens": 67
+    }
+  ],
+  "outputs": [
+    {
+      "model": "base",
+      "case_id": "edgeimci_public_001",
+      "text": "{\"route\":\"INFORMATIONAL_NON_ENCOUNTER\"}",
+      "generated_tokens": 11,
+      "elapsed_seconds": 1.5261276040000027,
+      "reached_token_limit": false,
+      "json_object": true,
+      "exact_target": false
+    },
+    {
+      "model": "base",
+      "case_id": "edgeimci_public_002",
+      "text": "{\"route\":\"INFORMATIONAL_NON_ENCOUNTER\"}",
+      "generated_tokens": 11,
+      "elapsed_seconds": 0.5619505169999996,
+      "reached_token_limit": false,
+      "json_object": true,
+      "exact_target": false
+    },
+    {
+      "model": "base",
+      "case_id": "freeform_architecture_demo",
+      "text": "EdgeIMCI is a system designed to support clinical decision-making, particularly in low-resource settings, by providing a structured approach to diagnosing and managing common childhood illnesses. It is based on the Integrated Management of Childhood Illness (IMCI) strategy, which is a WHO-led approach to improving the health of children under five.\n\nThe system incorporates a **language model** that is trained to understand and generate clinical text, such as patient histories, symptoms, and diagnostic recommendations. This language model helps in interpreting clinical data, generating structured clinical notes, and supporting healthcare providers in making informed decisions.\n\nIn addition to the language model, EdgeIMCI includes a **deterministic rules engine**. This engine follows predefined, rule-based logic to assess a child's condition based on standardized clinical guidelines. The rules engine is designed to apply the IMCI criteria systematically, ensuring consistency in diagnosis and treatment recommendations.\n\nThe **language model** and the **deterministic rules engine** work together in EdgeIMCI. The language model can assist in natural language processing tasks, such as extracting symptoms from clinical notes or generating summaries. The deterministic rules engine, on the other hand, ensures that clinical decisions are made according to established guidelines, providing a structured and evidence-based approach.\n\nIt is important to note that while the language model can support clinical workflows, it does not replace clinical judgment or provide autonomous medical advice. The deterministic rules engine is based on well-established clinical guidelines, but it also does not replace the expertise of healthcare professionals. Both components are tools to support, not replace, clinical decision-making.",
+      "generated_tokens": 316,
+      "elapsed_seconds": 15.76501411000001,
+      "reached_token_limit": false
+    },
+    {
+      "model": "fine_tuned",
+      "case_id": "edgeimci_public_001",
+      "text": "{\"danger_signs\":{\"convulsing_now\":true,\"had_convulsions\":false,\"lethargic_or_unconscious\":false,\"unable_to_drink_or_breastfeed\":false,\"vomits_everything\":null},\"diarrhoea\":null,\"ear\":null,\"fever\":null,\"patient_facts\":{\"age_months\":null,\"has_cough_or_difficult_breathing\":null,\"has_diarrhoea\":null,\"has_ear_problem\":null,\"has_fever\":null},\"respiratory\":null}",
+      "generated_tokens": 114,
+      "elapsed_seconds": 5.896179713000009,
+      "reached_token_limit": false,
+      "json_object": true,
+      "exact_target": true
+    },
+    {
+      "model": "fine_tuned",
+      "case_id": "edgeimci_public_002",
+      "text": "{\"danger_signs\":{\"convulsing_now\":false,\"had_convulsions\":false,\"lethargic_or_unconscious\":false,\"unable_to_drink_or_breastfeed\":false,\"vomits_everything\":false},\"diarrhoea\":{\"blood_in_stool\":false,\"cholera_in_area\":null,\"dehydration\":{\"drinking_status\":\"NORMAL\",\"restless_or_irritable\":false,\"skin_pinch\":\"NORMAL\",\"sunken_eyes\":false},\"duration_days\":3,\"post_rehydration\":null,\"rehydration_stage\":null},\"ear\":null,\"fever\":null,\"patient_facts\":{\"age_months\":18,\"has_cough_or_difficult_breathing\":false,\"has_diarrhoea\":true,\"has_ear_problem\":false,\"has_fever\":false},\"respiratory\":null}",
+      "generated_tokens": 175,
+      "elapsed_seconds": 8.970384948000003,
+      "reached_token_limit": false,
+      "json_object": true,
+      "exact_target": true
+    },
+    {
+      "model": "fine_tuned",
+      "case_id": "freeform_architecture_demo",
+      "text": "EdgeIMCI is an application for IMCI decision support, not a language model. Its production architecture separates language-model-driven content generation from deterministic IMCI logic, which remains authoritative.",
+      "generated_tokens": 37,
+      "elapsed_seconds": 1.8713893199999916,
+      "reached_token_limit": false
+    }
+  ],
+  "quantized_artifact_tested": false,
+  "effective_generation_config": {
+    "max_length": 20,
+    "max_new_tokens": 1200,
+    "min_length": 0,
+    "min_new_tokens": null,
+    "early_stopping": false,
+    "max_time": null,
+    "stop_strings": null,
+    "do_sample": false,
+    "num_beams": 1,
+    "use_cache": true,
+    "cache_implementation": null,
+    "cache_config": null,
+    "return_legacy_cache": null,
+    "prefill_chunk_size": null,
+    "temperature": 1.0,
+    "top_k": 50,
+    "top_p": 1.0,
+    "min_p": null,
+    "typical_p": 1.0,
+    "epsilon_cutoff": 0.0,
+    "eta_cutoff": 0.0,
+    "repetition_penalty": 1.0,
+    "encoder_repetition_penalty": 1.0,
+    "length_penalty": 1.0,
+    "no_repeat_ngram_size": 0,
+    "bad_words_ids": null,
+    "renormalize_logits": false,
+    "forced_bos_token_id": null,
+    "forced_eos_token_id": null,
+    "remove_invalid_values": false,
+    "exponential_decay_length_penalty": null,
+    "suppress_tokens": null,
+    "begin_suppress_tokens": null,
+    "sequence_bias": null,
+    "token_healing": false,
+    "guidance_scale": null,
+    "watermarking_config": null,
+    "num_return_sequences": 1,
+    "output_attentions": false,
+    "output_hidden_states": false,
+    "output_scores": false,
+    "output_logits": null,
+    "return_dict_in_generate": false,
+    "pad_token_id": 151645,
+    "bos_token_id": null,
+    "eos_token_id": 151645,
+    "encoder_no_repeat_ngram_size": 0,
+    "decoder_start_token_id": null,
+    "is_assistant": false,
+    "num_assistant_tokens": 20,
+    "num_assistant_tokens_schedule": "constant",
+    "assistant_confidence_threshold": 0.4,
+    "prompt_lookup_num_tokens": null,
+    "max_matching_ngram_size": null,
+    "assistant_early_exit": null,
+    "assistant_lookbehind": 10,
+    "target_lookbehind": 10,
+    "disable_compile": false,
+    "low_memory": null,
+    "penalty_alpha": null,
+    "dola_layers": null,
+    "diversity_penalty": 0.0,
+    "num_beam_groups": 1,
+    "constraints": null,
+    "force_words_ids": null,
+    "_from_model_config": false,
+    "transformers_version": "4.57.1"
+  },
+  "finished_at_unix": 1790097380.9619718,
+  "identical_rendered_prompts_and_input_ids": true,
+  "identical_effective_generation_settings": true
+}

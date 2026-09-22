@@ -41,7 +41,7 @@ These are terminal fine-tuned checkpoint results, not a full Q4 validation run. 
 
 A [preliminary Ubuntu CPU microbenchmark](provenance/4B-alpha-second/profiling/2026-09-22-cpu/README.md) on 2026-09-22 reported 12.15 tokens/s for 128-token prompt processing, 5.42 tokens/s for 32-token generation, and GNU time maximum RSS of 4.063 GiB on an Intel Core i5-4210U with two threads and no GPU offload. It used one repetition per test and is recorded from the operator's pasted console output; original raw-file import is pending. This is not an accuracy evaluation, full ADTC profile, or official 8 GB qualification.
 
-A matched pinned-base-versus-fine-tuned comparison, repeatability measurements, sustained thermals, ARC-Easy and a complete scoreable ADTC report remain **pending**. Gate 2 remains incomplete; see [`REPORT.md`](REPORT.md) and [`provenance/README.md`](provenance/README.md).
+A [three-prompt paired base-versus-fine-tuned demonstration](provenance/4B-alpha-second/before_after.md) is retained: on two public extraction examples, exact-target agreement was 0/2 for the base and 2/2 for the merged fine-tune; a third free-form response pair is reported qualitatively. This illustrates learned project-specific behavior, not held-out quality or clinical reliability. Broader matched validation, repeatability measurements, sustained thermals, ARC-Easy and a complete scoreable ADTC report remain **pending**. See [`REPORT.md`](REPORT.md) and [`provenance/README.md`](provenance/README.md).
 
 ## Intended Use and Limits
 

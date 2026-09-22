@@ -49,7 +49,17 @@ The final internal TRAIN file was not retained in reachable repository state, so
 
 ### Before/After Fine-Tuning
 
-This table reports the retained terminal checkpoint evaluation, not a full evaluation of the quantized GGUF. A matched untouched-base run is missing; no improvement claim can be calculated.
+An actual three-prompt paired demonstration was completed on 2026-09-22. The pinned untouched base and merged 4B-alpha-second used identical rendered prompts/input IDs and effective generation settings: BF16 on NVIDIA L4, greedy decoding, seed 0, thinking disabled, maximum 1200 new tokens.
+
+| Fixed public example | Untouched Qwen3-4B | Fine-tuned 4B-alpha-second |
+|---|---|---|
+| Public prompt 001: urgent incomplete encounter | `{"route":"INFORMATIONAL_NON_ENCOUNTER"}` | Exact expected encounter JSON |
+| Public prompt 002: complete diarrhoea encounter | `{"route":"INFORMATIONAL_NON_ENCOUNTER"}` | Exact expected encounter JSON |
+| Free-form question about EdgeIMCI and its rules engine | Longer explanation including language-model generation of "diagnostic recommendations" | Concise explanation placing authority in deterministic IMCI logic |
+
+Extraction exact agreement on these examples was 0/2 versus 2/2. This illustrates learned project-specific formatting/routing; the complete custom schema was not provided in the prompt, and training overlap is not ruled out. It is not a held-out benchmark or evidence of improved clinical reliability. Full prompts, all six raw outputs, settings, limitations, and the reproducible runner are in [`before_after.md`](provenance/4B-alpha-second/before_after.md) and [`before_after_results.json`](provenance/4B-alpha-second/before_after_results.json).
+
+The following table remains the separate 139-row terminal-checkpoint validation result, not a full evaluation of the GGUF. The base has not been evaluated on all 139 rows, so no validation-set improvement is claimed.
 
 | VALIDATION metric | Pinned base before SFT | Fine-tuned terminal checkpoint |
 |---|---|---:|
@@ -61,7 +71,7 @@ This table reports the retained terminal checkpoint evaluation, not a full evalu
 | Unsafe engine admissions | Pending matched evaluation | 1/20 |
 | Urgent misses | Pending matched evaluation | 2/4 |
 
-The small routing denominators and pending clinical gold review limit interpretation. Completing [`before_after.md`](provenance/4B-alpha-second/before_after.md) requires identical authorized held-out inputs, prompts, chat-template policy, decoding and scoring for the pinned base and fine-tuned checkpoint, with retained raw outputs. The F16-versus-Q4 smoke does not replace this study. Do not use the sealed TEST set for this work.
+The small routing denominators and pending clinical gold review limit interpretation. A broader matched-base validation study remains future work; the paired public examples and F16-versus-Q4 smoke are not substitutes for it. Do not use the sealed TEST set for that work.
 
 ### Merge and Quantization
 
@@ -69,7 +79,7 @@ The recipe records post-training adapter merging and the original source invento
 
 Q4_K_M provides a smaller candidate for laptop profiling (2,497,280,288 bytes versus 8,051,284,768 for F16). Both passed **2/2 public prompts**, with exact parsed JSON targets and matching `URGENT_INCOMPLETE` / `COMPLETE` states. The smoke used the extraction-v2 wrapper, thinking disabled, temperature 0, seed 0, context 3072, and at most 1200 generated tokens on Modal CPU. [`smoke_results.json`](provenance/4B-alpha-second/smoke_results.json) retains outputs. This is not full quantization-drift validation, Transformers equivalence, raw free-form testing, or target-laptop profiling.
 
-**Gate 2 is incomplete:** organizer acceptance of hosted adapter delivery, consolidated dataset/source-license review, matched base-before/after evidence, and independent clinical review remain unresolved.
+Actual before/after examples are now retained. Organizer acceptance of hosted adapter delivery, consolidated dataset/source-license review, and complete ADTC profiling remain unresolved. Independent clinical review remains pending; this report does not authorize clinical use.
 
 ## Target Profiling
 
