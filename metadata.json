@@ -18,10 +18,7 @@
     "base_model_source": "huggingface:Qwen/Qwen3-4B",
     "base_model_commit_sha": "1cfa9a7208912126459214e8b04321603b3df60c",
     "fine_tuning_method": "lora",
-    "training_datasets": ["EdgeIMCI beta0_1k_multitask_enriched_2258_v1 (project-authored synthetic multitask TRAIN release; public dataset Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1 at da8daa8efbd583d92000920366085f6dd00c3fb2)"],
-    "dataset_repository": "https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1",
-    "dataset_commit_sha": "da8daa8efbd583d92000920366085f6dd00c3fb2",
-    "dataset_manifest_sha256": "0820f092ed585a46182e075477f9246917629061b03a3f57d92cb1087e303706"
+    "training_datasets": ["EdgeIMCI beta0_1k_multitask_enriched_2258_v1 (project-authored synthetic multitask TRAIN release; public dataset Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1 at da8daa8efbd583d92000920366085f6dd00c3fb2)"]
   },
   "test_prompts": [
     {

@@ -20,10 +20,21 @@ def test_selected_artifact_is_consistent():
     assert metadata["model"]["parameters_estimate"] == "4B"
     assert metadata["model"]["quantization"] == "GGUF Q4_K_M"
     assert metadata["_runtime"]["model_path"] == f"model/{artifact['gguf']['filename']}"
+    # ADTC profiler schema 1.3.0 rejects additional provenance properties.
+    assert set(metadata["provenance"]) == {
+        "base_model_source",
+        "base_model_commit_sha",
+        "fine_tuning_method",
+        "training_datasets",
+    }
     assert metadata["provenance"]["base_model_source"] == "huggingface:Qwen/Qwen3-4B"
     assert metadata["provenance"]["base_model_commit_sha"] == artifact["base_model_revision"]
     assert metadata["provenance"]["fine_tuning_method"] == "lora"
     assert "beta0_1k_multitask_enriched_2258_v1" in metadata["provenance"]["training_datasets"][0]
+    publication = json.loads((ROOT / "provenance/dataset/publication.json").read_text())
+    assert publication["repository"]["repo_id"] in metadata["provenance"]["training_datasets"][0]
+    assert publication["repository"]["revision"] in metadata["provenance"]["training_datasets"][0]
+    assert publication["frozen_training_release"]["manifest_sha256"] == "0820f092ed585a46182e075477f9246917629061b03a3f57d92cb1087e303706"
     assert len(metadata["test_prompts"]) == 2
     assert artifact["training_run_id"] == "multitask2258-20260922-v1--qwen4-e2-lr3-s20260824"
     assert artifact["gguf"]["bytes"] == 2497280288
