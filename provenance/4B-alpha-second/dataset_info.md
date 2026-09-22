@@ -52,6 +52,12 @@ these validation numbers.
 
 ## Publication and Review Status
 
+See [Dataset Source and Rights Disclosure](../dataset/source_rights.md) for the
+source inventory, official rights-policy references, and the owner's 2026-09-22
+confirmation of no separate permissions. Documentation is complete for those
+facts; source/provider rights clearance remains unresolved. This does not change
+the public dataset's license declaration or its immutable publication record.
+
 - Public immutable dataset release: complete at revision
   `da8daa8efbd583d92000920366085f6dd00c3fb2`; anonymous loading verified.
 - Consolidated dataset/source license review: pending. The public card uses

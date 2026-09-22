@@ -12,10 +12,19 @@ from the repository root to retrieve and verify both original adapter files into
 the ignored `adapter/` subdirectory. Confirm organizer acceptance of this hosted
 adapter arrangement before calling the Gate 2 packet complete.
 
+See [adapter delivery status](adapter_delivery.md) for the public-fork LFS
+restriction and the prepared organizer clarification. No large-weight Git
+workaround has been committed.
+
 The dataset source-release hashes are recorded in `dataset_info.md`. Its public
 JSONL/Parquet publication is pinned at immutable Hugging Face revision
 `da8daa8efbd583d92000920366085f6dd00c3fb2`; consolidated dataset/source-license
 review remains pending.
+
+The [source and rights disclosure](../dataset/source_rights.md) identifies the
+WHO reference, AI-assisted construction roles, applicable-terms questions, and
+the owner's confirmation that no separate permissions have been obtained.
+It is not a new license or a claim of legal clearance.
 
 The source training authorization was research-only. The owner subsequently
 selected this candidate for quantization, public hosting, and submission profiling;

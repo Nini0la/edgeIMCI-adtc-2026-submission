@@ -32,8 +32,8 @@ The original adapter is public in the HF repository's `adapter/` directory at th
 
 ## Remaining Work
 
-- Confirm organizer acceptance of public immutable adapter hosting plus the fetch helper rather than large weight blobs in Git.
-- Complete consolidated dataset/source-license review. The public message-normalized release is pinned at [Hugging Face revision `da8daa8efbd583d92000920366085f6dd00c3fb2`](https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1/tree/da8daa8efbd583d92000920366085f6dd00c3fb2), but its `license: other` declaration does not establish redistribution rights.
+- Resolve [adapter delivery](4B-alpha-second/adapter_delivery.md) with the organizers: original weights are public, but this public fork cannot upload new Git LFS objects. A [clarification draft](../docs/ORGANIZER_ADAPTER_QUESTION.md) is prepared; no split-weight workaround or approval is assumed.
+- Complete source/provider rights review using the [recorded source disclosure](dataset/source_rights.md). The owner confirms no separate permissions; no legal exception or governing-provider permission is established here. The public release remains pinned at [revision `da8daa8efbd583d92000920366085f6dd00c3fb2`](https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1/tree/da8daa8efbd583d92000920366085f6dd00c3fb2), and `license: other` is not a general reuse grant.
 - Extend the retained three-prompt illustration to broader matched validation if making general quality claims; do not use the sealed TEST set.
 - Import the original preliminary microbenchmark evidence from the flash drive, and complete target-laptop Ubuntu profiling on the exact selected GGUF with retained scoreable ADTC evidence. The preliminary CPU result does not establish accuracy, sustained thermals or an official 8 GB pass. No old performance figures transfer to 4B.
 - Complete independent clinical/source-governance review before any clinical-use claim. Hosting/profiling selection is not that approval.
