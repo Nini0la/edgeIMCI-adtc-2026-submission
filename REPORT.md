@@ -1,6 +1,6 @@
 # Technical Report - EdgeIMCI Offline Structured Extraction
 
-**Team ID:** edgeimci
+**Team ID:** edge-imci
 **Domain:** healthcare_medical
 **Model:** EdgeIMCI-Qwen3-0.6B-SFT-Q8_0
 
@@ -16,13 +16,27 @@ This model is not a diagnostic system and is not authorized for production clini
 
 ## Design Decisions
 
-- **Base model:** Qwen/Qwen3-0.6B at revision `c1899de289a04d12100db370d81485cdf75e47ca` (Apache-2.0).
-- **Fine-tuning:** LoRA structured-extraction SFT, merged after training; 3 epochs, learning rate 0.0002, seed 20260824.
 - **Runtime:** CPU-only `llama.cpp`, converted and quantized at commit `aedb2a5e9ca3d4064148bbb919e0ddc0c1b70ab3`.
 - **Quantization:** Q8_0 was selected because it preserved the tested JSON output exactly and scored 0.64 on the profiler's 50-sample ARC-Easy check, compared with 0.50 for Q4_K_M.
 - **Alternatives:** BF16, Q8_0, and Q4_K_M all passed the retained JSON parse, schema, and exact-output smoke check. Q4_K_M was faster and smaller, but its observed accuracy reduction outweighed those gains because accuracy is half of the ADTC score.
+
+---
+## Model Provenance
+
+- **Base model source:** `huggingface:Qwen/Qwen3-0.6B`
+- **Base model commit SHA:** `c1899de289a04d12100db370d81485cdf75e47ca`
+- **Fine-tuning method:** LoRA structured-extraction SFT, merged after training; 3 epochs, learning rate 0.0002, seed 20260824.
+- **Training datasets:** Pending source records. Dataset names, source URLs, licenses, split policy, and checksums must be added before Gate 2 submission.
 - **Final artifact:** `qwen3-0.6b-sft-selected-seed-20260824-q8_0.gguf`, 639,446,752 bytes (609.82 MiB), SHA-256 `26d11ee99801455fcef011a3e5ff124b2ff1cce943ed06cbe611c8fbcc42aca2`.
-- **Hosting:** Hugging Face repository `Nini0la/edgeimci-qwen3-0.6b-sft-gguf`, model commit `6af69949d91fbe2628d88a6ed7df62a944cd71a3`. The download script pins that immutable revision and fails closed on a checksum mismatch.
+- **Artifact hosting:** Hugging Face repository `Nini0la/edgeimci-qwen3-0.6b-sft-gguf`, model commit `6af69949d91fbe2628d88a6ed7df62a944cd71a3`.
+
+The base-model commit identifies the upstream checkpoint used to start training. The artifact-hosting commit identifies the immutable repository revision from which evaluators download the final GGUF. The profiler records the submission repository commit separately; that value does not belong in `metadata.json`.
+
+The current [`provenance/`](provenance/) directory is an explicit handoff checklist, not a completed Gate 2 evidence bundle. Before Gate 2 submission it must be populated with the LoRA adapter or reproducible training scripts, training and loss logs, dataset information and checksums, merge and quantization instructions, and a base-versus-fine-tuned comparison.
+
+### Before/After Fine-Tuning Evidence
+
+Pending source evidence. Add a reproducible comparison of the pinned base checkpoint and the final fine-tuned checkpoint on a held-out structured-extraction set. Report the dataset split, prompts, decoding settings, schema-validity rate, exact-match result, and representative outputs.
 
 ---
 

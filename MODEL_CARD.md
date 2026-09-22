@@ -13,8 +13,11 @@ completeness checks, classifications, management selection, and rendering.
 - Quantization: GGUF Q8_0
 - Size: 639,446,752 bytes
 - SHA-256: `26d11ee99801455fcef011a3e5ff124b2ff1cce943ed06cbe611c8fbcc42aca2`
-- Immutable model revision: `6af69949d91fbe2628d88a6ed7df62a944cd71a3`
+- Hosted artifact revision: `6af69949d91fbe2628d88a6ed7df62a944cd71a3`
 - Base model: `Qwen/Qwen3-0.6B`
+- Base model commit: `c1899de289a04d12100db370d81485cdf75e47ca`
+- Fine-tuning method: LoRA structured-extraction SFT, merged after training
+- Training evidence: incomplete; see [`provenance/README.md`](provenance/README.md)
 - License: Apache License 2.0
 
 ## Intended Use

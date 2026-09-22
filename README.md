@@ -2,7 +2,7 @@
 
 EdgeIMCI is an offline structured-extraction model for primary-healthcare sick-child encounters. It converts free-form PHC worker findings into a bounded JSON encounter record for schema validation and downstream deterministic IMCI logic.
 
-This repository is the ADTC 2026 Laptop LLM submission package for team `edgeimci` in the `healthcare_medical` domain.
+This repository is the ADTC 2026 Laptop LLM submission package for team `edge-imci` in the `healthcare_medical` domain.
 
 ## Submission Artifact
 
@@ -18,7 +18,7 @@ This repository is the ADTC 2026 Laptop LLM submission package for team `edgeimc
 | SHA-256 | `26d11ee99801455fcef011a3e5ff124b2ff1cce943ed06cbe611c8fbcc42aca2` |
 | Hosting | [Hugging Face](https://huggingface.co/Nini0la/edgeimci-qwen3-0.6b-sft-gguf) |
 
-The download script pins immutable Hugging Face model commit `6af69949d91fbe2628d88a6ed7df62a944cd71a3` and verifies the SHA-256 before installing the model.
+The download script pins immutable Hugging Face model commit `6af69949d91fbe2628d88a6ed7df62a944cd71a3`.
 See [`MODEL_CARD.md`](MODEL_CARD.md) for intended use, provenance, and limitations.
 
 ## Download
@@ -29,13 +29,36 @@ No credentials are required:
 bash download_model.sh
 ```
 
-The script is idempotent and writes the verified model to the path declared in `metadata.json`:
+The script is idempotent and writes the model to the path declared in `metadata.json`:
 
 ```text
 model/qwen3-0.6b-sft-selected-seed-20260824-q8_0.gguf
 ```
 
 After download, inference runs locally without network access.
+
+## Model Provenance (Gate 2)
+
+The structured provenance in [`metadata.json`](metadata.json) records the facts already established for this submission:
+
+- Base model: `huggingface:Qwen/Qwen3-0.6B`
+- Base model commit: `c1899de289a04d12100db370d81485cdf75e47ca`
+- Fine-tuning method: `lora`
+
+The base-model commit identifies the checkpoint used to start training. The separate commit embedded in `download_model.sh` pins the hosted final GGUF. The profiler generates the submission repository commit in its output; do not add a `reproducibility.git_commit_sha` field to `metadata.json`.
+
+The Gate 2 provenance packet is intentionally marked incomplete until the original training materials are supplied:
+
+- [x] Base model source and immutable base-model commit recorded
+- [x] Fine-tuning method recorded
+- [ ] Training dataset names, source URLs, licenses, split policy, and checksums supplied
+- [ ] LoRA adapter or reproducible training scripts and configuration supplied
+- [ ] Training and loss logs supplied
+- [ ] Merge and quantization procedure supplied
+- [ ] Base-versus-fine-tuned comparison supplied
+
+See [`provenance/README.md`](provenance/README.md) for the evidence handoff checklist. Do not mark the Gate 2 packet complete until every pending item is backed by the original artifact or a reproducible record.
+
 
 ## Run The GUI
 
@@ -45,7 +68,7 @@ Requirements:
 - Node.js and npm
 - The exact qualified `llama-completion` build described below
 
-Install dependencies, build the frontend, and download the verified model:
+Install dependencies, build the frontend, and download the pinned model:
 
 ```bash
 bash setup.sh
@@ -107,11 +130,11 @@ The ADTC quick participant profile used `--skip-accuracy`; the accuracy smoke wa
 
 ## Repository Files
 
-- [`metadata.json`](metadata.json): team, domain, prompts, and runtime metadata.
-- [`download_model.sh`](download_model.sh): anonymous, revision-pinned, checksum-verifying model download.
-- [`REPORT.md`](REPORT.md): technical report and ASUS benchmark evidence.
+- [`metadata.json`](metadata.json): team, domain, structured provenance, prompts, and runtime metadata.
+- [`download_model.sh`](download_model.sh): anonymous, immutable-revision-pinned model download.
+- [`REPORT.md`](REPORT.md): technical report, provenance disclosure, and ASUS benchmark evidence.
 - [`MODEL_CARD.md`](MODEL_CARD.md): model provenance, intended use, and limitations.
-- [`model/`](model/): local model destination; weights are excluded from Git.
+- [`provenance/`](provenance/): Gate 2 evidence handoff checklist and, when supplied, original training artifacts.
 - [`app/`](app/): local API, extraction adapters, and deterministic service flow.
 - [`src/edge_imci/`](src/edge_imci/): bounded schemas and deterministic IMCI logic.
 - [`web/`](web/): worker-facing React interface.
