@@ -30,11 +30,19 @@ The source training authorization was research-only. The owner subsequently
 selected this candidate for quantization, public hosting, and submission profiling;
 that does not authorize clinical use or establish that clinical review is complete.
 
-## Preliminary Laptop Profiling
+## Laptop Profiling
 
 The [2026-09-22 Ubuntu CPU microbenchmark](profiling/2026-09-22-cpu/README.md)
 records the operator's successful one-repetition pp128/tg32 run and GNU time
 memory result for the selected Q4_K_M GGUF. Console transcriptions are retained
-separately from the unchanged training/conversion evidence. Original flash-drive
-files have not yet been imported; the complete official ADTC profile, accuracy,
-sustained thermals and 8 GB qualification remain pending.
+separately from the unchanged training/conversion evidence.
+
+The subsequent [Ubuntu ADTC participant run](profiling/2026-09-22-ubuntu-adtc/README.md)
+completed with accuracy enabled: ARC-Easy `acc_norm` 0.78 on 50 questions,
+5.03 generation tokens/s, 4,288.94 MiB peak RSS and 80.0 C peak temperature.
+The report records submission commit `0017d85836d7` and seed 42. All 17 original
+files are now retained byte-for-byte with verified checksums and official schema
+validation; the earlier console excerpt matches the full report. GNU time records
+18:29.24 elapsed and 4.583 GiB maximum process RSS for the full command.
+The archived metadata predates the current public-prompt selection. Sustained
+thermal stability and official 8 GB qualification are not established.

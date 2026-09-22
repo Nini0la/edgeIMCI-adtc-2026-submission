@@ -1,0 +1,94 @@
+{
+  "schema_version": "1.3.0",
+  "profiler_version": "adtc-profiler 0.1.0",
+  "submission": {
+    "team_id": "edge-imci",
+    "domain": "healthcare_medical",
+    "language_scope": [
+      "en"
+    ],
+    "african_alpha_claim": true,
+    "budget_laptop_claim": true,
+    "submitter": {
+      "name": "Niniola Adegboyega",
+      "email": "nini.adegboyega@gmail.com",
+      "github_handle": "Nini0la"
+    },
+    "cross_disciplinary_pairing": {
+      "discipline": "public_health",
+      "load_bearing": true,
+      "description": "Offline structured extraction of primary-healthcare sick-child findings for constrained-connectivity African settings."
+    },
+    "provenance": {
+      "base_model_source": "huggingface:Qwen/Qwen3-4B",
+      "base_model_commit_sha": "1cfa9a7208912126459214e8b04321603b3df60c",
+      "fine_tuning_method": "lora",
+      "training_datasets": [
+        "EdgeIMCI beta0_1k_multitask_enriched_2258_v1 (recorded training release; reconstructed public source view: https://huggingface.co/datasets/Nini0la/edgeimci-beta0-1k-multitask-enriched-2258-v1/tree/da8daa8efbd583d92000920366085f6dd00c3fb2; original TRAIN byte identity not claimed; see provenance/4B-alpha-second/dataset_info.md)"
+      ]
+    },
+    "test_prompts": [
+      {
+        "prompt_id": "edgeimci_public_001",
+        "prompt": "Convulsing now. No history of convulsions. Not lethargic or unconscious. Able to drink or breastfeed."
+      },
+      {
+        "prompt_id": "edgeimci_public_002",
+        "prompt": "The child is not convulsing now. There has been no history of convulsions. The child is not lethargic or unconscious. The child is able to drink or breastfeed. The child does not vomit everything. There is no blood in the stool. The child is drinking normally. The child is not restless or irritable. The skin pinch goes back to normal. The child does not have sunken eyes. The diarrhoea has lasted for 3 days. The child is 18 months old. The child does not have cough or difficult breathing. The child has diarrhoea. There is no ear problem. The child does not have fever."
+      }
+    ],
+    "model": {
+      "name": "EdgeIMCI-4B-alpha-second-Q4_K_M",
+      "runtime": "llama.cpp",
+      "quantization": "GGUF Q4_K_M",
+      "parameters_estimate": "4B",
+      "packaging": "binary_bundle"
+    }
+  },
+  "environment": {
+    "measured_on": "participant_laptop",
+    "cpu_model": "Intel(R) Core(TM) i5-4210U CPU @ 1.70GHz",
+    "ram_gb": 11.6,
+    "gpu": "none",
+    "os": "Ubuntu 22.04.5 LTS"
+  },
+  "throughput": {
+    "tokens_per_second_generation": 5.03,
+    "first_token_latency_ms": 46052.31,
+    "prompt_tokens": 512,
+    "generated_tokens": 128,
+    "threads_used": 2
+  },
+  "memory": {
+    "peak_rss_mb": 4288.94,
+    "steady_state_rss_mb": 4147.98,
+    "peak_vms_mb": 4779.79
+  },
+  "accuracy": [
+    {
+      "benchmark": "arc_easy",
+      "dataset_version": "lm-eval-harness",
+      "language": "en",
+      "samples": 50,
+      "score": 0.78,
+      "metric": "acc_norm"
+    }
+  ],
+  "cpu_thermal": {
+    "cpu_percent_p99": 61.7,
+    "core_temp_c_peak": 80.0,
+    "throttled": false
+  },
+  "reproducibility": {
+    "git_commit_sha": "0017d85836d7",
+    "docker_image_digest": "unknown",
+    "random_seed": 42
+  },
+  "model_info": {
+    "params_count": 4022468096,
+    "context_length": 40960,
+    "architecture": "qwen3",
+    "claimed_params_estimate": "4B",
+    "params_match": true
+  }
+}

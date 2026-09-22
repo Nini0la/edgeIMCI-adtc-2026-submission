@@ -1,0 +1,92 @@
+{
+  "status": "VERIFIED_BYTE_PRESERVING_IMPORT",
+  "imported_at_utc": "2026-09-22T19:28:10.395674+00:00",
+  "source_directory": "/Users/niniola/Downloads/profile-alpha-second-adtc-g1G6ns",
+  "original_ubuntu_directory": "/media/ubuntu/eagleNo/profile-alpha-second-adtc-g1G6ns",
+  "raw_directory": "raw",
+  "files": {
+    "CMakeCache.txt": {
+      "bytes": 32181,
+      "sha256": "c3f0ccfce485b9cf1f0f43c73d2bfdb01f472f01fe4c38456b9b372407344213"
+    },
+    "accuracy-backend-source.json": {
+      "bytes": 178,
+      "sha256": "a31fad6d70a6edc5be604e6588f3abc5634d39cf0ee59391e4c451f069f41647"
+    },
+    "console.log": {
+      "bytes": 869,
+      "sha256": "b32c92ebf463e859bde7b7650510f88a74fc73f5904d1f63201bea5ea1ffb00e"
+    },
+    "environment.txt": {
+      "bytes": 3605,
+      "sha256": "26269979dcb512a38d1fbfbbbe9fb0fd3f41df21a69ab9dd9e5ae62c60811a8d"
+    },
+    "metadata.json": {
+      "bytes": 2188,
+      "sha256": "888c9c81bc4640d1ea6a08d90efa6bcfb94a25b2d371fd5411d90b9af0598654"
+    },
+    "model-verification-after.json": {
+      "bytes": 243,
+      "sha256": "623c512de1a43539470c6172ed6af4441e1c9057eae5601fab71015557242505"
+    },
+    "model-verification.json": {
+      "bytes": 243,
+      "sha256": "623c512de1a43539470c6172ed6af4441e1c9057eae5601fab71015557242505"
+    },
+    "profiler-source.json": {
+      "bytes": 219,
+      "sha256": "97710fbbe967dac056c1d800b422c4086fa032bb5701a9c9507267a488cbec57"
+    },
+    "python-packages.txt": {
+      "bytes": 1642,
+      "sha256": "1c8695ce637f303f977b35d71068d8ac39f62a8e48cdde90119784599a9f7273"
+    },
+    "report-and-log.sha256": {
+      "bytes": 270,
+      "sha256": "45f51c5c5dc9f77a5859c499c8c834ccbedffb1adeb4f877d457b609b6427850"
+    },
+    "status.txt": {
+      "bytes": 24,
+      "sha256": "7d7d0a775b66ffce709e1bd4928c0fae21c2a3d4d789496cf128f1afe4acec30"
+    },
+    "submission-commit-after.txt": {
+      "bytes": 41,
+      "sha256": "68a5b9232b4eda0ee3130c366271b3bb834ca0c2fb031b05b942518be697f40c"
+    },
+    "submission-commit.txt": {
+      "bytes": 41,
+      "sha256": "68a5b9232b4eda0ee3130c366271b3bb834ca0c2fb031b05b942518be697f40c"
+    },
+    "submission.json": {
+      "bytes": 3400,
+      "sha256": "20244dcb046ef3c68c0d0aa10e2784bb4928d1c1876dbd52adf1d2d7b44b2a48"
+    },
+    "time-and-memory.txt": {
+      "bytes": 986,
+      "sha256": "5b035de42e6b23888b8e62a42c2b806f2704ffeda4383b94f3e1d7995449b008"
+    },
+    "worktree-status-after.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    "worktree-status.txt": {
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  },
+  "schema_validation": {
+    "status": "PASSED",
+    "schema_version": "1.3.0",
+    "profiler_commit": "7f117dde3d8f2a0b3d3f05948a7bfd4bf693e909",
+    "schema_sha256": "d15dc450c779aa2719bad62a67568b40af147a2d635398886b5c29f47d26c1bb"
+  },
+  "original_report_and_log_checksums": {
+    "submission.json": "20244dcb046ef3c68c0d0aa10e2784bb4928d1c1876dbd52adf1d2d7b44b2a48",
+    "console.log": "b32c92ebf463e859bde7b7650510f88a74fc73f5904d1f63201bea5ea1ffb00e"
+  },
+  "console_excerpt_matches_original": true,
+  "model_verification_before_after_matches_artifact": true,
+  "submission_commit_unchanged": "0017d85836d7a0cf7c03f12315ae68502138b8a4",
+  "submission_metadata_matches_recorded_commit": true,
+  "worktrees_clean_before_after": true
+}

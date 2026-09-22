@@ -1,0 +1,8 @@
+adtc-profiler mode=participant model=EdgeIMCI-4B-alpha-second-Q4_K_M.gguf
+→ running llama-bench (throughput)…
+→ running lm_eval task=arc_easy limit=50…
+Using the latest cached version of the dataset since allenai/ai2_arc couldn't be found on the Hugging Face Hub (offline mode is enabled).
+Found the latest cached dataset configuration 'ARC-Easy' at /mnt/adtc-storage/edgeimci-full-vEUb6D/cache/huggingface/datasets/allenai___ai2_arc/ARC-Easy/0.0.0/210d026faf9955653af8916fad021475a3f00453 (last modified on Tue Sep 22 18:55:08 2026).
+  0%|          | 0/50 [00:00<?, ?it/s] 88%|████████▊ | 44/50 [00:00<00:00, 436.90it/s]100%|██████████| 50/50 [00:00<00:00, 433.35it/s]
+fatal: not a git repository (or any of the parent directories): .git
+✓ wrote /media/ubuntu/eagleNo/profile-alpha-second-adtc-g1G6ns/submission.json

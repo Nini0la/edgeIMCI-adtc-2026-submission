@@ -81,9 +81,32 @@ The recipe records post-training adapter merging and the original source invento
 
 Q4_K_M provides a smaller candidate for laptop profiling (2,497,280,288 bytes versus 8,051,284,768 for F16). Both passed **2/2 public prompts**, with exact parsed JSON targets and matching `URGENT_INCOMPLETE` / `COMPLETE` states. The smoke used the extraction-v2 wrapper, thinking disabled, temperature 0, seed 0, context 3072, and at most 1200 generated tokens on Modal CPU. [`smoke_results.json`](provenance/4B-alpha-second/smoke_results.json) retains outputs. This is not full quantization-drift validation, Transformers equivalence, raw free-form testing, or target-laptop profiling.
 
-Actual before/after examples are now retained. Organizer acceptance of hosted adapter delivery, consolidated dataset/source-license review, and complete ADTC profiling remain unresolved. Independent clinical review remains pending; this report does not authorize clinical use.
+Actual before/after examples and the original ADTC profiling files are now retained. Organizer acceptance of hosted adapter delivery and consolidated dataset/source-license review remain unresolved. Independent clinical review remains pending; this report does not authorize clinical use.
 
 ## Target Profiling
+
+### Accuracy-Enabled ADTC Participant Run
+
+On 2026-09-22, the operator completed the official profiler's full participant pipeline on the Ubuntu PC, including ARC-Easy accuracy, with exit status 0. The [original report and evidence packet](provenance/4B-alpha-second/profiling/2026-09-22-ubuntu-adtc/README.md) are now retained byte-for-byte. Import validation checked all 17 files, the original report/log checksums, the official schema, unchanged model and commit records, clean pre/post worktrees and the measured metadata snapshot. No Mac accuracy result is combined with this run.
+
+| ADTC participant measurement | Reported result |
+|---|---|
+| Submission commit | `0017d85836d7a0cf7c03f12315ae68502138b8a4`; report prefix `0017d85836d7` |
+| Profiler pin | `7f117dde3d8f2a0b3d3f05948a7bfd4bf693e909` |
+| Environment | Intel Core i5-4210U, Ubuntu 22.04.5 LTS; report `ram_gb: 11.6`, preflight no swap; Python 3.11.16 |
+| Accuracy dependencies | `llama-cpp-python` 0.3.34 and `lm-eval` 0.4.12 |
+| ARC-Easy | **0.78 `acc_norm`**, 50 test questions, seed 42 |
+| Generation throughput | **5.03 tokens/s**, 128 generation tokens; separate 512-token prompt-processing test, 2 CPU threads |
+| Reported first-token latency estimate | 46,052.31 ms; derived from prompt-processing rate, not measured streaming TTFT |
+| Peak / steady RSS | **4,288.94 / 4,147.98 MiB**; peak approximately 4.188 GiB |
+| Peak VMS | 4,779.79 MiB |
+| CPU utilization p99 / peak temperature | 61.7% / **80.0 C** |
+| Profiler throttling flag | `false`; temperature-threshold heuristic, not kernel throttle-event detection |
+| Whole-command GNU time | **18:29.24 elapsed; 4,805,892 KiB (4.583 GiB) maximum process RSS**, exit status 0 |
+
+The model was verified before and after profiling; ARC-Easy was cached online and the run used Hugging Face offline settings. Accuracy is now measured for this GGUF, but 50 general-science questions do not establish the full ARC-Easy score or the organizer's hidden accuracy/quality result. The profiler's memory and thermals cover throughput, not accuracy; GNU time provides a distinct full-command maximum process RSS, not total system memory. This is participant evidence, not an organizer audit or an official 8 GB qualification. The Git warning from lm-eval's optional current-directory lookup did not prevent ADTC from recording the correct submission commit. The archived report retains the measured commit's metadata; the current root public-prompt pair was selected afterward and is not evaluated by ARC-Easy.
+
+### Earlier Direct Microbenchmark
 
 The target is an 8 GB-class laptop using CPU `llama.cpp`. A **preliminary direct CPU microbenchmark** of 4B-alpha-second completed on 2026-09-22. Its evidence is the operator's pasted console output, transcribed in the [profiling evidence packet](provenance/4B-alpha-second/profiling/2026-09-22-cpu/README.md); the original flash-drive files have not yet been imported or independently inspected.
 
@@ -101,7 +124,7 @@ The target is an 8 GB-class laptop using CPU `llama.cpp`. A **preliminary direct
 
 The two rows are separate synthetic tests, not a complete clinical interaction. One repetition does not establish variability; zero reported standard deviation is not evidence of stability. GNU time RSS is not total system memory or the official profiler's sampled memory metric. The 11 GiB machine and short workload do not establish an 8 GB deployment pass. No controlled comparison against the historical 0.6B workloads is claimed.
 
-**Full profiling remains pending:** original evidence import, repeatability, time to first token, sustained thermals, accuracy and a complete scoreable ADTC report. Use [`docs/PROFILING_RUNBOOK.md`](docs/PROFILING_RUNBOOK.md) for that workflow and verify the exact GGUF separately with `python3 scripts/verify_model_artifact.py`. The official downloader retains its template logic; only `MODEL_FILE` and `MODEL_URL` changed. This microbenchmark does not complete Gate 2 or clinical qualification.
+**The accuracy-enabled participant run and its original-file import are complete for commit `0017d85836d7`.** Independent repeat runs, a report synchronized to any later submission snapshot, directly measured time to first token, sustained thermal testing and organizer auditing are separate work. Use [`docs/PROFILING_RUNBOOK.md`](docs/PROFILING_RUNBOOK.md) for future runs and verify the exact GGUF separately with `python3 scripts/verify_model_artifact.py`. The official downloader retains its template logic; only `MODEL_FILE` and `MODEL_URL` changed. Neither local run by itself completes Gate 2 or clinical qualification.
 
 ## Historical Benchmarks: Different Artifact
 

@@ -22,3 +22,6 @@ web/dist/
 # Local profiler output
 submission.json
 audit.json
+
+# Verified original participant report retained as submission evidence.
+!/provenance/4B-alpha-second/profiling/2026-09-22-ubuntu-adtc/raw/submission.json

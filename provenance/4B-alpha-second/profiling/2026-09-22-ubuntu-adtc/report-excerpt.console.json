@@ -1,0 +1,34 @@
+{
+  "accuracy": [
+    {
+      "benchmark": "arc_easy",
+      "dataset_version": "lm-eval-harness",
+      "language": "en",
+      "samples": 50,
+      "score": 0.78,
+      "metric": "acc_norm"
+    }
+  ],
+  "throughput": {
+    "tokens_per_second_generation": 5.03,
+    "first_token_latency_ms": 46052.31,
+    "prompt_tokens": 512,
+    "generated_tokens": 128,
+    "threads_used": 2
+  },
+  "memory": {
+    "peak_rss_mb": 4288.94,
+    "steady_state_rss_mb": 4147.98,
+    "peak_vms_mb": 4779.79
+  },
+  "cpu_thermal": {
+    "cpu_percent_p99": 61.7,
+    "core_temp_c_peak": 80.0,
+    "throttled": false
+  },
+  "reproducibility": {
+    "git_commit_sha": "0017d85836d7",
+    "docker_image_digest": "unknown",
+    "random_seed": 42
+  }
+}

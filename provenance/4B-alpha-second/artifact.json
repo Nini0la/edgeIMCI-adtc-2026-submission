@@ -52,7 +52,7 @@
     "local_gguf_sha256_verified": true,
     "f16_public_prompts_exact": "2/2",
     "q4_public_prompts_exact": "2/2",
-    "target_laptop_profile": "PENDING",
+    "target_laptop_profile": "PARTICIPANT_RUN_VERIFIED_RAW_RETAINED",
     "matched_base_before_after": "THREE_PUBLIC_PROMPT_PAIRS_RETAINED_FULL_VALIDATION_PENDING",
     "dataset_public_release": "COMPLETE",
     "dataset_source_license_review": "PENDING",
