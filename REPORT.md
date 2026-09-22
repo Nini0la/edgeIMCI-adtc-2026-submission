@@ -38,6 +38,12 @@ The current [`provenance/`](provenance/) directory is an explicit handoff checkl
 
 Pending source evidence. Add a reproducible comparison of the pinned base checkpoint and the final fine-tuned checkpoint on a held-out structured-extraction set. Report the dataset split, prompts, decoding settings, schema-validity rate, exact-match result, and representative outputs.
 
+### New Candidate Evidence
+
+Two later research runs, `qwen17-e3-lr1-s3407` and `qwen4-e2-lr3-s20260824`, are documented under [`provenance/`](provenance/README.md). They share the same 1,831-row multitask TRAIN release, 139-row VALIDATION release, LoRA structure, optimizer schedule, tokenization policy, and software pins. They differ in base model, epochs, learning rate, seed, checkpoint history, and output artifacts.
+
+These records do not replace the currently packaged 0.6B GGUF and are not a before/after evaluation of that artifact. Both candidate receipts remain research-only, pending independent clinical and source-governance review, with no promotion or deployment authorization. Laptop profiling and GGUF packaging are intentionally deferred until one candidate is selected.
+
 ---
 
 ## Constraints

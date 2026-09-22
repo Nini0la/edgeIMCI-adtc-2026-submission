@@ -1,0 +1,74 @@
+{
+  "schema_version": "1.0.0",
+  "record_type": "candidate_training_run_provenance",
+  "candidate_status": "USER_SHORTLISTED_FOR_PROVENANCE_REVIEW",
+  "submission_artifact_status": "NOT_PACKAGED_OR_DEPLOYED",
+  "campaign_id": "multitask1831-20260922-v1",
+  "cell_id": "qwen4-e2-lr3-s20260824",
+  "run_id": "multitask1831-20260922-v1--qwen4-e2-lr3-s20260824",
+  "status": "SUCCEEDED",
+  "base_model": {
+    "source": "huggingface:Qwen/Qwen3-4B",
+    "revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+    "tokenizer_revision": "1cfa9a7208912126459214e8b04321603b3df60c",
+    "license": "Apache-2.0"
+  },
+  "dataset": {
+    "release_id": "beta0_1k_multitask_v1",
+    "manifest_sha256": "f326d23a8d9ffa4017b510e13933e8a8db08db9ccfb11e5f3a8a36f148987a7a",
+    "train_rows": 1831,
+    "train_sha256": "952a785b478654097bff3d643ca743d2d5a078de4f2c2e5b125f87b47dbab367",
+    "validation_rows": 139,
+    "validation_sha256": "76dc64d51f52a8ffbb7a10c5fd10a3fff770a7ee6847cf7fb62c9a00568a58c5",
+    "test_accessed": false
+  },
+  "training": {
+    "method": "lora",
+    "epochs": 2,
+    "learning_rate": 0.0003,
+    "seed": 20260824,
+    "lora_rank": 16,
+    "lora_alpha": 32,
+    "lora_dropout": 0.05,
+    "effective_batch_size": 16,
+    "max_sequence_length": 3072,
+    "terminal_export_epoch": 2,
+    "lowest_loss_epoch": 2,
+    "global_steps": 230,
+    "lowest_validation_loss": 0.008947928436100483,
+    "final_reported_train_loss": 0.12006764726146407,
+    "same_call_recoveries": 0
+  },
+  "evaluation": {
+    "partition": "VALIDATION",
+    "example_count": 139,
+    "json_valid": 139,
+    "predictions_sha256": "a4f2b92a8937f2a7ad0db099fe7781db128b333ea7ef7bb98e6a376811b6b242",
+    "strict_schema_valid": 136,
+    "whole_prediction_exact_match": 133,
+    "route_correct": 135,
+    "original115_extraction_exact_rate": 0.991304347826087,
+    "original115_field_accuracy": 0.991304347826087,
+    "original115_decision_equivalence": 0.991304347826087,
+    "false_reject": {"count": 2, "denominator": 119},
+    "unsafe_engine_admission": {"count": 0, "denominator": 20},
+    "urgent_miss": {"count": 1, "denominator": 4},
+    "token_limit_events": 0
+  },
+  "receipts": {
+    "config_sha256": "69407c7734a08ff83b9bde8e188f81338492dcb1d89205f808cc44871bd3a754",
+    "plan_sha256": "6779f9f24547d95357cccc4855c4c2127fb6eee411e16e63eca292abfefb8833",
+    "authorization_sha256": "387b19fa0b363b4a7451aa9ad09d419ac032598a8ed74c544c29f397cd4ffe30",
+    "artifact_manifest_sha256": "6abf30a4b4382811c58143059eec1ca47585e35d0342400184d1eaef2f4ef7ad",
+    "function_call_id": "fc-01M33NYQ2QT8EKKJMA48XX13KC",
+    "output_volume": "edge-imci-beta0-1k-backbone-multitask-matrix-v1-artifacts",
+    "output_path": "/outputs/multitask1831-20260922-v1--qwen4-e2-lr3-s20260824"
+  },
+  "authorization": {
+    "research_only": true,
+    "clinical_review_complete": false,
+    "clinical_use_authorized": false,
+    "promotion_authorized": false,
+    "deployment_authorized": false
+  }
+}

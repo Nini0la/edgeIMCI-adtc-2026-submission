@@ -1,8 +1,10 @@
 # Gate 2 Model Provenance Handoff
 
-**Status:** Incomplete. This directory is a handoff checklist, not a completed Gate 2 evidence bundle. Replace each pending item with the original artifact or a reproducible record before submission.
+**Status:** Incomplete. The two Beta0-1K candidate runs below now have documented dataset, recipe, run, and validation records. Neither candidate is the GGUF currently declared in `metadata.json`, and neither is authorized for promotion, deployment, or clinical use.
 
-## Established Facts
+## Current Submission Artifact
+
+The currently packaged artifact is still the 0.6B GGUF. Its original training dataset, complete training logs, adapter, and merge path have not yet been linked to this repository.
 
 | Field | Value |
 |---|---|
@@ -16,28 +18,33 @@
 | `llama.cpp` conversion revision | `aedb2a5e9ca3d4064148bbb919e0ddc0c1b70ab3` |
 | Quantization | GGUF Q8_0 |
 
-## Required Inputs
+Do not use the Beta0-1K candidate records to fill the current artifact's `metadata.json` provenance. That would incorrectly attribute the 0.6B GGUF to a different base model and training campaign.
 
-The following evidence is not yet present and must not be inferred or fabricated:
+## Shortlisted Candidate Runs
 
-- Original LoRA adapter weights, or the complete training scripts and configuration needed to reproduce them.
-- Training and validation logs, including the loss history and checkpoint-selection evidence.
-- Dataset names, source URLs, versions, licenses, split policy, and checksums.
-- Commands and tool versions used to merge the LoRA adapter into the base checkpoint.
-- Commands and tool versions used to convert and quantize the merged checkpoint to GGUF Q8_0.
-- A reproducible comparison of the pinned base model and final fine-tuned model on a held-out structured-extraction set.
+These runs were explicitly shortlisted for provenance review. Both completed successfully in campaign `multitask1831-20260922-v1`.
 
-## Expected Final Layout
+| Candidate | Base model | Epochs | Learning rate | Seed | Status |
+|---|---|---:|---:|---:|---|
+| [`qwen17-e3-lr1-s3407`](qwen17-e3-lr1-s3407.json) | `Qwen/Qwen3-1.7B` | 3 | 0.0001 | 3407 | Research candidate only |
+| [`qwen4-e2-lr3-s20260824`](qwen4-e2-lr3-s20260824.json) | `Qwen/Qwen3-4B` | 2 | 0.0003 | 20260824 | Research candidate only |
 
-Use the applicable files when the source materials become available; do not create empty substitutes for missing evidence.
+Shared evidence:
 
-```text
-provenance/
-├── adapter_model.safetensors   # or complete training scripts/configuration
-├── training_log.txt
-├── dataset_info.md
-├── merge_quantization.md
-└── evaluation.md
-```
+- [`dataset_info.md`](dataset_info.md): exact dataset identity, counts, hashes, split policy, and authorization boundary.
+- [`training_recipe.md`](training_recipe.md): shared LoRA recipe and the parameters that differ between candidates.
+- [`evaluation.md`](evaluation.md): terminal validation comparison and limitations.
 
-`dataset_info.md` should identify every training and validation source and include checksums for local or derived datasets. `merge_quantization.md` should make the path from the pinned base checkpoint to the hosted GGUF reproducible. `evaluation.md` should document prompts, dataset split, decoding settings, schema-validity rate, exact-match results, and representative base-versus-fine-tuned outputs.
+The candidate records deliberately omit laptop inference profiling, GGUF conversion, quantization, and runtime measurements. Those facts must be produced for the exact final bytes after a candidate is selected and packaged.
+
+## Remaining Submission Work
+
+- Decide which candidate, if either, replaces the current 0.6B submission artifact.
+- Record an explicit promotion decision after the pending independent clinical and source-governance review.
+- Export and preserve the chosen merged checkpoint or adapter from the recorded artifact manifest.
+- Produce reproducible merge, GGUF conversion, and quantization commands for the chosen candidate.
+- Host the exact GGUF at an immutable public revision and record its byte count and SHA-256.
+- Update `metadata.json`, `MODEL_CARD.md`, `download_model.sh`, runtime constants, and tests together.
+- Run public-prompt validation and laptop profiling against those exact final bytes.
+
+The current `metadata.json` still lacks `provenance.training_datasets`. It should remain unresolved rather than being populated with the Beta0-1K release until the submitted GGUF is actually derived from one of these candidate runs.

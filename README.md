@@ -59,6 +59,8 @@ The Gate 2 provenance packet is intentionally marked incomplete until the origin
 
 See [`provenance/README.md`](provenance/README.md) for the evidence handoff checklist. Do not mark the Gate 2 packet complete until every pending item is backed by the original artifact or a reproducible record.
 
+Two newer Beta0-1K research candidates now have dataset, recipe, receipt, and terminal-validation records under [`provenance/`](provenance/README.md): `qwen17-e3-lr1-s3407` and `qwen4-e2-lr3-s20260824`. They are not the 0.6B GGUF currently declared by this repository, and no runtime, downloader, model-card, or profiler claim has been transferred to them.
+
 
 ## Run The GUI
 
@@ -127,6 +129,7 @@ The selected GGUF was measured on an ASUS laptop running Ubuntu 22.04.5 with an 
 | ARC-Easy accuracy smoke | 0.64 `acc_norm`, 50 samples |
 
 The ADTC quick participant profile used `--skip-accuracy`; the accuracy smoke was run separately with the same pinned profiler and exact GGUF bytes. These are participant measurements, not organizer audit results. See [`REPORT.md`](REPORT.md) for conversion comparisons, provenance, constraints, and limitations.
+Follow [`docs/PROFILING_RUNBOOK.md`](docs/PROFILING_RUNBOOK.md) to prepare the persistent Ubuntu 22.04 environment, build the pinned CPU `llama-bench`, install the ADTC profiler, verify the GGUF, and retain a complete scoreable `submission.json`.
 
 ## Repository Files
 
@@ -140,6 +143,7 @@ The ADTC quick participant profile used `--skip-accuracy`; the accuracy smoke wa
 - [`web/`](web/): worker-facing React interface.
 - [`acceptance/public_prompts.json`](acceptance/public_prompts.json): expected structured outputs for the two submitted prompts.
 - [`docs/LLAMA_CPP_INTEGRATION.md`](docs/LLAMA_CPP_INTEGRATION.md): qualified runtime details and limitations.
+- [`docs/PROFILING_RUNBOOK.md`](docs/PROFILING_RUNBOOK.md): end-to-end Ubuntu setup, smoke-profile, full-profile, and evidence-retention procedure.
 
 ## Safety and Scope
 
