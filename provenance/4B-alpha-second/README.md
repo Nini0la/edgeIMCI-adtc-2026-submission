@@ -13,7 +13,7 @@ the ignored `adapter/` subdirectory. Confirm organizer acceptance of this hosted
 adapter arrangement before calling the Gate 2 packet complete.
 
 See [adapter delivery status](adapter_delivery.md) for the public-fork LFS
-restriction and the prepared organizer clarification. No large-weight Git
+restriction and the current public hosting arrangement. No large-weight Git
 workaround has been committed.
 
 The dataset source-release hashes are recorded in `dataset_info.md`. Its public

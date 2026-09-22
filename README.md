@@ -2,6 +2,10 @@
 
 EdgeIMCI is an offline research model for primary-healthcare sick-child encounters. Its structured-extraction mode converts worker findings into bounded JSON for validation and downstream deterministic IMCI logic. This is team `edge-imci`'s Laptop LLM submission package in `healthcare_medical`.
 
+**The submitted artifact is the standalone 4B-alpha-second Q4_K_M GGUF. The
+included GUI is a legacy 0.6B research interface, not a demonstration or evaluation
+frontend for the submitted 4B model.**
+
 ## Selected Artifact
 
 `main` is the final submission branch. See the [integration review](docs/SUBMISSION_INTEGRATION.md)

@@ -41,11 +41,9 @@ weight archive has been committed as a workaround.
 ## Acceptance Status
 
 **Original adapter availability: complete. Competition acceptance of this
-hosted delivery arrangement: unconfirmed.** A precise clarification request is
-prepared in [`ORGANIZER_ADAPTER_QUESTION.md`](../../docs/ORGANIZER_ADAPTER_QUESTION.md).
-No organizer reply has been received or represented as approval.
+hosted delivery arrangement: unconfirmed.** No organizer approval is claimed.
 
 This is a packaging question, not a missing-weight or model-identity problem,
-and it does not prevent standalone GGUF profiling. The next action is to use the
-delivery method the organizers confirm, without changing the existing GGUF or
-the organizer's two-placeholder downloader.
+and it does not prevent standalone GGUF profiling. The current delivery remains
+the public immutable adapter plus its retrieval helper, without changing the
+existing GGUF or the organizer's two-placeholder downloader.
