@@ -23,11 +23,11 @@
   "test_prompts": [
     {
       "prompt_id": "edgeimci_public_001",
-      "prompt": "Convulsing now. No history of convulsions. Not lethargic or unconscious. Able to drink or breastfeed."
+      "prompt": "An 18-month-old child cannot drink or breastfeed and vomits everything. The rest of the assessment is incomplete. What should the health worker do next?"
     },
     {
       "prompt_id": "edgeimci_public_002",
-      "prompt": "The child is not convulsing now. There has been no history of convulsions. The child is not lethargic or unconscious. The child is able to drink or breastfeed. The child does not vomit everything. There is no blood in the stool. The child is drinking normally. The child is not restless or irritable. The skin pinch goes back to normal. The child does not have sunken eyes. The diarrhoea has lasted for 3 days. The child is 18 months old. The child does not have cough or difficult breathing. The child has diarrhoea. There is no ear problem. The child does not have fever."
+      "prompt": "<EDGEIMCI_EXTRACT_V2>\nConvulsing now. No history of convulsions. Not lethargic or unconscious. Able to drink or breastfeed.\n</EDGEIMCI_EXTRACT_V2>"
     }
   ],
   "model": {

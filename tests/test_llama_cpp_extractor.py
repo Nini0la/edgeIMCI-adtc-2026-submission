@@ -98,7 +98,7 @@ def test_selected_model_identity_is_pinned() -> None:
     assert LLAMA_CPP_SHA256 == "a41d3d5fec1173afc89323a026a8f3612a9de2692a8c825223852627e8277641"
 
 
-def test_submission_metadata_matches_freeform_acceptance_prompts() -> None:
+def test_submission_metadata_matches_dual_mode_public_prompts() -> None:
     metadata = json.loads((ROOT / "metadata.json").read_text(encoding="utf-8"))
     acceptance = json.loads(
         (ROOT / "acceptance" / "public_prompts.json").read_text(encoding="utf-8")

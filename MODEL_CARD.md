@@ -27,6 +27,8 @@ Original configuration, training/loss logs, source receipt, artifact hashes, and
 
 ## Evaluation
 
+The extraction smoke and paired examples below use the historical fixture pair in [`acceptance/historical_extraction_prompts.json`](acceptance/historical_extraction_prompts.json), not the current mixed-mode submission pair. Current inputs and the owner's verification statement are documented in [`acceptance/README.md`](acceptance/README.md); no new model run is implied by that selection.
+
 | Terminal checkpoint VALIDATION metric | Result |
 |---|---:|
 | JSON valid | 139/139 |

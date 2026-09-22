@@ -42,7 +42,7 @@ bash scripts/verify_llama_cpp_integration.sh
 The script defaults to the model under `model/` and `llama-completion` on
 `PATH`. Set `EDGEIMCI_MODEL_PATH` or `LLAMA_CPP_BIN` when they are elsewhere.
 It reruns backend and frontend tests, builds and serves the GUI, then runs both
-submitted prompts through the real Q8_0.
+historical extraction fixtures through the real Q8_0.
 
 Historical interactive GUI command after 0.6B automated acceptance:
 

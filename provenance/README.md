@@ -24,7 +24,7 @@
 - [`artifact_hashes.json`](4B-alpha-second/artifact_hashes.json): original adapter and merged-checkpoint inventory, not the weight files themselves.
 - [`dataset_info.md`](4B-alpha-second/dataset_info.md): exact enriched release identity, 2,258 TRAIN / 139 VALIDATION records, hashes, split policy, sources and disclosure gaps.
 - [`merge_quantization.md`](4B-alpha-second/merge_quantization.md) and [`conversion_manifest.json`](4B-alpha-second/conversion_manifest.json): recorded merge policy, verified source files, F16/Q4 conversion commands and hashes; historical merge implementation is not recovered here.
-- [`smoke_results.json`](4B-alpha-second/smoke_results.json): F16 and Q4 each pass 2/2 public prompts for exact parsed JSON and deterministic state under the recorded wrapper.
+- [`smoke_results.json`](4B-alpha-second/smoke_results.json): F16 and Q4 each pass 2/2 historical extraction fixtures under the recorded wrapper, not the current mixed-mode submission pair. See [`acceptance/README.md`](../acceptance/README.md).
 - [`before_after.md`](4B-alpha-second/before_after.md), [`before_after_results.json`](4B-alpha-second/before_after_results.json), and [`compare_before_after_modal.py`](4B-alpha-second/compare_before_after_modal.py): three fixed public prompt pairs, all raw outputs, and the reproducible runner; broader matched validation remains unmeasured.
 - [Preliminary Ubuntu CPU microbenchmark](4B-alpha-second/profiling/2026-09-22-cpu/README.md): successful one-repetition pp128/tg32 benchmark and GNU time memory measurement, transcribed from the operator's 2026-09-22 console output; original files not yet imported, not an official ADTC report.
 

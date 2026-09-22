@@ -38,9 +38,13 @@ python /opt/llama.cpp/convert_hf_to_gguf.py "$MERGED" --outfile "$F16" --outtype
 | Q4_K_M | 2,497,280,288 | `a4a8c5bb2d9f3401defa1cb8ea007812d5916c0242d8306a1c7ed6322d550919` |
 
 Q4_K_M is mixed-precision 4-bit quantization. The F16 intermediate was not
-downloaded locally. Both representations passed the two public extraction prompts
+downloaded locally. Both representations passed the two historical extraction fixtures
 with exact JSON targets and matching deterministic states (`URGENT_INCOMPLETE`,
 `COMPLETE`). Raw outputs and parsed results are in `smoke_results.json`.
+
+Those fixtures are preserved in `acceptance/historical_extraction_prompts.json`
+at the repository root. The current mixed-mode submission pair is separate;
+these retained results have not been relabelled as verification of that pair.
 
 The smoke used the extraction-v2 system instruction, exact wrapper, tokenizer
 chat template with `enable_thinking=False`, temperature 0, seed 0, context 3072,

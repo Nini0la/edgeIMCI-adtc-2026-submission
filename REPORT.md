@@ -49,6 +49,8 @@ The final internal TRAIN file was not retained in reachable repository state, so
 
 ### Before/After Fine-Tuning
 
+The public extraction examples in this section are the historical pair preserved in [`historical_extraction_prompts.json`](acceptance/historical_extraction_prompts.json). The current submission pair is different: one free-form question and one explicitly wrapped extraction input, selected and reported verified by the owner. No historical receipt is presented as an automated result for that current pair; see [`acceptance/README.md`](acceptance/README.md).
+
 An actual three-prompt paired demonstration was completed on 2026-09-22. The pinned untouched base and merged 4B-alpha-second used identical rendered prompts/input IDs and effective generation settings: BF16 on NVIDIA L4, greedy decoding, seed 0, thinking disabled, maximum 1200 new tokens.
 
 | Fixed public example | Untouched Qwen3-4B | Fine-tuned 4B-alpha-second |

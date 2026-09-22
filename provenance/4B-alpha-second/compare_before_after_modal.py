@@ -1,4 +1,4 @@
-"""Run a fixed three-prompt illustration, not a held-out quality benchmark.
+"""Run the historical three-prompt illustration, not the current submission pair.
 
 From the repository root: modal run --detach provenance/4B-alpha-second/compare_before_after_modal.py
 Weights stay on Modal. This script does not invoke ChatEval or sealed TEST data.
@@ -31,7 +31,7 @@ evidence = modal.Volume.from_name("edge-imci-4b-alpha-second-gguf-20260922", cre
 image = (
     modal.Image.from_registry("nvidia/cuda:12.8.1-cudnn-runtime-ubuntu22.04", add_python="3.11")
     .pip_install("torch==2.7.1", "transformers==4.57.1", "accelerate==1.9.0", "huggingface_hub==0.34.2")
-    .add_local_file(ROOT / "acceptance/public_prompts.json", "/inputs/public_prompts.json", copy=True)
+    .add_local_file(ROOT / "acceptance/historical_extraction_prompts.json", "/inputs/public_prompts.json", copy=True)
     .add_local_file(ROOT / "provenance/4B-alpha-second/artifact_hashes.json", "/inputs/artifact_hashes.json", copy=True)
     .add_local_file(ROOT / "scripts/verify_model_artifact.py", "/root/verify_model_artifact.py", copy=True)
 )
@@ -71,8 +71,8 @@ def compare():
         {"role": "system", "content": FREE_SYSTEM}, {"role": "user", "content": FREE_PROMPT},
     ]})
     result = {
-        "purpose": "Three fixed public illustrative prompts; not held-out evaluation or clinical qualification",
-        "selection": "Two existing public extraction prompts plus one architecture question, fixed before inference; no response-based selection",
+        "purpose": "Historical three-prompt illustration; not the current submission pair, held-out evaluation, or clinical qualification",
+        "selection": "Two historical extraction fixtures plus one architecture question; no response-based selection",
         "training_overlap": "Not ruled out; no unseen-data claim",
         "base": {"model": BASE, "revision": REVISION},
         "fine_tuned": {"name": "4B-alpha-second", "run": RUN, "artifact_manifest_sha256": manifest["artifact_manifest_sha256"]},

@@ -14,6 +14,12 @@ is not evidence that every target capability improved.
 
 ## Paired Public Demonstration
 
+This is the historical demonstration set. Its two extraction inputs are retained
+unchanged in [`historical_extraction_prompts.json`](../../acceptance/historical_extraction_prompts.json).
+The current metadata pair has since changed to one free-form question and one
+explicitly wrapped extraction input. Original prompt IDs in the evidence refer
+to the historical fixture contents, not the current metadata entries.
+
 On 2026-09-22, the pinned untouched Qwen3-4B base and the terminal merged
 4B-alpha-second checkpoint were run on three prompts fixed before inference.
 Both used BF16 on the same NVIDIA L4, identical rendered prompts and input token

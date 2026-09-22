@@ -47,6 +47,22 @@ def test_selected_artifact_is_consistent():
     assert "reproducibility" not in metadata
 
 
+def test_owner_selected_public_prompt_pair():
+    metadata = json.loads((ROOT / "metadata.json").read_text())
+    expected = [
+        {
+            "prompt_id": "edgeimci_public_001",
+            "prompt": "An 18-month-old child cannot drink or breastfeed and vomits everything. The rest of the assessment is incomplete. What should the health worker do next?",
+        },
+        {
+            "prompt_id": "edgeimci_public_002",
+            "prompt": "<EDGEIMCI_EXTRACT_V2>\nConvulsing now. No history of convulsions. Not lethargic or unconscious. Able to drink or breastfeed.\n</EDGEIMCI_EXTRACT_V2>",
+        },
+    ]
+    assert metadata["test_prompts"] == expected
+    assert json.loads((ROOT / "acceptance/public_prompts.json").read_text()) == expected
+
+
 def test_original_receipts_and_smokes_match():
     root = ROOT / "provenance/4B-alpha-second"
     inventory_file = root / "artifact_hashes.json"
@@ -61,6 +77,9 @@ def test_original_receipts_and_smokes_match():
     assert remote["status"] == "SUCCEEDED"
     assert remote["epoch_evidence"]["exported_epoch"] == 2
     smoke = json.loads((root / "smoke_results.json").read_text())
+    historical_bytes = (ROOT / "acceptance/historical_extraction_prompts.json").read_bytes()
+    conversion = json.loads((root / "conversion_manifest.json").read_text())
+    assert hashlib.sha256(historical_bytes).hexdigest() == conversion["public_prompts_sha256"]
     assert len(smoke) == 4
     assert all(row["exact_target"] and row["schema_valid"] and row["state_match"] and row["error"] is None for row in smoke)
 
@@ -77,6 +96,11 @@ def test_paired_demonstration_retains_all_outputs_and_boundaries():
     assert len(result["outputs"]) == 6
     outputs = {(row["model"], row["case_id"]): row for row in result["outputs"]}
     assert len(outputs) == 6
+    historical = json.loads((ROOT / "acceptance/historical_extraction_prompts.json").read_text())
+    for fixture in historical:
+        case = next(case for case in result["cases"] if case["id"] == fixture["prompt_id"])
+        assert case["messages"][1]["content"] == f'<EDGEIMCI_EXTRACT_V2>\n{fixture["prompt"]}\n</EDGEIMCI_EXTRACT_V2>'
+        assert case["expected_target"] == fixture["expected_target"]
     for case in result["cases"]:
         for model in ("base", "fine_tuned"):
             row = outputs[model, case["id"]]

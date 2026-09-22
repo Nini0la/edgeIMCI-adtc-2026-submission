@@ -1,4 +1,4 @@
-"""Exercise public prompts through local Q8_0 extraction and existing logic."""
+"""Exercise historical extraction fixtures through the legacy local Q8_0 pipeline."""
 
 from __future__ import annotations
 
@@ -17,7 +17,7 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def main() -> None:
     prompts = json.loads(
-        (ROOT / "acceptance" / "public_prompts.json").read_text(encoding="utf-8")
+        (ROOT / "acceptance" / "historical_extraction_prompts.json").read_text(encoding="utf-8")
     )
     extractor = LlamaCppEncounterExtractor()
     outcomes: list[dict[str, object]] = []
@@ -32,7 +32,7 @@ def main() -> None:
         extraction = extractor.extract(findings)
         if extraction.encounter != test_prompt["expected_target"]:
             raise RuntimeError(
-                f"{test_prompt['prompt_id']} did not exactly preserve the public findings"
+                f"{test_prompt['prompt_id']} did not exactly preserve the historical findings"
             )
 
         class CapturedExtractor:
@@ -74,7 +74,7 @@ def main() -> None:
         json.dumps(
             {
                 "status": "PASS",
-                "scope": "real-q8_0-public-prompts-and-deterministic-pipeline",
+                "scope": "legacy-q8_0-historical-extraction-fixtures-and-deterministic-pipeline",
                 "model_file": MODEL_FILENAME,
                 "model_sha256": MODEL_SHA256,
                 "outcomes": outcomes,
